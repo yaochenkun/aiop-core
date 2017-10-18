@@ -1,7 +1,7 @@
 package org.bupt.aiop.restapi.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import org.bupt.aiop.common.service.inter.SayHelloService;
+import org.bupt.aiop.common.rpcapi.service.inter.SayHelloService;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
