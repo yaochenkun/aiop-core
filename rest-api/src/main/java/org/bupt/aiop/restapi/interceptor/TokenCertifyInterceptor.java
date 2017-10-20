@@ -28,24 +28,26 @@ public class TokenCertifyInterceptor implements HandlerInterceptor {
 
         // return true;
         // 验证token的有效性
-        try {
+//        try {
+//
+//            String token = request.getHeader(Constant.TOKEN);
+//            Identity identity = TokenUtil.parseToken(token, Constant.TOKEN_API_KEY_SECRET);
+//
+//            //把identity存入session中(其中包含用户名、角色、过期时间戳等)
+//            request.getSession().setAttribute(Constant.IDENTITY, identity);
+//
+//            logger.info("{}: token有效", identity.getUsername());
+//            return true;
+//
+//        } catch (Exception e) {
+//
+//            logger.info("token无效，转到登录界面");
+//            response.sendRedirect("/restapi/auth/login_denied");
+//
+//            return false;
+//        }
 
-            String token = request.getHeader(Constant.TOKEN);
-            Identity identity = TokenUtil.parseToken(token, Constant.TOKEN_API_KEY_SECRET);
-
-            //把identity存入session中(其中包含用户名、角色、过期时间戳等)
-            request.getSession().setAttribute(Constant.IDENTITY, identity);
-
-            logger.info("{}: token有效", identity.getUsername());
-            return true;
-
-        } catch (Exception e) {
-
-            logger.info("token无效，转到登录界面");
-            response.sendRedirect("/api/auth/login_denied");
-
-            return false;
-        }
+        return true;
     }
 
     @Override

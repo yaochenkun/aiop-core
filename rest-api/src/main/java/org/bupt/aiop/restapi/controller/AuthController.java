@@ -1,5 +1,7 @@
 package org.bupt.aiop.restapi.controller;
+import com.alibaba.dubbo.config.annotation.Reference;
 import org.bupt.aiop.common.bean.CommonResult;
+import org.bupt.aiop.common.rpcapi.service.inter.SayHelloService;
 import org.bupt.aiop.common.util.MD5Util;
 import org.bupt.aiop.restapi.bean.Constant;
 import org.bupt.aiop.restapi.pojo.User;
@@ -35,6 +37,10 @@ public class AuthController {
     @Autowired
     private RedisService redisService;
 
+//    @Reference
+//    private static SayHelloService sayHelloService;
+
+
     /**
      * 发送短信验证码
      *
@@ -44,6 +50,7 @@ public class AuthController {
     @RequestMapping(value = "send_sms", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult sendSms(@RequestBody Map<String, String> params) {
+
 
         String phone = params.get("username");
 

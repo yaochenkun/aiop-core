@@ -5,13 +5,13 @@
 
 
     <parent>
-        <artifactId>ai-op</artifactId>
-        <groupId>org.bupt</groupId>
+        <artifactId>aiop</artifactId>
+        <groupId>org.bupt.aiop</groupId>
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>rest-api</artifactId>
-
+    <packaging>war</packaging>
 
     <!-- 集中定义依赖版本号 -->
     <properties>
@@ -58,7 +58,7 @@
 
         <!--rpc接口定义公用包-->
         <dependency>
-            <groupId>org.bupt</groupId>
+            <groupId>org.bupt.aiop</groupId>
             <artifactId>common</artifactId>
             <version>1.0</version>
         </dependency>

@@ -40,17 +40,17 @@
     </filter>
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
-        <url-pattern>/api/*</url-pattern>
+        <url-pattern>/restapi/*</url-pattern>
     </filter-mapping>
 
     <!--解决跨域访问-->
     <filter>
         <filter-name>crossOriginFilter</filter-name>
-        <filter-class>com.tongren.interceptor.CrossOriginInterceptor</filter-class>
+        <filter-class>org.bupt.aiop.restapi.interceptor.CrossOriginInterceptor</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>crossOriginFilter</filter-name>
-        <url-pattern>/api/*</url-pattern>
+        <url-pattern>/restapi/*</url-pattern>
     </filter-mapping>
 
 
@@ -62,20 +62,20 @@
     <!-- 配置SpringMVC框架入口 -->
     <servlet>
         <description>SpringMVCServlet</description>
-        <servlet-name>rest-api-servlet</servlet-name>
+        <servlet-name>springmvc-servlet</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
             <param-value>
-                classpath:spring/tongren-servlet.xml
+                classpath:spring/springmvc.xml
             </param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>rest-api-servlet</servlet-name>
+        <servlet-name>springmvc-servlet</servlet-name>
         <!-- <url-pattern>*.html</url-pattern> -->
-        <url-pattern>/api/*</url-pattern>
+        <url-pattern>/restapi/*</url-pattern>
     </servlet-mapping>
 
 </web-app>

@@ -10,7 +10,7 @@ public class ProvidersLauncher {
 	public static void main(String[] args) throws Exception {
 
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
-				new String[]{"classpath:spring/provider.xml"});
+				new String[]{"classpath:spring/dubbo-provider.xml"});
 		context.start();
 
 		System.out.println("Providers has been successfully launched~");

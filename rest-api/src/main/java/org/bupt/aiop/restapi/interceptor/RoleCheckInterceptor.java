@@ -66,7 +66,7 @@ public class RoleCheckInterceptor extends HandlerInterceptorAdapter {
 
         logger.info("权限拒绝");
         // 拦截之后应该返回公共结果, 这里没做处理
-        response.sendRedirect("/api/auth/role_denied");
+        response.sendRedirect("/restapi/auth/role_denied");
         return false;
     }
 }

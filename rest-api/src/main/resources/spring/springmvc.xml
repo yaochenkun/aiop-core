@@ -23,20 +23,20 @@
             <mvc:exclude-mapping path="/auth/send_sms"/>
             <mvc:exclude-mapping path="/auth/login_denied"/>
             <mvc:exclude-mapping path="/auth/role_denied"/>
-            <bean class="com.tongren.interceptor.TokenCertifyInterceptor"/>
+            <bean class="org.bupt.aiop.restapi.interceptor.TokenCertifyInterceptor"/>
         </mvc:interceptor>
 
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <!-- 如果不定义 mvc:mapping path 将拦截所有的URL请求 -->
-            <bean class="com.tongren.bean.rolecheck.RoleCheckInterceptor"/>
+            <bean class="org.bupt.aiop.restapi.interceptor.RoleCheckInterceptor"/>
         </mvc:interceptor>
 
         <!-- 当设置多个拦截器时，先按顺序调用preHandle方法，然后逆序调用每个拦截器的postHandle和afterCompletion方法 -->
     </mvc:interceptors>
 
     <!-- 定义Controller的扫描包 -->
-    <context:component-scan base-package="com.tongren.controller"/>
+    <context:component-scan base-package="org.bupt.aiop.restapi.controller"/>
 
     <!-- 定义文件上传解析器 -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">

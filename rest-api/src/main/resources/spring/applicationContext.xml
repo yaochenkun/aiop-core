@@ -8,61 +8,7 @@
     <context:property-placeholder location="classpath:*.properties"/>
 
     <!-- 扫描包 -->
-    <context:component-scan base-package="com.tongren"/>
-
-    <!--&lt;!&ndash; 定义数据源 &ndash;&gt;-->
-    <!--<bean id="dataSourceBak" class="com.jolbox.bonecp.BoneCPDataSource"-->
-    <!--destroy-method="close">-->
-    <!--&lt;!&ndash; 数据库驱动 &ndash;&gt;-->
-    <!--<property name="driverClass" value="${jdbc.driverClassName}"/>-->
-    <!--&lt;!&ndash; 相应驱动的jdbcUrl &ndash;&gt;-->
-    <!--<property name="jdbcUrl" value="${jdbc.url}"/>-->
-    <!--&lt;!&ndash; 数据库的用户名 &ndash;&gt;-->
-    <!--<property name="username" value="${jdbc.username}"/>-->
-    <!--&lt;!&ndash; 数据库的密码 &ndash;&gt;-->
-    <!--<property name="password" value="${jdbc.password}"/>-->
-    <!--&lt;!&ndash; 检查数据库连接池中空闲连接的间隔时间，单位是分，默认值：240，如果要取消则设置为0 &ndash;&gt;-->
-    <!--<property name="idleConnectionTestPeriodInMinutes" value="60"/>-->
-    <!--&lt;!&ndash; 连接池中未使用的链接最大存活时间，单位是分，默认值：60，如果要永远存活设置为0 &ndash;&gt;-->
-    <!--<property name="idleMaxAgeInMinutes" value="30"/>-->
-    <!--&lt;!&ndash; 每个分区最大的连接数 &ndash;&gt;-->
-    <!--&lt;!&ndash;-->
-    <!--判断依据：请求并发数-->
-    <!--&ndash;&gt;-->
-    <!--<property name="maxConnectionsPerPartition" value="100"/>-->
-    <!--&lt;!&ndash; 每个分区最小的连接数 &ndash;&gt;-->
-    <!--<property name="minConnectionsPerPartition" value="5"/>-->
-    <!--</bean>-->
-
-    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
-
-        <property name="url" value="${jdbc.url}"/>
-        <property name="username" value="${jdbc.username}"/>
-        <property name="password" value="${jdbc.password}"/>
-
-        <property name="initialSize" value="10"/>
-        <property name="minIdle" value="5"/>
-        <property name="maxActive" value="20"/>
-
-        <property name="maxWait" value="60000"/>
-
-        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
-        <property name="minEvictableIdleTimeMillis" value="300000"/>
-
-        <!--连续长时间不访问数据库自动触发事件激活-->
-        <property name="validationQuery" value="SELECT 'x' from dual"/>
-        <property name="testWhileIdle" value="true"/>
-        <property name="testOnBorrow" value="false"/>
-        <property name="testOnReturn" value="false"/>
-
-        <property name="poolPreparedStatements" value="true"/>
-        <property name="maxPoolPreparedStatementPerConnectionSize" value="20"/>
-
-        <property name="connectionProperties" value="config.decrypt=true"/>
-
-        <!--<property name="filters" value="stat,log4j"/>-->
-
-    </bean>
+    <context:component-scan base-package="org.bupt.aiop.restapi"/>
 
 
 </beans>
