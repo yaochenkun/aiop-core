@@ -3,7 +3,7 @@ package org.bupt.aiop.restapi.interceptor;
 import org.bupt.aiop.common.util.Validator;
 import org.bupt.aiop.common.util.token.Identity;
 import org.bupt.aiop.restapi.annotation.RequiredRoles;
-import org.bupt.aiop.restapi.bean.Constant;
+import org.bupt.aiop.restapi.constant.AuthConsts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.method.HandlerMethod;
@@ -52,7 +52,7 @@ public class RoleCheckInterceptor extends HandlerInterceptorAdapter {
             // 这里我为了方便是直接参数传入权限, 在实际操作中应该是从参数中获取用户Id
             // 到数据库权限表中查询用户拥有的权限集合, 与set集合中的权限进行对比完成权限校验
 
-            String role = ((Identity) request.getSession().getAttribute(Constant.IDENTITY)).getRole();
+            String role = ((Identity) request.getSession().getAttribute(AuthConsts.IDENTITY)).getRole();
             logger.info("用户的角色是 {}", role);
             // String role = request.getParameter("role");
             if (!Validator.checkEmpty(role)) {

@@ -1,4 +1,4 @@
-package org.bupt.aiop.restapi.pojo;
+package org.bupt.aiop.restapi.pojo.po;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;

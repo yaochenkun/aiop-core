@@ -1,9 +1,5 @@
 package org.bupt.aiop.restapi.interceptor;
 
-
-import org.bupt.aiop.common.util.token.Identity;
-import org.bupt.aiop.common.util.token.TokenUtil;
-import org.bupt.aiop.restapi.bean.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;

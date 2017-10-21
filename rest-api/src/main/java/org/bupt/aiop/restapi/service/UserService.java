@@ -1,13 +1,14 @@
 package org.bupt.aiop.restapi.service;
 
 import com.github.pagehelper.PageHelper;
+import org.bupt.aiop.common.bean.ResponseResult;
 import org.bupt.aiop.common.util.MD5Util;
 import org.bupt.aiop.common.util.Validator;
 import org.bupt.aiop.common.util.token.TokenUtil;
-import org.bupt.aiop.common.bean.CommonResult;
-import org.bupt.aiop.restapi.bean.Constant;
 import org.bupt.aiop.common.util.token.Identity;
-import org.bupt.aiop.restapi.pojo.User;
+import org.bupt.aiop.restapi.constant.AuthConsts;
+import org.bupt.aiop.restapi.constant.CodeConsts;
+import org.bupt.aiop.restapi.pojo.po.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,7 @@ public class UserService extends BaseService<User> {
      * @param type
      * @return
      */
-    public CommonResult login(String username, String password, String type) {
+    public ResponseResult login(String username, String password, String type) {
 
         try {
             Thread.sleep(600);
@@ -62,7 +63,7 @@ public class UserService extends BaseService<User> {
             User user = this.queryOne(record);
 
             if (user == null) {
-                return CommonResult.failure("登录失败：用户不存在");
+                return ResponseResult.failure("登录失败：用户不存在");
             }
         }
 
@@ -73,7 +74,7 @@ public class UserService extends BaseService<User> {
             md5Password = MD5Util.generate(password);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            return CommonResult.failure("MD5加密失败");
+            return ResponseResult.failure("MD5加密失败");
         }
 
         // 从数据库中取出对应的user
@@ -83,22 +84,22 @@ public class UserService extends BaseService<User> {
 
         // 检验密码
         if (!targetUser.getPassword().equals(md5Password)) {
-            return CommonResult.failure("密码错误");
+            return ResponseResult.failure("密码错误");
         }
 
         // 生成token
-        CommonResult result = this.generateToken(targetUser.getId().toString(),
-                Constant.TOKEN_ISSUER,
+        ResponseResult responseResult = this.generateToken(targetUser.getId().toString(),
+                AuthConsts.TOKEN_ISSUER,
                 targetUser.getUsername(),
                 targetUser.getRole(),
                 "/avatar/" + targetUser.getAvatar(),
-                Constant.TOKEN_DURATION,
+                AuthConsts.TOKEN_DURATION,
                 targetUser.getDoctorId() == null ? null : targetUser.getDoctorId().toString(),
-                Constant.TOKEN_API_KEY_SECRET);
+                AuthConsts.TOKEN_API_KEY_SECRET);
 
-        ((Identity) result.getContent()).setName(targetUser.getName());
+        ((Identity) responseResult.getContent()).setName(targetUser.getName());
 
-        return result;
+        return responseResult;
     }
 
 
@@ -114,7 +115,7 @@ public class UserService extends BaseService<User> {
      * @param apiKeySecret
      * @return
      */
-    public CommonResult generateToken(String id, String issuer, String username, String role, String avatar, Long
+    public ResponseResult generateToken(String id, String issuer, String username, String role, String avatar, Long
             duration, String doctorId, String apiKeySecret) {
 
         Identity identity = new Identity();
@@ -130,7 +131,7 @@ public class UserService extends BaseService<User> {
         // 封装返回前端(除了用户名、角色、时间戳保留，其余消去)
         identity.setToken(token);
         identity.setIssuer(null);
-        return CommonResult.success("登录成功", identity);
+        return ResponseResult.success("登录成功", identity);
     }
 
 
@@ -250,7 +251,7 @@ public class UserService extends BaseService<User> {
 
         this.getMapper().delete(user);
 
-        return Constant.CRUD_SUCCESS;
+        return CodeConsts.CRUD_SUCCESS;
     }
 
 

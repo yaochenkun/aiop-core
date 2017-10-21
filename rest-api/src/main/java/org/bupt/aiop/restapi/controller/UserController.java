@@ -2,15 +2,16 @@ package org.bupt.aiop.restapi.controller;
 
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.fileupload.util.Streams;
-import org.bupt.aiop.common.bean.CommonResult;
+import org.bupt.aiop.common.bean.ResponseResult;
 import org.bupt.aiop.common.bean.PageResult;
 import org.bupt.aiop.common.util.FileUtil;
 import org.bupt.aiop.common.util.MD5Util;
 import org.bupt.aiop.common.util.Validator;
 import org.bupt.aiop.common.util.token.Identity;
 import org.bupt.aiop.restapi.annotation.RequiredRoles;
-import org.bupt.aiop.restapi.bean.Constant;
-import org.bupt.aiop.restapi.pojo.User;
+import org.bupt.aiop.restapi.constant.AuthConsts;
+import org.bupt.aiop.restapi.constant.EnvConsts;
+import org.bupt.aiop.restapi.pojo.po.User;
 import org.bupt.aiop.restapi.service.PropertyService;
 import org.bupt.aiop.restapi.service.RedisService;
 import org.bupt.aiop.restapi.service.UserService;
@@ -55,7 +56,7 @@ public class UserController {
      */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult addUser(@RequestBody Map<String, Object> params) {
+    public ResponseResult addUser(@RequestBody Map<String, Object> params) {
 
         String name = (String) params.get("name");
         String username = (String) params.get("username");
@@ -64,7 +65,7 @@ public class UserController {
         User user = new User();
 
         if (Validator.checkEmpty(name) || Validator.checkEmpty(username) || Validator.checkEmpty(role)) {
-            return CommonResult.failure("添加失败，信息不完整");
+            return ResponseResult.failure("添加失败，信息不完整");
         } else {
             user.setName(name);
             user.setUsername(username);
@@ -72,19 +73,19 @@ public class UserController {
         }
 
         if (this.userService.isExist(username)) {
-            return CommonResult.failure("该用户名已被注册");
+            return ResponseResult.failure("该用户名已被注册");
         }
 
         try {
-            user.setPassword(MD5Util.generate(Constant.DEFAULT_PASSWORD));
+            user.setPassword(MD5Util.generate(AuthConsts.DEFAULT_PASSWORD));
             user.setAvatar("avatar_default.png"); // 默认头像
             this.userService.save(user);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            return CommonResult.failure("添加失败，md5生成错误");
+            return ResponseResult.failure("添加失败，md5生成错误");
         }
 
-        return CommonResult.success("添加成功");
+        return ResponseResult.success("添加成功");
     }
 
 
@@ -96,7 +97,7 @@ public class UserController {
      */
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
-    public CommonResult updateOtherUser(@RequestBody Map<String, Object> params) {
+    public ResponseResult updateOtherUser(@RequestBody Map<String, Object> params) {
 
         Integer userId = (Integer) params.get("userId");
         // 修改别的用户的时候不能修改name和phone
@@ -117,7 +118,7 @@ public class UserController {
 
         this.userService.update(user);
 
-        return CommonResult.success("修改成功");
+        return ResponseResult.success("修改成功");
     }
 
 
@@ -129,14 +130,14 @@ public class UserController {
      */
     @RequestMapping(value = "{userId}", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult queryById(@PathVariable("userId") Integer userId) {
+    public ResponseResult queryById(@PathVariable("userId") Integer userId) {
 
         User user = this.userService.queryById(userId);
         if (user == null) {
-            return CommonResult.failure("用户不存在");
+            return ResponseResult.failure("用户不存在");
         }
 
-        return CommonResult.success("查询成功", user);
+        return ResponseResult.success("查询成功", user);
     }
 
 
@@ -150,11 +151,11 @@ public class UserController {
     @RequestMapping(value = "{userId}", method = RequestMethod.DELETE)
     @ResponseBody
     @RequiredRoles(roles = {"系统管理员"})
-    public CommonResult deleteById(@PathVariable("userId") Integer userId) {
+    public ResponseResult deleteById(@PathVariable("userId") Integer userId) {
 
         User user = this.userService.queryById(userId);
         if (user == null) {
-            return CommonResult.failure("用户不存在");
+            return ResponseResult.failure("用户不存在");
         }
 
         // this.userService.deleteById(userId);
@@ -162,7 +163,7 @@ public class UserController {
 
         logger.info("删除用户：{}", user.getName());
 
-        return CommonResult.success("删除成功");
+        return ResponseResult.success("删除成功");
     }
 
 
@@ -175,7 +176,7 @@ public class UserController {
      */
     @RequestMapping(value = "{userId}", method = RequestMethod.PUT)
     @ResponseBody
-    public CommonResult updateById(@PathVariable("userId") Integer userId, @RequestBody Map<String, Object> params) {
+    public ResponseResult updateById(@PathVariable("userId") Integer userId, @RequestBody Map<String, Object> params) {
 
         // 自己可以修改自己的name和phone
         String name = (String) params.get("name");
@@ -188,7 +189,7 @@ public class UserController {
         }
 
         this.userService.update(user);
-        return CommonResult.success("修改成功");
+        return ResponseResult.success("修改成功");
     }
 
 
@@ -202,21 +203,21 @@ public class UserController {
      */
     @RequestMapping(value = "list", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult queryUsers(@RequestBody Map<String, Object> params, HttpSession session) {
+    public ResponseResult queryUsers(@RequestBody Map<String, Object> params, HttpSession session) {
 
-        Integer pageNow = (Integer) params.get(Constant.PAGE_NOW);
-        Integer pageSize = (Integer) params.get(Constant.PAGE_SIZE);
+        Integer pageNow = (Integer) params.get("pageNow");
+        Integer pageSize = (Integer) params.get("pageSize");
 
         String role = (String) params.get("role");
         String username = (String) params.get("username");
         String name = (String) params.get("name");
 
-        Identity identity = (Identity) session.getAttribute(Constant.IDENTITY);
+        Identity identity = (Identity) session.getAttribute(AuthConsts.IDENTITY);
 
         List<User> userList = this.userService.queryUserList(pageNow, pageSize, role, username, name, identity);
         PageResult pageResult = new PageResult(new PageInfo<>(userList));
 
-        return CommonResult.success("查询成功", pageResult);
+        return ResponseResult.success("查询成功", pageResult);
     }
 
 
@@ -228,7 +229,7 @@ public class UserController {
      */
     @RequestMapping(value = "password/{userId}", method = RequestMethod.PUT)
     @ResponseBody
-    public CommonResult changePassword(@RequestBody Map<String, Object> params, @PathVariable("userId") Integer
+    public ResponseResult changePassword(@RequestBody Map<String, Object> params, @PathVariable("userId") Integer
             userId) {
 
         String oldPassword = (String) params.get("oldPassword");
@@ -243,11 +244,11 @@ public class UserController {
                 oldPasswordMD5 = MD5Util.generate(oldPassword);
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
-                return CommonResult.failure("md5加密失败！");
+                return ResponseResult.failure("md5加密失败！");
             }
 
             if (!oldPasswordMD5.equals(user.getPassword())) {
-                return CommonResult.failure("修改失败，原密码输入错误");
+                return ResponseResult.failure("修改失败，原密码输入错误");
             }
         }
 
@@ -256,13 +257,13 @@ public class UserController {
             newPasswordMD5 = MD5Util.generate(newPassword);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            return CommonResult.failure("md5加密失败");
+            return ResponseResult.failure("md5加密失败");
         }
 
         user.setPassword(newPasswordMD5);
         this.userService.update(user);
 
-        return CommonResult.success("密码修改成功");
+        return ResponseResult.success("密码修改成功");
     }
 
 
@@ -275,11 +276,11 @@ public class UserController {
      */
     @RequestMapping(value = "avatar", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult uploadAvatar(@RequestParam("file") MultipartFile file, Integer id) {
+    public ResponseResult uploadAvatar(@RequestParam("file") MultipartFile file, Integer id) {
 
         User user = this.userService.queryById(id);
         if (user == null) {
-            return CommonResult.failure("上传失败，用户不存在");
+            return ResponseResult.failure("上传失败，用户不存在");
         }
 
         String fileName;
@@ -288,19 +289,19 @@ public class UserController {
             fileName = id + "." + FileUtil.getExtensionName(file.getOriginalFilename());
 
             try {
-                Streams.copy(file.getInputStream(), new FileOutputStream(Constant.FILE_PATH + "avatar/" +
+                Streams.copy(file.getInputStream(), new FileOutputStream(EnvConsts.FILE_PATH + "avatar/" +
                         fileName), true);
             } catch (IOException e) {
                 e.printStackTrace();
-                return CommonResult.failure("头像上传失败");
+                return ResponseResult.failure("头像上传失败");
             }
 
             user.setAvatar(fileName);
             this.userService.update(user);
         } else {
-            return CommonResult.failure("头像上传失败");
+            return ResponseResult.failure("头像上传失败");
         }
 
-        return CommonResult.success("头像上传成功", "/avatar/" + fileName);
+        return ResponseResult.success("头像上传成功", "/avatar/" + fileName);
     }
 }

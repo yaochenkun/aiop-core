@@ -44,7 +44,7 @@
         <!-- 指定mapper.xml文件，扫描所有的文件 -->
         <property name="mapperLocations" value="classpath:mybatis/mapping/*.xml"/>
         <!-- 指定别名包 -->
-        <property name="typeAliasesPackage" value="org.bupt.aiop.restapi.pojo"/>
+        <property name="typeAliasesPackage" value="org.bupt.aiop.restapi.pojo.po"/>
     </bean>
 
     <!-- 定义Mapper接口的扫描器 -->

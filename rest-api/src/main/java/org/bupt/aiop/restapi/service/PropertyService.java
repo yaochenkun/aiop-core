@@ -1,6 +1,6 @@
 package org.bupt.aiop.restapi.service;
 
-import org.bupt.aiop.restapi.bean.Constant;
+import org.bupt.aiop.restapi.constant.CodeConsts;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -231,12 +231,12 @@ public class PropertyService {
 			outputStream.close();
 			bufferedWriter.close();
 
-			return Constant.CRUD_SUCCESS;
+			return CodeConsts.CRUD_SUCCESS;
 
 		} catch (IOException e) {
 
 			System.err.println("属性文件更新错误");
-			return Constant.CRUD_FAILURE;
+			return CodeConsts.CRUD_FAILURE;
 
 		}
 	}
@@ -274,12 +274,12 @@ public class PropertyService {
 			bufferedWriter.close();
 
 
-			return Constant.CRUD_SUCCESS;
+			return CodeConsts.CRUD_SUCCESS;
 
 		} catch (IOException e) {
 
 			System.err.println("属性文件更新错误");
-			return Constant.CRUD_FAILURE;
+			return CodeConsts.CRUD_FAILURE;
 		}
 	}
 }

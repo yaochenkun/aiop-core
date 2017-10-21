@@ -1,7 +1,7 @@
 package org.bupt.aiop.restapi.service;
 
 import org.bupt.aiop.common.util.JedisClient;
-import org.bupt.aiop.restapi.bean.Constant;
+import org.bupt.aiop.restapi.constant.AuthConsts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +39,6 @@ public class RedisService {
      */
     public void setSmSCode(String key, String value) {
         this.set(key, value);
-        this.expire(key, Constant.SMS_CODE_EXPIRE);
+        this.expire(key, AuthConsts.SMS_CODE_EXPIRE);
     }
 }

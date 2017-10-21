@@ -1,13 +1,13 @@
-package org.bupt.aiop.restapi.pojo.extend;
+package org.bupt.aiop.restapi.pojo.vo;
 
 
-import org.bupt.aiop.restapi.pojo.User;
+import org.bupt.aiop.restapi.pojo.po.User;
 import org.springframework.beans.BeanUtils;
 
 /**
  * Created by zlren on 2017/7/16.
  */
-public class UserExtend extends User {
+public class UserTableItem extends User {
 
     public String staffName;
     public String staffMgrName;
@@ -19,7 +19,7 @@ public class UserExtend extends User {
      * @param staffName
      * @param staffMgrName
      */
-    public UserExtend(User user, String staffName, String staffMgrName) {
+    public UserTableItem(org.bupt.aiop.restapi.pojo.po.User user, String staffName, String staffMgrName) {
 
         BeanUtils.copyProperties(user, this);
         this.staffName = staffName;

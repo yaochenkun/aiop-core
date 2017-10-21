@@ -1,5 +1,6 @@
 package org.bupt.aiop.common.bean;
 
+import org.bupt.aiop.common.constant.CodeConsts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,9 +8,9 @@ import org.slf4j.LoggerFactory;
  * 通用返回结果
  * Created by zlren on 2017/6/6.
  */
-public class CommonResult {
+public class ResponseResult {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommonResult.class);
+    private static final Logger logger = LoggerFactory.getLogger(ResponseResult.class);
 
     private String code;
     private String reason;
@@ -18,16 +19,16 @@ public class CommonResult {
     /**
      * @return
      */
-    public static CommonResult success() {
-        return new CommonResult(Constant.SUCCESS, null, null);
+    public static ResponseResult success() {
+        return new ResponseResult(CodeConsts.SUCCESS, null, null);
     }
 
     /**
      * @param reason
      * @return
      */
-    public static CommonResult success(String reason) {
-        return new CommonResult(Constant.SUCCESS, reason, null);
+    public static ResponseResult success(String reason) {
+        return new ResponseResult(CodeConsts.SUCCESS, reason, null);
     }
 
     /**
@@ -35,8 +36,8 @@ public class CommonResult {
      * @param content
      * @return
      */
-    public static CommonResult success(String reason, Object content) {
-        return new CommonResult(Constant.SUCCESS, reason, content);
+    public static ResponseResult success(String reason, Object content) {
+        return new ResponseResult(CodeConsts.SUCCESS, reason, content);
     }
 
 
@@ -44,11 +45,11 @@ public class CommonResult {
      * @param reason
      * @return
      */
-    public static CommonResult failure(String reason) {
-        return new CommonResult(Constant.FAILURE, reason, null);
+    public static ResponseResult failure(String reason) {
+        return new ResponseResult(CodeConsts.FAILURE, reason, null);
     }
 
-    private CommonResult(String code, String reason, Object content) {
+    private ResponseResult(String code, String reason, Object content) {
         this.code = code;
         this.reason = reason;
         this.content = content;
@@ -82,7 +83,7 @@ public class CommonResult {
 
     @Override
     public String toString() {
-        return "CommonResult {" +
+        return "ResponseResult {" +
                 "code = '" + code + '\'' +
                 ", reason = '" + reason + '\'' +
                 ", content = " + content +
