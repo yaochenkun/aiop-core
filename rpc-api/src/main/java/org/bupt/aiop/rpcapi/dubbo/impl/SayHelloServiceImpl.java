@@ -1,7 +1,7 @@
-package org.bupt.aiop.rpcapi.service.impl;
+package org.bupt.aiop.rpcapi.dubbo.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import org.bupt.aiop.common.rpcapi.service.inter.SayHelloService;
+import org.bupt.aiop.rpcapi.dubbo.inter.SayHelloService;
 
 
 @Service

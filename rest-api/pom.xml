@@ -56,10 +56,17 @@
 
     <dependencies>
 
-        <!--rpc接口定义公用包-->
+        <!--公用包-->
         <dependency>
             <groupId>org.bupt.aiop</groupId>
             <artifactId>common</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <!--RPC公用包-->
+        <dependency>
+            <groupId>org.bupt.aiop</groupId>
+            <artifactId>rpc-api</artifactId>
             <version>1.0</version>
         </dependency>
 
@@ -239,6 +246,14 @@
             <artifactId>zkclient</artifactId>
             <version>0.1</version>
         </dependency>
+
+        <!--thrift-->
+        <dependency>
+            <groupId>org.apache.thrift</groupId>
+            <artifactId>libthrift</artifactId>
+            <version>0.10.0</version>
+        </dependency>
+
 
     </dependencies>
 

@@ -18,14 +18,16 @@ public class PropertyService {
 
 	private static String rootPath = PropertyService.class.getResource("/").getPath();
 
+
 	/**
 	 * 读取一个键值对
+	 *
 	 * @param filePath
 	 * @param key
 	 */
 	public String readString(String filePath, String key) {
 
-		String targetPath = rootPath  + filePath;
+		String targetPath = rootPath + filePath;
 
 		try {
 
@@ -50,12 +52,13 @@ public class PropertyService {
 
 	/**
 	 * 读取一个键值对
+	 *
 	 * @param filePath
 	 * @param key
 	 */
 	public Integer readInteger(String filePath, String key) {
 
-		String targetPath = rootPath  + filePath;
+		String targetPath = rootPath + filePath;
 
 		try {
 
@@ -78,13 +81,14 @@ public class PropertyService {
 
 	/**
 	 * 读取一组字符串键值对
+	 *
 	 * @param filePath
 	 * @param keySet
 	 * @return
 	 */
 	public Map<String, String> readStrings(String filePath, Set<String> keySet) {
 
-		String targetPath = rootPath  + filePath;
+		String targetPath = rootPath + filePath;
 
 		try {
 
@@ -94,7 +98,7 @@ public class PropertyService {
 			props.load(bufferedReader);
 
 			Map<String, String> map = new HashMap<>();
-			for(String key : keySet)
+			for (String key : keySet)
 				map.put(key, props.getProperty(key));
 
 			inputStream.close();
@@ -110,13 +114,14 @@ public class PropertyService {
 
 	/**
 	 * 读取一组整形键值对
+	 *
 	 * @param filePath
 	 * @param keySet
 	 * @return
 	 */
 	public Map<String, Integer> readIntegers(String filePath, Set<String> keySet) {
 
-		String targetPath = rootPath  + filePath;
+		String targetPath = rootPath + filePath;
 
 		try {
 
@@ -127,7 +132,7 @@ public class PropertyService {
 
 
 			Map<String, Integer> map = new HashMap<>();
-			for(String key : keySet)
+			for (String key : keySet)
 				map.put(key, Integer.parseInt(props.getProperty(key)));
 
 			inputStream.close();
@@ -143,12 +148,13 @@ public class PropertyService {
 
 	/**
 	 * 读取所有的整形键值对
+	 *
 	 * @param filePath
 	 * @return
 	 */
 	public Map<String, Integer> readIntegers(String filePath) {
 
-		String targetPath = rootPath  + filePath;
+		String targetPath = rootPath + filePath;
 
 		try {
 			InputStream inputStream = new FileInputStream(targetPath);
@@ -157,7 +163,7 @@ public class PropertyService {
 			props.load(bufferedReader);
 
 			Map<String, Integer> map = new HashMap<>();
-			for(Map.Entry entry : props.entrySet())
+			for (Map.Entry entry : props.entrySet())
 				map.put(String.valueOf(entry.getKey()), Integer.parseInt(entry.getValue().toString()));
 
 			inputStream.close();
@@ -173,12 +179,13 @@ public class PropertyService {
 
 	/**
 	 * 读取所有的整形键值对
+	 *
 	 * @param filePath
 	 * @return
 	 */
 	public Map<String, Double> readDoubles(String filePath) {
 
-		String targetPath = rootPath  + filePath;
+		String targetPath = rootPath + filePath;
 
 		try {
 			InputStream inputStream = new FileInputStream(targetPath);
@@ -187,7 +194,7 @@ public class PropertyService {
 			props.load(bufferedReader);
 
 			Map<String, Double> map = new HashMap<>();
-			for(Map.Entry entry : props.entrySet())
+			for (Map.Entry entry : props.entrySet())
 				map.put(String.valueOf(entry.getKey()), Double.parseDouble(entry.getValue().toString()));
 
 			inputStream.close();
@@ -203,13 +210,14 @@ public class PropertyService {
 
 	/**
 	 * 更新一个键值对
+	 *
 	 * @param filePath
 	 * @param key
 	 * @param value
 	 */
 	public Integer update(String filePath, String key, String value) {
 
-		String targetPath = rootPath  + filePath;
+		String targetPath = rootPath + filePath;
 
 		try {
 
@@ -223,7 +231,6 @@ public class PropertyService {
 			props.setProperty(key, value);
 			// 将此 Properties 表中的属性列表（键和元素对）写入输出流
 			props.store(bufferedWriter, "");
-
 
 
 			inputStream.close();
@@ -243,12 +250,13 @@ public class PropertyService {
 
 	/**
 	 * 更新一组键值对
+	 *
 	 * @param filePath
 	 * @param map
 	 */
 	public Integer update(String filePath, Map<String, Object> map) {
 
-		String targetPath = rootPath  + filePath;
+		String targetPath = rootPath + filePath;
 		try {
 
 			InputStream inputStream = new FileInputStream(targetPath);
@@ -258,7 +266,7 @@ public class PropertyService {
 
 			OutputStream outputStream = new FileOutputStream(targetPath);
 			BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "utf-8"));
-			for(Map.Entry<String, Object> entry : map.entrySet()) {
+			for (Map.Entry<String, Object> entry : map.entrySet()) {
 
 				String key = entry.getKey();
 				String value = String.valueOf(entry.getValue());

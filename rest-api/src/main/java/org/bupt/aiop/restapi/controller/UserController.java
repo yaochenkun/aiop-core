@@ -2,6 +2,7 @@ package org.bupt.aiop.restapi.controller;
 
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.fileupload.util.Streams;
+import org.apache.thrift.TException;
 import org.bupt.aiop.common.bean.ResponseResult;
 import org.bupt.aiop.common.bean.PageResult;
 import org.bupt.aiop.common.util.FileUtil;
@@ -15,6 +16,8 @@ import org.bupt.aiop.restapi.pojo.po.User;
 import org.bupt.aiop.restapi.service.PropertyService;
 import org.bupt.aiop.restapi.service.RedisService;
 import org.bupt.aiop.restapi.service.UserService;
+import org.bupt.aiop.rpcapi.thrift.client.AlgServiceClient;
+import org.bupt.aiop.rpcapi.thrift.inter.AlgService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +49,30 @@ public class UserController {
 
     @Autowired
     private RedisService redisService;
+
+    @Autowired
+    private EnvConsts envConsts;
+
+
+    @RequestMapping(value = "test", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseResult test() {
+
+
+        AlgService.Client algClient = AlgServiceClient.getInstance();
+
+        try {
+            System.out.println(algClient.hello(666));
+            System.out.println(algClient.bye());
+        } catch (TException e) {
+            e.printStackTrace();
+        }
+
+
+        return ResponseResult.failure("错误");
+    }
+
+
 
 
     /**
@@ -289,7 +316,7 @@ public class UserController {
             fileName = id + "." + FileUtil.getExtensionName(file.getOriginalFilename());
 
             try {
-                Streams.copy(file.getInputStream(), new FileOutputStream(EnvConsts.FILE_PATH + "avatar/" +
+                Streams.copy(file.getInputStream(), new FileOutputStream(envConsts.FILE_PATH + "avatar/" +
                         fileName), true);
             } catch (IOException e) {
                 e.printStackTrace();

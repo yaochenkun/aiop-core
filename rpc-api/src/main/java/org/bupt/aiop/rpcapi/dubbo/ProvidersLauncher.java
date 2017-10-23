@@ -1,4 +1,4 @@
-package org.bupt.aiop.rpcapi;
+package org.bupt.aiop.rpcapi.dubbo;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

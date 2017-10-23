@@ -1,4 +1,5 @@
 package org.bupt.aiop.restapi.controller;
+import com.alibaba.dubbo.config.annotation.Reference;
 import org.bupt.aiop.common.bean.ResponseResult;
 import org.bupt.aiop.common.util.MD5Util;
 import org.bupt.aiop.restapi.constant.AuthConsts;
@@ -6,6 +7,7 @@ import org.bupt.aiop.restapi.constant.RoleConsts;
 import org.bupt.aiop.restapi.pojo.po.User;
 import org.bupt.aiop.restapi.service.RedisService;
 import org.bupt.aiop.restapi.service.UserService;
+import org.bupt.aiop.rpcapi.dubbo.inter.SayHelloService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,7 @@ public class AuthController {
 //    private static SayHelloService sayHelloService;
 
 
+
     /**
      * 发送短信验证码
      *
@@ -49,7 +52,6 @@ public class AuthController {
     @RequestMapping(value = "send_sms", method = RequestMethod.POST)
     @ResponseBody
     public ResponseResult sendSms(@RequestBody Map<String, String> params) {
-
 
         String phone = params.get("username");
 
