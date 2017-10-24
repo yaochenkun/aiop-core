@@ -2,7 +2,7 @@ package org.bupt.aiop.restapi.controller;
 
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.fileupload.util.Streams;
-import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TProtocol;
 import org.bupt.aiop.common.bean.ResponseResult;
 import org.bupt.aiop.common.bean.PageResult;
 import org.bupt.aiop.common.util.FileUtil;
@@ -16,8 +16,9 @@ import org.bupt.aiop.restapi.pojo.po.User;
 import org.bupt.aiop.restapi.service.PropertyService;
 import org.bupt.aiop.restapi.service.RedisService;
 import org.bupt.aiop.restapi.service.UserService;
-import org.bupt.aiop.rpcapi.thrift.client.AlgServiceClient;
-import org.bupt.aiop.rpcapi.thrift.inter.AlgService;
+import org.bupt.aiop.rpcapi.thrift.inter.ImageAlgService;
+import org.bupt.aiop.rpcapi.thrift.inter.NlpAlgService;
+import org.bupt.aiop.rpcapi.thrift.pool.ThriftConnectionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,19 +54,37 @@ public class UserController {
     @Autowired
     private EnvConsts envConsts;
 
+    @Autowired
+    private ThriftConnectionService thriftNlpConnectionService;
+
+    @Autowired
+    private ThriftConnectionService thriftImageConnectionService;
+
 
     @RequestMapping(value = "test", method = RequestMethod.GET)
     @ResponseBody
     public ResponseResult test() {
 
-
-        AlgService.Client algClient = AlgServiceClient.getInstance();
-
+        TProtocol protocol = thriftNlpConnectionService.getConnection();
+        NlpAlgService.Client nlpAlgSerivce = new NlpAlgService.Client(protocol);
         try {
-            System.out.println(algClient.hello(666));
-            System.out.println(algClient.bye());
-        } catch (TException e) {
+            System.out.println(nlpAlgSerivce.hello("yaochenkun"));
+
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            thriftNlpConnectionService.returnConnection(protocol);
+        }
+
+        protocol = thriftImageConnectionService.getConnection();
+        ImageAlgService.Client imageAlgSerivce = new ImageAlgService.Client(protocol);
+        try {
+            System.out.println(imageAlgSerivce.hello("yaochenkun"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            thriftImageConnectionService.returnConnection(protocol);
         }
 
 
