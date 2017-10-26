@@ -16,15 +16,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class ThriftConnectionFactory implements PooledObjectFactory<TProtocol> {
 
-	private String serverIP;
-	private int serverPort;
-	private int timeout;
+	private String proxyIP;
+	private int proxyPort;
+	private int proxyTimeout;
 
 
 	@Override
 	public PooledObject<TProtocol> makeObject() throws Exception {
 
-		TTransport transport = new TSocket(this.serverIP, this.serverPort, this.timeout);
+		TTransport transport = new TSocket(this.proxyIP, this.proxyPort, this.proxyTimeout);
 		TProtocol protocol = new TBinaryProtocol(transport);
 		protocol.getTransport().open();
 
@@ -35,7 +35,7 @@ public class ThriftConnectionFactory implements PooledObjectFactory<TProtocol> {
 	public void destroyObject(PooledObject<TProtocol> pooledObject) throws Exception {
 
 		TProtocol protocol = pooledObject.getObject();
-		if(protocol.getTransport().isOpen()) {
+		if (protocol.getTransport().isOpen()) {
 			protocol.getTransport().close();
 		}
 	}
@@ -56,28 +56,27 @@ public class ThriftConnectionFactory implements PooledObjectFactory<TProtocol> {
 	}
 
 
-
-	public String getServerIP() {
-		return serverIP;
+	public String getProxyIP() {
+		return proxyIP;
 	}
 
-	public void setServerIP(String serverIP) {
-		this.serverIP = serverIP;
+	public void setProxyIP(String proxyIP) {
+		this.proxyIP = proxyIP;
 	}
 
-	public int getServerPort() {
-		return serverPort;
+	public int getProxyPort() {
+		return proxyPort;
 	}
 
-	public void setServerPort(int serverPort) {
-		this.serverPort = serverPort;
+	public void setProxyPort(int proxyPort) {
+		this.proxyPort = proxyPort;
 	}
 
-	public int getTimeout() {
-		return timeout;
+	public int getProxyTimeout() {
+		return proxyTimeout;
 	}
 
-	public void setTimeout(int timeout) {
-		this.timeout = timeout;
+	public void setProxyTimeout(int proxyTimeout) {
+		this.proxyTimeout = proxyTimeout;
 	}
 }
