@@ -1,0 +1,29 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+    <!--Email消息生产者-->
+    <bean id="emailMessageProducer"
+          class="org.bupt.aiop.restapi.rocketmq.producer.MessageProducer"
+          init-method="init"
+          destroy-method="destroy">
+
+        <constructor-arg name="producerGroup" value="email-msg-producer-group"/>
+        <constructor-arg name="namesrvAddr" value="${rocketmq.namesrvAddr}"/>
+        <constructor-arg name="instanceName" value="email-msg-producer"/>
+    </bean>
+
+    <!--Sms消息生产者-->
+    <bean id="smsMessageProducer"
+          class="org.bupt.aiop.restapi.rocketmq.producer.MessageProducer"
+          init-method="init"
+          destroy-method="destroy">
+
+        <constructor-arg name="producerGroup" value="sms-msg-producer-group"/>
+        <constructor-arg name="namesrvAddr" value="${rocketmq.namesrvAddr}"/>
+        <constructor-arg name="instanceName" value="sms-msg-producer"/>
+    </bean>
+
+
+
+</beans>

@@ -254,6 +254,13 @@
             <version>0.10.0</version>
         </dependency>
 
+        <!--RocketMQ-->
+        <dependency>
+            <groupId>com.alibaba.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
+            <version>3.2.6</version>
+        </dependency>
+
 
     </dependencies>
 

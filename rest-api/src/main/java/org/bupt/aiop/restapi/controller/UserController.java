@@ -15,6 +15,7 @@ import org.bupt.aiop.restapi.constant.EnvConsts;
 import org.bupt.aiop.restapi.pojo.po.User;
 import org.bupt.aiop.restapi.service.PropertyService;
 import org.bupt.aiop.restapi.service.RedisService;
+import org.bupt.aiop.restapi.service.TestService;
 import org.bupt.aiop.restapi.service.UserService;
 import org.bupt.aiop.rpcapi.thrift.inter.ImageAlgService;
 import org.bupt.aiop.rpcapi.thrift.inter.NlpAlgService;
@@ -68,62 +69,67 @@ public class UserController {
     @Autowired
     private ThriftConnectionService thriftVideoConnectionService;
 
+    @Autowired
+    private TestService testService;
+
 
     @RequestMapping(value = "test", method = RequestMethod.GET)
     @ResponseBody
     public ResponseResult test() {
 
-        /*
-        ** RPC测试
-         */
+//        /*
+//        ** RPC测试
+//         */
+//
+//        // 1.自然语言处理技术
+//        TProtocol protocol = thriftNlpConnectionService.getConnection();
+//        NlpAlgService.Client nlpAlgSerivce = new NlpAlgService.Client(protocol);
+//        try {
+//            System.out.println(nlpAlgSerivce.hello("yaochenkun"));
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            thriftNlpConnectionService.returnConnection(protocol);
+//        }
+//
+//        // 2.图像技术
+//        protocol = thriftImageConnectionService.getConnection();
+//        ImageAlgService.Client imageAlgSerivce = new ImageAlgService.Client(protocol);
+//        try {
+//            System.out.println(imageAlgSerivce.hello("yaochenkun"));
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            thriftImageConnectionService.returnConnection(protocol);
+//        }
+//
+//        // 3.语音技术
+//        protocol = thriftSpeechConnectionService.getConnection();
+//        SpeechAlgService.Client speechAlgSerivce = new SpeechAlgService.Client(protocol);
+//        try {
+//            System.out.println(speechAlgSerivce.hello("yaochenkun"));
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            thriftSpeechConnectionService.returnConnection(protocol);
+//        }
+//
+//        // 4.视频技术
+//        protocol = thriftVideoConnectionService.getConnection();
+//        VideoAlgService.Client videoAlgSerivce = new VideoAlgService.Client(protocol);
+//        try {
+//            System.out.println(videoAlgSerivce.hello("yaochenkun"));
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            thriftVideoConnectionService.returnConnection(protocol);
+//        }
 
-        // 1.自然语言处理技术
-        TProtocol protocol = thriftNlpConnectionService.getConnection();
-        NlpAlgService.Client nlpAlgSerivce = new NlpAlgService.Client(protocol);
-        try {
-            System.out.println(nlpAlgSerivce.hello("yaochenkun"));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            thriftNlpConnectionService.returnConnection(protocol);
-        }
-
-        // 2.图像技术
-        protocol = thriftImageConnectionService.getConnection();
-        ImageAlgService.Client imageAlgSerivce = new ImageAlgService.Client(protocol);
-        try {
-            System.out.println(imageAlgSerivce.hello("yaochenkun"));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            thriftImageConnectionService.returnConnection(protocol);
-        }
-
-        // 3.语音技术
-        protocol = thriftSpeechConnectionService.getConnection();
-        SpeechAlgService.Client speechAlgSerivce = new SpeechAlgService.Client(protocol);
-        try {
-            System.out.println(speechAlgSerivce.hello("yaochenkun"));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            thriftSpeechConnectionService.returnConnection(protocol);
-        }
-
-        // 4.视频技术
-        protocol = thriftVideoConnectionService.getConnection();
-        VideoAlgService.Client videoAlgSerivce = new VideoAlgService.Client(protocol);
-        try {
-            System.out.println(videoAlgSerivce.hello("yaochenkun"));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            thriftVideoConnectionService.returnConnection(protocol);
-        }
+        testService.registerSuccessNotify("姚陈堃");
 
 
         return ResponseResult.success();
