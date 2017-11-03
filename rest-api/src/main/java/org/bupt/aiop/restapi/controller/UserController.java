@@ -129,7 +129,11 @@ public class UserController {
 //            thriftVideoConnectionService.returnConnection(protocol);
 //        }
 
-        testService.registerSuccessNotify("姚陈堃");
+
+        /*
+        **RocketMQ测试
+         */
+        testService.registerSuccessNotify(1);
 
 
         return ResponseResult.success();

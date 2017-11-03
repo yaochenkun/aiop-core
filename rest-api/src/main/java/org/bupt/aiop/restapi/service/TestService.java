@@ -1,12 +1,18 @@
 package org.bupt.aiop.restapi.service;
 
+import com.alibaba.rocketmq.client.exception.MQBrokerException;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
+import com.alibaba.rocketmq.client.producer.MessageQueueSelector;
 import com.alibaba.rocketmq.client.producer.SendCallback;
 import com.alibaba.rocketmq.client.producer.SendResult;
+import com.alibaba.rocketmq.common.TopicConfig;
 import com.alibaba.rocketmq.common.message.Message;
+import com.alibaba.rocketmq.remoting.common.RemotingHelper;
 import com.alibaba.rocketmq.remoting.exception.RemotingException;
 import org.bupt.aiop.common.bean.ResponseResult;
+import org.bupt.aiop.restapi.constant.TagConsts;
+import org.bupt.aiop.restapi.constant.TopicConsts;
 import org.bupt.aiop.restapi.pojo.po.User;
 import org.bupt.aiop.restapi.rocketmq.producer.MessageProducer;
 import org.slf4j.Logger;
@@ -23,45 +29,87 @@ public class TestService extends BaseService<User> {
 	private static final Logger logger = LoggerFactory.getLogger(TestService.class);
 
 	@Autowired
-	private MessageProducer emailMessageProducer;
+	private MessageQueueSelector modMessageQueueSelector;
+
+	@Autowired
+	private MessageProducer messageProducer;
 
 	@Autowired
 	private MessageProducer smsMessageProducer;
 
+	@Autowired
+	private TopicConsts topicConsts;
+
+	@Autowired
+	private TagConsts tagConsts;
+
 	/**
 	 * 注册成功后分别给邮箱和手机发送邮件、短信通知
-	 * @param content
+	 *
+	 * @param userId
 	 * @return
 	 */
-	public ResponseResult registerSuccessNotify(String content) {
+	public ResponseResult registerSuccessNotify(Integer userId) {
 
+		DefaultMQProducer producer = messageProducer.getProducer();
 
-		//发送邮件
-		DefaultMQProducer producer = emailMessageProducer.getProducer();
-		Message msg = new Message("emailTopic", content.getBytes());
-		try {
-			producer.send(msg, new SendCallback() {
-				@Override
-				public void onSuccess(SendResult sendResult) {
-					logger.info(sendResult.getSendStatus().name());
-					logger.info("onSuccess~~~~~");
-				}
+		//构建依次要发送的Tag
+		String[] tags = {tagConsts.SEND_EMAIL_TAG,
+				         tagConsts.SEND_SMS_TAG};
 
-				@Override
-				public void onException(Throwable throwable) {
+		//依次通知发送邮件、短信
+		for (int i = 0; i < tags.length; i++) {
 
-				}
-			});
-		} catch (MQClientException e) {
-			e.printStackTrace();
-		} catch (RemotingException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+			//构造消息体
+			Message msg = new Message(topicConsts.REGISTER_TOPIC,
+									  tags[i % tags.length],
+									  "KEY" + i,
+									  ("第1个用户 " + i).getBytes());
+
+			//发送消息
+			try {
+				SendResult sendResult = producer.send(msg, modMessageQueueSelector, 1);
+				//logger.info("成功发送消息: {}", sendResult);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
+		//依次通知发送邮件、短信
+		for (int i = 0; i < tags.length; i++) {
 
-		//发送通知
+			//构造消息体
+			Message msg = new Message(topicConsts.REGISTER_TOPIC,
+					tags[i % tags.length],
+					"KEY" + i,
+					("第2个用户" + i).getBytes());
+
+			//发送消息
+			try {
+				SendResult sendResult = producer.send(msg, modMessageQueueSelector, 2);
+				//logger.info("成功发送消息: {}", sendResult);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		//依次通知发送邮件、短信
+		for (int i = 0; i < tags.length; i++) {
+
+			//构造消息体
+			Message msg = new Message(topicConsts.REGISTER_TOPIC,
+					tags[i % tags.length],
+					"KEY" + i,
+					("第3个用户" + i).getBytes());
+
+			//发送消息
+			try {
+				SendResult sendResult = producer.send(msg, modMessageQueueSelector, 3);
+				//logger.info("成功发送消息: {}", sendResult);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
 		return ResponseResult.success();
 	}

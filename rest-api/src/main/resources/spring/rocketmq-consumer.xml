@@ -2,16 +2,15 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
-    <bean id="emailMessageConsumer"
+    <bean id="registerMessageConsumer"
           class="org.bupt.aiop.restapi.rocketmq.consumer.MessageConsumer"
           init-method="init"
           destroy-method="destroy">
-        <constructor-arg name="consumerGroup" value="email-msg-consumer-group" />
+        <constructor-arg name="consumerGroup" value="${rocketmq.registerConsumerGroup}" />
         <constructor-arg name="namesrvAddr" value="${rocketmq.namesrvAddr}" />
-        <constructor-arg name="instanceName" value="email-msg-consumer" />
-        <constructor-arg name="topic" value="emailTopic" />
-        <constructor-arg name="messageListener" ref="emailMessageListener" />
+        <constructor-arg name="instanceName" value="${rocketmq.registerInstanceName}" />
+        <constructor-arg name="topic" value="${rocketmq.registerTopic}" />
+        <constructor-arg name="messageListener" ref="registerMessageListener" />
     </bean>
-
 
 </beans>

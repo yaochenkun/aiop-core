@@ -1,7 +1,9 @@
 package org.bupt.aiop.restapi.rocketmq.consumer;
 
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
+import com.alibaba.rocketmq.client.consumer.listener.MessageListener;
 import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
+import com.alibaba.rocketmq.client.consumer.listener.MessageListenerOrderly;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.log4j.Logger;
@@ -17,7 +19,7 @@ public class MessageConsumer {
 	private DefaultMQPushConsumer consumer;
 
 	//消费者处理类
-	private MessageListenerConcurrently messageListener;
+	private MessageListenerOrderly messageListener;
 
 	//消费者群名称
 	private String consumerGroup;
@@ -31,7 +33,7 @@ public class MessageConsumer {
 	//业务主题
 	private String topic;
 
-	public MessageConsumer(String consumerGroup, String namesrvAddr, String instanceName, String topic, MessageListenerConcurrently messageListener) {
+	public MessageConsumer(String consumerGroup, String namesrvAddr, String instanceName, String topic, MessageListenerOrderly messageListener) {
 		this.consumerGroup = consumerGroup;
 		this.namesrvAddr = namesrvAddr;
 		this.instanceName = instanceName;
