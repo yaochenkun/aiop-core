@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          id="WebApp_ID" version="2.5" metadata-complete="true">
 
-    <display-name>人工智能开放平台</display-name>
+    <display-name>人工智能开放平台-信息管理系统</display-name>
 
     <!-- 加载spring相关配置文件 -->
     <context-param>
@@ -39,17 +39,17 @@
     </filter>
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
-        <url-pattern>/restapi/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 
     <!--解决跨域访问-->
     <filter>
         <filter-name>crossOriginFilter</filter-name>
-        <filter-class>org.bupt.aiop.restapi.interceptor.CrossOriginInterceptor</filter-class>
+        <filter-class>org.bupt.aiop.mis.interceptor.CrossOriginInterceptor</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>crossOriginFilter</filter-name>
-        <url-pattern>/restapi/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 
 
@@ -73,7 +73,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>springmvc-servlet</servlet-name>
-        <url-pattern>/restapi/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 
 </web-app>

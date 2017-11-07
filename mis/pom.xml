@@ -10,7 +10,7 @@
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>rest-api</artifactId>
+    <artifactId>mis</artifactId>
     <packaging>war</packaging>
 
     <!-- 集中定义依赖版本号 -->
@@ -59,14 +59,6 @@
             <artifactId>common</artifactId>
             <version>1.0</version>
         </dependency>
-
-        <!--RPC公用包-->
-        <dependency>
-            <groupId>org.bupt.aiop</groupId>
-            <artifactId>rpc-api</artifactId>
-            <version>1.0</version>
-        </dependency>
-
 
 
         <!-- 测试使用 -->
@@ -214,49 +206,27 @@
             <version>${commons-fileupload.version}</version>
         </dependency>
 
+        <!--&lt;!&ndash;短信api&ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>com.aliyun</groupId>-->
+            <!--<artifactId>aliyun-java-sdk-core</artifactId>-->
+            <!--<version>3.2.2</version>-->
+        <!--</dependency>-->
 
+        <!--&lt;!&ndash;dubbo rpc通信框架&ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>com.alibaba</groupId>-->
+            <!--<artifactId>dubbo</artifactId>-->
+            <!--<version>2.5.5</version>-->
+        <!--</dependency>-->
 
+        <!--&lt;!&ndash;RocketMQ&ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>com.aliborg.bupt.aiop.mis.rocketmqetmq</groupId>-->
+            <!--<artifacorg.bupt.aiop.mis.rocketmqetmq-client</artifactId>-->
+            <!--<version>3.2.6</version>-->
+        <!--</dependency>-->
 
-        <!--短信api-->
-        <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>aliyun-java-sdk-core</artifactId>
-            <version>3.2.2</version>
-        </dependency>
-
-
-        <!--dubbo rpc通信框架-->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>dubbo</artifactId>
-            <version>2.5.5</version>
-        </dependency>
-
-        <!--zookeeper-->
-        <dependency>
-            <groupId>org.apache.zookeeper</groupId>
-            <artifactId>zookeeper</artifactId>
-            <version>3.4.10</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.sgroschupf</groupId>
-            <artifactId>zkclient</artifactId>
-            <version>0.1</version>
-        </dependency>
-
-        <!--thrift-->
-        <dependency>
-            <groupId>org.apache.thrift</groupId>
-            <artifactId>libthrift</artifactId>
-            <version>0.10.0</version>
-        </dependency>
-
-        <!--RocketMQ-->
-        <dependency>
-            <groupId>com.alibaba.rocketmq</groupId>
-            <artifactId>rocketmq-client</artifactId>
-            <version>3.2.6</version>
-        </dependency>
 
     </dependencies>
 
@@ -291,7 +261,7 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <port>8080</port>
+                    <port>8081</port>
                     <path>/</path>
 
                     <!-- 系统热部署配置 118.89.227.189 -->

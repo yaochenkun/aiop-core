@@ -1,8 +1,9 @@
-package org.bupt.aiop.restapi.rocketmq.producer;
+package org.bupt.aiop.common.rocketmq;
 
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * RocketMQ消息队列生产者
@@ -10,7 +11,7 @@ import org.apache.log4j.Logger;
  */
 public class MessageProducer {
 
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 
 	//生产者
 	private DefaultMQProducer producer;

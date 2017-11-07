@@ -1,27 +1,21 @@
-package org.bupt.aiop.restapi.controller;
+package org.bupt.aiop.mis.controller;
 
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.fileupload.util.Streams;
-import org.apache.thrift.protocol.TProtocol;
-import org.bupt.aiop.common.bean.ResponseResult;
 import org.bupt.aiop.common.bean.PageResult;
+import org.bupt.aiop.common.bean.ResponseResult;
 import org.bupt.aiop.common.util.FileUtil;
 import org.bupt.aiop.common.util.MD5Util;
 import org.bupt.aiop.common.util.Validator;
 import org.bupt.aiop.common.util.token.Identity;
-import org.bupt.aiop.restapi.annotation.RequiredRoles;
-import org.bupt.aiop.restapi.constant.AuthConsts;
-import org.bupt.aiop.restapi.constant.EnvConsts;
-import org.bupt.aiop.restapi.pojo.po.User;
-import org.bupt.aiop.restapi.service.PropertyService;
-import org.bupt.aiop.restapi.service.RedisService;
-import org.bupt.aiop.restapi.service.TestService;
-import org.bupt.aiop.restapi.service.UserService;
-import org.bupt.aiop.rpcapi.thrift.inter.ImageAlgService;
-import org.bupt.aiop.rpcapi.thrift.inter.NlpAlgService;
-import org.bupt.aiop.rpcapi.thrift.inter.SpeechAlgService;
-import org.bupt.aiop.rpcapi.thrift.inter.VideoAlgService;
-import org.bupt.aiop.rpcapi.thrift.pool.ThriftConnectionService;
+import org.bupt.aiop.mis.annotation.RequiredRoles;
+import org.bupt.aiop.mis.constant.AuthConsts;
+import org.bupt.aiop.mis.constant.EnvConsts;
+import org.bupt.aiop.mis.pojo.po.User;
+import org.bupt.aiop.mis.service.PropertyService;
+import org.bupt.aiop.mis.service.RedisService;
+import org.bupt.aiop.mis.service.TestService;
+import org.bupt.aiop.mis.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +29,6 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
 /**
  * UserController
@@ -58,17 +51,7 @@ public class UserController {
     @Autowired
     private EnvConsts envConsts;
 
-    @Autowired
-    private ThriftConnectionService thriftNlpConnectionService;
 
-    @Autowired
-    private ThriftConnectionService thriftImageConnectionService;
-
-    @Autowired
-    private ThriftConnectionService thriftSpeechConnectionService;
-
-    @Autowired
-    private ThriftConnectionService thriftVideoConnectionService;
 
     @Autowired
     private TestService testService;
@@ -78,27 +61,22 @@ public class UserController {
     @ResponseBody
     public ResponseResult test() {
 
-        //RocketMQ测试
-        //testService.registerSuccessNotify(1);
-
-        //Thrift测试
-        /*
-		** Thrift测试
-		 */
-
-        // 1.自然语言处理技术
-        TProtocol protocol = thriftNlpConnectionService.getConnection();
-        NlpAlgService.Client nlpAlgSerivce = new NlpAlgService.Client(protocol);
-        String res = "";
-        try {
-            res = nlpAlgSerivce.predict(10);
-            System.out.println(res);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            thriftNlpConnectionService.returnConnection(protocol);
-        }
-
+//        /*
+//        ** RPC测试
+//         */
+//
+//        // 1.自然语言处理技术
+//        TProtocol protocol = thriftNlpConnectionService.getConnection();
+//        NlpAlgService.Client nlpAlgSerivce = new NlpAlgService.Client(protocol);
+//        try {
+//            System.out.println(nlpAlgSerivce.hello("yaochenkun"));
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            thriftNlpConnectionService.returnConnection(protocol);
+//        }
+//
 //        // 2.图像技术
 //        protocol = thriftImageConnectionService.getConnection();
 //        ImageAlgService.Client imageAlgSerivce = new ImageAlgService.Client(protocol);
@@ -136,7 +114,26 @@ public class UserController {
 //        }
 
 
-        return ResponseResult.success("success", res);
+        /*
+        **RocketMQ测试
+         */
+//        testService.registerSuccessNotify(1);
+
+
+        /**
+         ** OAuth2.0测试
+         */
+
+        //生成token
+
+
+        //验证token
+
+
+
+
+
+        return ResponseResult.success();
     }
 
 

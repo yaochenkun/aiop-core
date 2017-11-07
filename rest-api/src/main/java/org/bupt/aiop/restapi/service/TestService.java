@@ -1,20 +1,14 @@
 package org.bupt.aiop.restapi.service;
 
-import com.alibaba.rocketmq.client.exception.MQBrokerException;
-import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.client.producer.MessageQueueSelector;
-import com.alibaba.rocketmq.client.producer.SendCallback;
 import com.alibaba.rocketmq.client.producer.SendResult;
-import com.alibaba.rocketmq.common.TopicConfig;
 import com.alibaba.rocketmq.common.message.Message;
-import com.alibaba.rocketmq.remoting.common.RemotingHelper;
-import com.alibaba.rocketmq.remoting.exception.RemotingException;
 import org.bupt.aiop.common.bean.ResponseResult;
+import org.bupt.aiop.common.rocketmq.MessageProducer;
 import org.bupt.aiop.restapi.constant.TagConsts;
 import org.bupt.aiop.restapi.constant.TopicConsts;
 import org.bupt.aiop.restapi.pojo.po.User;
-import org.bupt.aiop.restapi.rocketmq.producer.MessageProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +29,6 @@ public class TestService extends BaseService<User> {
 	private MessageProducer messageProducer;
 
 	@Autowired
-	private MessageProducer smsMessageProducer;
-
-	@Autowired
 	private TopicConsts topicConsts;
 
 	@Autowired
@@ -51,65 +42,70 @@ public class TestService extends BaseService<User> {
 	 */
 	public ResponseResult registerSuccessNotify(Integer userId) {
 
-		DefaultMQProducer producer = messageProducer.getProducer();
 
-		//构建依次要发送的Tag
-		String[] tags = {tagConsts.SEND_EMAIL_TAG,
-				         tagConsts.SEND_SMS_TAG};
+		/*
+		** RocketMQ测试
+		 */
 
-		//依次通知发送邮件、短信
-		for (int i = 0; i < tags.length; i++) {
+//		DefaultMQProducer producer = messageProducer.getProducer();
+//
+//		//构建依次要发送的Tag
+//		String[] tags = {tagConsts.SEND_EMAIL_TAG,
+//				         tagConsts.SEND_SMS_TAG};
+//
+//		//依次通知发送邮件、短信
+//		for (int i = 0; i < tags.length; i++) {
+//
+//			//构造消息体
+//			Message msg = new Message(topicConsts.REGISTER_TOPIC,
+//									  tags[i % tags.length],
+//									  "KEY" + i,
+//									  ("第1个用户 " + i).getBytes());
+//
+//			//发送消息
+//			try {
+//				SendResult sendResult = producer.send(msg, modMessageQueueSelector, 1);
+//				//logger.info("成功发送消息: {}", sendResult);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
 
-			//构造消息体
-			Message msg = new Message(topicConsts.REGISTER_TOPIC,
-									  tags[i % tags.length],
-									  "KEY" + i,
-									  ("第1个用户 " + i).getBytes());
-
-			//发送消息
-			try {
-				SendResult sendResult = producer.send(msg, modMessageQueueSelector, 1);
-				//logger.info("成功发送消息: {}", sendResult);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		//依次通知发送邮件、短信
-		for (int i = 0; i < tags.length; i++) {
-
-			//构造消息体
-			Message msg = new Message(topicConsts.REGISTER_TOPIC,
-					tags[i % tags.length],
-					"KEY" + i,
-					("第2个用户" + i).getBytes());
-
-			//发送消息
-			try {
-				SendResult sendResult = producer.send(msg, modMessageQueueSelector, 2);
-				//logger.info("成功发送消息: {}", sendResult);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		//依次通知发送邮件、短信
-		for (int i = 0; i < tags.length; i++) {
-
-			//构造消息体
-			Message msg = new Message(topicConsts.REGISTER_TOPIC,
-					tags[i % tags.length],
-					"KEY" + i,
-					("第3个用户" + i).getBytes());
-
-			//发送消息
-			try {
-				SendResult sendResult = producer.send(msg, modMessageQueueSelector, 3);
-				//logger.info("成功发送消息: {}", sendResult);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+//		//依次通知发送邮件、短信
+//		for (int i = 0; i < tags.length; i++) {
+//
+//			//构造消息体
+//			Message msg = new Message(topicConsts.REGISTER_TOPIC,
+//					tags[i % tags.length],
+//					"KEY" + i,
+//					("第2个用户" + i).getBytes());
+//
+//			//发送消息
+//			try {
+//				SendResult sendResult = producer.send(msg, modMessageQueueSelector, 2);
+//				//logger.info("成功发送消息: {}", sendResult);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+//
+//		//依次通知发送邮件、短信
+//		for (int i = 0; i < tags.length; i++) {
+//
+//			//构造消息体
+//			Message msg = new Message(topicConsts.REGISTER_TOPIC,
+//					tags[i % tags.length],
+//					"KEY" + i,
+//					("第3个用户" + i).getBytes());
+//
+//			//发送消息
+//			try {
+//				SendResult sendResult = producer.send(msg, modMessageQueueSelector, 3);
+//				//logger.info("成功发送消息: {}", sendResult);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
 
 		return ResponseResult.success();
 	}

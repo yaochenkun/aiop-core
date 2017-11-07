@@ -1,8 +1,9 @@
-package org.bupt.aiop.restapi.rocketmq.consumer.listener;
+package org.bupt.aiop.mis.rocketmq;
 
-import com.alibaba.rocketmq.client.consumer.listener.*;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeOrderlyContext;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeOrderlyStatus;
+import com.alibaba.rocketmq.client.consumer.listener.MessageListenerOrderly;
 import com.alibaba.rocketmq.common.message.MessageExt;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,7 @@ import java.util.List;
  * Created by ken on 2017/11/1.
  */
 @Component
-public class RegisterMessageListener implements MessageListenerOrderly{
+public class RegisterMessageListener implements MessageListenerOrderly {
 
 	private Logger logger = LoggerFactory.getLogger(RegisterMessageListener.class);
 
