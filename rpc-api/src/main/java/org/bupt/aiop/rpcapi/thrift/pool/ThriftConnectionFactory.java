@@ -18,13 +18,12 @@ public class ThriftConnectionFactory implements PooledObjectFactory<TProtocol> {
 
 	private String proxyIP;
 	private int proxyPort;
-	private int proxyTimeout;
 
 
 	@Override
 	public PooledObject<TProtocol> makeObject() throws Exception {
 
-		TTransport transport = new TSocket(this.proxyIP, this.proxyPort, this.proxyTimeout);
+		TTransport transport = new TSocket(this.proxyIP, this.proxyPort);
 		TProtocol protocol = new TBinaryProtocol(transport);
 		protocol.getTransport().open();
 
@@ -70,13 +69,5 @@ public class ThriftConnectionFactory implements PooledObjectFactory<TProtocol> {
 
 	public void setProxyPort(int proxyPort) {
 		this.proxyPort = proxyPort;
-	}
-
-	public int getProxyTimeout() {
-		return proxyTimeout;
-	}
-
-	public void setProxyTimeout(int proxyTimeout) {
-		this.proxyTimeout = proxyTimeout;
 	}
 }

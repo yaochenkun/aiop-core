@@ -7,7 +7,6 @@
     <bean id="thriftNlpConnectionFactory" class="org.bupt.aiop.rpcapi.thrift.pool.ThriftConnectionFactory">
         <property name="proxyIP" value="${thrift.nlpProxyIP}"/>
         <property name="proxyPort" value="${thrift.nlpProxyPort}" />
-        <property name="proxyTimeout" value="${thrift.nlpProxyTimeout}" />
     </bean>
     <bean id="genericNlpObjectPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">
         <property name="maxIdle" value="10"/>
@@ -29,7 +28,6 @@
     <bean id="thriftImageConnectionFactory" class="org.bupt.aiop.rpcapi.thrift.pool.ThriftConnectionFactory">
         <property name="proxyIP" value="${thrift.imageProxyIP}"/>
         <property name="proxyPort" value="${thrift.imageProxyPort}" />
-        <property name="proxyTimeout" value="${thrift.imageProxyTimeout}" />
     </bean>
     <bean id="genericImageObjectPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">
         <property name="maxIdle" value="10"/>
@@ -51,7 +49,6 @@
     <bean id="thriftSpeechConnectionFactory" class="org.bupt.aiop.rpcapi.thrift.pool.ThriftConnectionFactory">
         <property name="proxyIP" value="${thrift.speechProxyIP}"/>
         <property name="proxyPort" value="${thrift.speechProxyPort}" />
-        <property name="proxyTimeout" value="${thrift.speechProxyTimeout}" />
     </bean>
     <bean id="genericSpeechObjectPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">
         <property name="maxIdle" value="10"/>
@@ -72,7 +69,6 @@
     <bean id="thriftVideoConnectionFactory" class="org.bupt.aiop.rpcapi.thrift.pool.ThriftConnectionFactory">
         <property name="proxyIP" value="${thrift.videoProxyIP}"/>
         <property name="proxyPort" value="${thrift.videoProxyPort}" />
-        <property name="proxyTimeout" value="${thrift.videoProxyTimeout}" />
     </bean>
     <bean id="genericVideoObjectPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">
         <property name="maxIdle" value="10"/>
