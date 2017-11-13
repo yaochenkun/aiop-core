@@ -261,7 +261,7 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <port>8081</port>
+                    <port>8082</port>
                     <path>/</path>
 
                     <!-- 系统热部署配置 118.89.227.189 -->

@@ -1,5 +1,4 @@
 package org.bupt.aiop.restapi.controller;
-import com.alibaba.dubbo.config.annotation.Reference;
 import org.bupt.aiop.common.bean.ResponseResult;
 import org.bupt.aiop.common.util.MD5Util;
 import org.bupt.aiop.restapi.constant.AuthConsts;
@@ -7,7 +6,6 @@ import org.bupt.aiop.restapi.constant.RoleConsts;
 import org.bupt.aiop.restapi.pojo.po.User;
 import org.bupt.aiop.restapi.service.RedisService;
 import org.bupt.aiop.restapi.service.UserService;
-import org.bupt.aiop.rpcapi.dubbo.inter.SayHelloService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

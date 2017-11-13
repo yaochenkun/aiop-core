@@ -4,7 +4,7 @@
 
     <!--1.自然语言处理-->
     <!--thrift连接池工厂类配置 + 连接池属性配置-->
-    <bean id="thriftNlpConnectionFactory" class="org.bupt.aiop.rpcapi.thrift.pool.ThriftConnectionFactory">
+    <bean id="thriftNlpConnectionFactory" class="org.bupt.aiop.common.thrift.ThriftConnectionFactory">
         <property name="proxyIP" value="${thrift.nlpProxyIP}"/>
         <property name="proxyPort" value="${thrift.nlpProxyPort}" />
     </bean>
@@ -19,13 +19,16 @@
         <property name="numTestsPerEvictionRun" value="3" />
         <property name="testWhileIdle" value="true" />
     </bean>
-
+    <bean id="thriftNlpConnectionService" class="org.bupt.aiop.common.thrift.ThriftConnectionService">
+        <constructor-arg name="thriftConnectionFactory" ref="thriftNlpConnectionFactory"/>
+        <constructor-arg name="genericObjectPoolConfig" ref="genericNlpObjectPoolConfig"/>
+    </bean>
 
 
 
     <!--2.图像技术-->
     <!--thrift连接池工厂类配置 + 连接池属性配置-->
-    <bean id="thriftImageConnectionFactory" class="org.bupt.aiop.rpcapi.thrift.pool.ThriftConnectionFactory">
+    <bean id="thriftImageConnectionFactory" class="org.bupt.aiop.common.thrift.ThriftConnectionFactory">
         <property name="proxyIP" value="${thrift.imageProxyIP}"/>
         <property name="proxyPort" value="${thrift.imageProxyPort}" />
     </bean>
@@ -40,13 +43,16 @@
         <property name="numTestsPerEvictionRun" value="3" />
         <property name="testWhileIdle" value="true" />
     </bean>
-
+    <bean id="thriftImageConnectionService" class="org.bupt.aiop.common.thrift.ThriftConnectionService">
+        <constructor-arg name="thriftConnectionFactory" ref="thriftImageConnectionFactory"/>
+        <constructor-arg name="genericObjectPoolConfig" ref="genericImageObjectPoolConfig"/>
+    </bean>
 
 
 
     <!--3.语音技术-->
     <!--thrift连接池工厂类配置 + 连接池属性配置-->
-    <bean id="thriftSpeechConnectionFactory" class="org.bupt.aiop.rpcapi.thrift.pool.ThriftConnectionFactory">
+    <bean id="thriftSpeechConnectionFactory" class="org.bupt.aiop.common.thrift.ThriftConnectionFactory">
         <property name="proxyIP" value="${thrift.speechProxyIP}"/>
         <property name="proxyPort" value="${thrift.speechProxyPort}" />
     </bean>
@@ -61,12 +67,16 @@
         <property name="numTestsPerEvictionRun" value="3" />
         <property name="testWhileIdle" value="true" />
     </bean>
+    <bean id="thriftSpeechConnectionService" class="org.bupt.aiop.common.thrift.ThriftConnectionService">
+        <constructor-arg name="thriftConnectionFactory" ref="thriftSpeechConnectionFactory"/>
+        <constructor-arg name="genericObjectPoolConfig" ref="genericSpeechObjectPoolConfig"/>
+    </bean>
 
 
 
     <!--4.视频技术-->
     <!--thrift连接池工厂类配置 + 连接池属性配置-->
-    <bean id="thriftVideoConnectionFactory" class="org.bupt.aiop.rpcapi.thrift.pool.ThriftConnectionFactory">
+    <bean id="thriftVideoConnectionFactory" class="org.bupt.aiop.common.thrift.ThriftConnectionFactory">
         <property name="proxyIP" value="${thrift.videoProxyIP}"/>
         <property name="proxyPort" value="${thrift.videoProxyPort}" />
     </bean>
@@ -81,4 +91,9 @@
         <property name="numTestsPerEvictionRun" value="3" />
         <property name="testWhileIdle" value="true" />
     </bean>
+    <bean id="thriftVideoConnectionService" class="org.bupt.aiop.common.thrift.ThriftConnectionService">
+        <constructor-arg name="thriftConnectionFactory" ref="thriftVideoConnectionFactory"/>
+        <constructor-arg name="genericObjectPoolConfig" ref="genericVideoObjectPoolConfig"/>
+    </bean>
+
 </beans>

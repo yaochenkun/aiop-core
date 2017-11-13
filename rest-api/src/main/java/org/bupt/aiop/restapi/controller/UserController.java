@@ -5,6 +5,7 @@ import org.apache.commons.fileupload.util.Streams;
 import org.apache.thrift.protocol.TProtocol;
 import org.bupt.aiop.common.bean.ResponseResult;
 import org.bupt.aiop.common.bean.PageResult;
+import org.bupt.aiop.common.thrift.ThriftConnectionService;
 import org.bupt.aiop.common.util.FileUtil;
 import org.bupt.aiop.common.util.MD5Util;
 import org.bupt.aiop.common.util.Validator;
@@ -17,11 +18,7 @@ import org.bupt.aiop.restapi.service.PropertyService;
 import org.bupt.aiop.restapi.service.RedisService;
 import org.bupt.aiop.restapi.service.TestService;
 import org.bupt.aiop.restapi.service.UserService;
-import org.bupt.aiop.rpcapi.thrift.inter.ImageAlgService;
-import org.bupt.aiop.rpcapi.thrift.inter.NlpAlgService;
-import org.bupt.aiop.rpcapi.thrift.inter.SpeechAlgService;
-import org.bupt.aiop.rpcapi.thrift.inter.VideoAlgService;
-import org.bupt.aiop.rpcapi.thrift.pool.ThriftConnectionService;
+import org.bupt.aiop.rpcapi.thrift.NlpAlgService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +32,6 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
 /**
  * UserController

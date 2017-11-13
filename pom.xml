@@ -12,6 +12,6 @@
         <module>rest-api</module> <!-- 能力接口API -->
         <module>rpc-api</module>  <!-- 内部Dubbo/Thrift RPC API -->
         <module>mis</module>      <!-- 管理信息系统 -->
-        <module>common</module>   <!-- 能力接口API -->
+        <module>common</module>
     </modules>
 </project>
