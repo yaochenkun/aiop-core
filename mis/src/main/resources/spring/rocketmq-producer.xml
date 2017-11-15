@@ -2,15 +2,18 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
-    <!--Email消息生产者-->
-    <bean id="messageProducer"
-          class="org.bupt.aiop.common.rocketmq.MessageProducer"
-          init-method="init"
-          destroy-method="destroy">
+    <!--&lt;!&ndash; 排队策略 &ndash;&gt;-->
+    <!--<bean id="modMessageQueueSelector" class="org.bupt.aiop.common.rocketmq.selector.ModMessageQueueSelector" />-->
 
-        <constructor-arg name="producerGroup" value="${rocketmq.producerGroup}"/>
-        <constructor-arg name="namesrvAddr" value="${rocketmq.namesrvAddr}"/>
-        <constructor-arg name="instanceName" value="${rocketmq.instanceName}"/>
-    </bean>
+    <!--&lt;!&ndash;Email消息生产者&ndash;&gt;-->
+    <!--<bean id="messageProducer"-->
+          <!--class="org.bupt.aiop.common.rocketmq.MessageProducer"-->
+          <!--init-method="init"-->
+          <!--destroy-method="destroy">-->
+
+        <!--<constructor-arg name="producerGroup" value="${rocketmq.producerGroup}"/>-->
+        <!--<constructor-arg name="namesrvAddr" value="${rocketmq.namesrvAddr}"/>-->
+        <!--<constructor-arg name="instanceName" value="${rocketmq.instanceName}"/>-->
+    <!--</bean>-->
 
 </beans>

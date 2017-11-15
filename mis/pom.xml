@@ -60,7 +60,6 @@
             <version>1.0</version>
         </dependency>
 
-
         <!-- 测试使用 -->
         <dependency>
             <groupId>junit</groupId>
@@ -206,27 +205,52 @@
             <version>${commons-fileupload.version}</version>
         </dependency>
 
-        <!--&lt;!&ndash;短信api&ndash;&gt;-->
+        <!--短信api-->
         <!--<dependency>-->
             <!--<groupId>com.aliyun</groupId>-->
             <!--<artifactId>aliyun-java-sdk-core</artifactId>-->
             <!--<version>3.2.2</version>-->
         <!--</dependency>-->
 
-        <!--&lt;!&ndash;dubbo rpc通信框架&ndash;&gt;-->
+
+        <!--dubbo rpc通信框架-->
         <!--<dependency>-->
             <!--<groupId>com.alibaba</groupId>-->
             <!--<artifactId>dubbo</artifactId>-->
             <!--<version>2.5.5</version>-->
         <!--</dependency>-->
 
-        <!--&lt;!&ndash;RocketMQ&ndash;&gt;-->
+        <!--zookeeper-->
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>3.4.10</version>
+        </dependency>
         <!--<dependency>-->
-            <!--<groupId>com.aliborg.bupt.aiop.mis.rocketmqetmq</groupId>-->
-            <!--<artifacorg.bupt.aiop.mis.rocketmqetmq-client</artifactId>-->
-            <!--<version>3.2.6</version>-->
+            <!--<groupId>com.github.sgroschupf</groupId>-->
+            <!--<artifactId>zkclient</artifactId>-->
+            <!--<version>0.1</version>-->
         <!--</dependency>-->
 
+        <!--thrift-->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.thrift</groupId>-->
+            <!--<artifactId>libthrift</artifactId>-->
+            <!--<version>0.10.0</version>-->
+        <!--</dependency>-->
+
+        <!--RocketMQ-->
+        <dependency>
+            <groupId>com.alibaba.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
+            <version>3.2.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.authzserver</artifactId>
+            <version>0.31</version>
+        </dependency>
 
     </dependencies>
 
@@ -261,7 +285,7 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <port>8082</port>
+                    <port>8081</port>
                     <path>/</path>
 
                     <!-- 系统热部署配置 118.89.227.189 -->

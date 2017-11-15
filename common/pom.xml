@@ -91,13 +91,6 @@
             <version>2.5.0</version>
         </dependency>
 
-        <!--按拼音关键字搜索工具包（第三方）-->
-        <dependency>
-            <groupId>org.ken</groupId>
-            <artifactId>searcher</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
         <!-- Excel -->
         <dependency>
             <groupId>org.apache.poi</groupId>

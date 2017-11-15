@@ -22,11 +22,11 @@ public class TestService extends BaseService<User> {
 
 	private static final Logger logger = LoggerFactory.getLogger(TestService.class);
 
-	@Autowired
-	private MessageQueueSelector modMessageQueueSelector;
-
-	@Autowired
-	private MessageProducer messageProducer;
+//	@Autowired
+//	private MessageQueueSelector modMessageQueueSelector;
+//
+//	@Autowired
+//	private MessageProducer messageProducer;
 
 	@Autowired
 	private TopicConsts topicConsts;

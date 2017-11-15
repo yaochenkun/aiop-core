@@ -22,14 +22,11 @@ public class TestService extends BaseService<User> {
 
 	private static final Logger logger = LoggerFactory.getLogger(TestService.class);
 
-	@Autowired
-	private MessageQueueSelector modMessageQueueSelector;
-
-	@Autowired
-	private MessageProducer messageProducer;
-
-	@Autowired
-	private MessageProducer smsMessageProducer;
+//	@Autowired
+//	private MessageQueueSelector modMessageQueueSelector;
+//
+//	@Autowired
+//	private MessageProducer messageProducer;
 
 	@Autowired
 	private TopicConsts topicConsts;
@@ -45,65 +42,65 @@ public class TestService extends BaseService<User> {
 	 */
 	public ResponseResult registerSuccessNotify(Integer userId) {
 
-		DefaultMQProducer producer = messageProducer.getProducer();
-
-		//构建依次要发送的Tag
-		String[] tags = {tagConsts.SEND_EMAIL_TAG,
-				         tagConsts.SEND_SMS_TAG};
-
-		//依次通知发送邮件、短信
-		for (int i = 0; i < tags.length; i++) {
-
-			//构造消息体
-			Message msg = new Message(topicConsts.REGISTER_TOPIC,
-									  tags[i % tags.length],
-									  "KEY" + i,
-									  ("第1个用户 " + i).getBytes());
-
-			//发送消息
-			try {
-				SendResult sendResult = producer.send(msg, modMessageQueueSelector, 1);
-				//logger.info("成功发送消息: {}", sendResult);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		//依次通知发送邮件、短信
-		for (int i = 0; i < tags.length; i++) {
-
-			//构造消息体
-			Message msg = new Message(topicConsts.REGISTER_TOPIC,
-					tags[i % tags.length],
-					"KEY" + i,
-					("第2个用户" + i).getBytes());
-
-			//发送消息
-			try {
-				SendResult sendResult = producer.send(msg, modMessageQueueSelector, 2);
-				//logger.info("成功发送消息: {}", sendResult);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		//依次通知发送邮件、短信
-		for (int i = 0; i < tags.length; i++) {
-
-			//构造消息体
-			Message msg = new Message(topicConsts.REGISTER_TOPIC,
-					tags[i % tags.length],
-					"KEY" + i,
-					("第3个用户" + i).getBytes());
-
-			//发送消息
-			try {
-				SendResult sendResult = producer.send(msg, modMessageQueueSelector, 3);
-				//logger.info("成功发送消息: {}", sendResult);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+//		DefaultMQProducer producer = messageProducer.getProducer();
+//
+//		//构建依次要发送的Tag
+//		String[] tags = {tagConsts.SEND_EMAIL_TAG,
+//				         tagConsts.SEND_SMS_TAG};
+//
+//		//依次通知发送邮件、短信
+//		for (int i = 0; i < tags.length; i++) {
+//
+//			//构造消息体
+//			Message msg = new Message(topicConsts.REGISTER_TOPIC,
+//									  tags[i % tags.length],
+//									  "KEY" + i,
+//									  ("第1个用户 " + i).getBytes());
+//
+//			//发送消息
+//			try {
+//				SendResult sendResult = producer.send(msg, modMessageQueueSelector, 1);
+//				//logger.info("成功发送消息: {}", sendResult);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+//
+//		//依次通知发送邮件、短信
+//		for (int i = 0; i < tags.length; i++) {
+//
+//			//构造消息体
+//			Message msg = new Message(topicConsts.REGISTER_TOPIC,
+//					tags[i % tags.length],
+//					"KEY" + i,
+//					("第2个用户" + i).getBytes());
+//
+//			//发送消息
+//			try {
+//				SendResult sendResult = producer.send(msg, modMessageQueueSelector, 2);
+//				//logger.info("成功发送消息: {}", sendResult);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+//
+//		//依次通知发送邮件、短信
+//		for (int i = 0; i < tags.length; i++) {
+//
+//			//构造消息体
+//			Message msg = new Message(topicConsts.REGISTER_TOPIC,
+//					tags[i % tags.length],
+//					"KEY" + i,
+//					("第3个用户" + i).getBytes());
+//
+//			//发送消息
+//			try {
+//				SendResult sendResult = producer.send(msg, modMessageQueueSelector, 3);
+//				//logger.info("成功发送消息: {}", sendResult);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
 
 		return ResponseResult.success();
 	}

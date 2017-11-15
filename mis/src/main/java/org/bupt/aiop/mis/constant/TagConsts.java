@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 public class TagConsts {
 
 
-	@Value("${org.bupt.aiop.mis.rocketmq.sendEmailTag}")
+	@Value("${rocketmq.sendEmailTag}")
 	public String SEND_EMAIL_TAG;
 
-	@Value("${org.bupt.aiop.mis.rocketmq.sendSmsTag}")
+	@Value("${rocketmq.sendSmsTag}")
 	public String SEND_SMS_TAG;
 
 }

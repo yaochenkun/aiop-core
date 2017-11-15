@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class TopicConsts {
 
 
-	@Value("${org.bupt.aiop.mis.rocketmq.registerTopic}")
+	@Value("${rocketmq.registerTopic}")
 	public String REGISTER_TOPIC;
 
 

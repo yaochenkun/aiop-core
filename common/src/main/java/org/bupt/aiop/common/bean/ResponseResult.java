@@ -49,6 +49,17 @@ public class ResponseResult {
         return new ResponseResult(CodeConsts.FAILURE, reason, null);
     }
 
+    /**
+     *
+     * @param reason
+     * @param content
+     * @return
+     */
+    public static ResponseResult failure(String reason, Object content) {
+        return new ResponseResult(CodeConsts.FAILURE, reason, content);
+    }
+
+
     private ResponseResult(String code, String reason, Object content) {
         this.code = code;
         this.reason = reason;
