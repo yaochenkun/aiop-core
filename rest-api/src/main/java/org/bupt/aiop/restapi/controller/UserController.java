@@ -1,5 +1,7 @@
 package org.bupt.aiop.restapi.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.thrift.protocol.TProtocol;
@@ -87,8 +89,7 @@ public class UserController {
         NlpAlgService.Client nlpAlgSerivce = new NlpAlgService.Client(protocol);
         String res = "";
         try {
-            res = nlpAlgSerivce.predict(10);
-            System.out.println(res);
+            res = nlpAlgSerivce.hello("我的梦想就是有一天能够去看林宥嘉的演唱会，真的非常想，做梦都想");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -132,7 +133,7 @@ public class UserController {
 //        }
 
 
-        return ResponseResult.success("success", res);
+        return ResponseResult.success("success", JSON.parseObject(res).toString());
     }
 
 
