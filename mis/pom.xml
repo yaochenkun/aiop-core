@@ -10,46 +10,10 @@
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
+
     <artifactId>mis</artifactId>
+
     <packaging>war</packaging>
-
-    <!-- 集中定义依赖版本号 -->
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <junit.version>4.12</junit.version>
-        <spring.version>4.1.3.RELEASE</spring.version>
-
-        <mybatis.version>3.2.8</mybatis.version>
-        <mybatis.spring.version>1.3.0</mybatis.spring.version>
-
-
-        <mysql.version>5.1.40</mysql.version>
-
-        <fastjson.version>1.2.3</fastjson.version>
-
-        <druid.version>1.1.0</druid.version>
-
-        <aspectjweaver.version>1.8.9</aspectjweaver.version>
-
-        <httpclient.version>4.3.5</httpclient.version>
-        <jstl.version>1.2</jstl.version>
-        <servlet-api.version>3.0-alpha-1</servlet-api.version>
-
-        <jsp-api.version>2.0</jsp-api.version>
-
-        <joda-time.version>2.5</joda-time.version>
-        <commons-lang3.version>3.3.2</commons-lang3.version>
-        <commons-io.version>2.4</commons-io.version>
-        <commons-net.version>3.3</commons-net.version>
-
-        <jsqlparser.version>0.9.1</jsqlparser.version>
-        <commons-fileupload.version>1.3.1</commons-fileupload.version>
-
-        <ehcache.version>2.6.6</ehcache.version>
-
-    </properties>
-
 
     <dependencies>
 
@@ -60,30 +24,7 @@
             <version>1.0</version>
         </dependency>
 
-        <!-- 测试使用 -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-
         <!-- spring -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
@@ -99,8 +40,6 @@
             <artifactId>aspectjrt</artifactId>
             <version>1.8.9</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
@@ -127,70 +66,45 @@
             <artifactId>spring-context-support</artifactId>
             <version>${spring.version}</version>
         </dependency>
-
-
-        <!-- mybatis 包 -->
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-            <version>${mybatis.version}</version>
-        </dependency>
-
-        <!-- 通用Mapper -->
-        <dependency>
-            <groupId>tk.mybatis</groupId>
-            <artifactId>mapper</artifactId>
-            <version>3.3.9</version>
-        </dependency>
-
-        <!--mybatis spring -->
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis-spring</artifactId>
-            <version>${mybatis.spring.version}</version>
-        </dependency>
-
-        <!-- mysql连接 -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.version}</version>
-        </dependency>
-
-        <!-- 数据源 -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-            <version>${druid.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
             <version>${aspectjweaver.version}</version>
         </dependency>
 
-
+        <!-- 数据库相关 -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>${servlet-api.version}</version>
-            <scope>provided</scope>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>${mybatis.version}</version>
         </dependency>
-
-
-        <!--&lt;!&ndash; 连接池 &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>com.jolbox</groupId>-->
-        <!--<artifactId>bonecp-spring</artifactId>-->
-        <!--<version>0.8.0.RELEASE</version>-->
-        <!--</dependency>-->
-
-
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>${mybatis.spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper</artifactId>
+            <version>3.3.9</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
+            <artifactId>druid</artifactId>
+            <version>${druid.version}</version>
+        </dependency>
+
+        <!--servlet-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- 文件上传 -->
@@ -203,53 +117,6 @@
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>${commons-fileupload.version}</version>
-        </dependency>
-
-        <!--短信api-->
-        <!--<dependency>-->
-            <!--<groupId>com.aliyun</groupId>-->
-            <!--<artifactId>aliyun-java-sdk-core</artifactId>-->
-            <!--<version>3.2.2</version>-->
-        <!--</dependency>-->
-
-
-        <!--dubbo rpc通信框架-->
-        <!--<dependency>-->
-            <!--<groupId>com.alibaba</groupId>-->
-            <!--<artifactId>dubbo</artifactId>-->
-            <!--<version>2.5.5</version>-->
-        <!--</dependency>-->
-
-        <!--zookeeper-->
-        <dependency>
-            <groupId>org.apache.zookeeper</groupId>
-            <artifactId>zookeeper</artifactId>
-            <version>3.4.10</version>
-        </dependency>
-        <!--<dependency>-->
-            <!--<groupId>com.github.sgroschupf</groupId>-->
-            <!--<artifactId>zkclient</artifactId>-->
-            <!--<version>0.1</version>-->
-        <!--</dependency>-->
-
-        <!--thrift-->
-        <!--<dependency>-->
-            <!--<groupId>org.apache.thrift</groupId>-->
-            <!--<artifactId>libthrift</artifactId>-->
-            <!--<version>0.10.0</version>-->
-        <!--</dependency>-->
-
-        <!--RocketMQ-->
-        <dependency>
-            <groupId>com.alibaba.rocketmq</groupId>
-            <artifactId>rocketmq-client</artifactId>
-            <version>3.2.6</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.oltu.oauth2</groupId>
-            <artifactId>org.apache.oltu.oauth2.authzserver</artifactId>
-            <version>0.31</version>
         </dependency>
 
     </dependencies>
@@ -273,8 +140,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.6.0</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>

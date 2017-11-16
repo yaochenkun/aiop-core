@@ -8,10 +8,37 @@
     <artifactId>aiop</artifactId>
     <packaging>pom</packaging>
     <version>1.0</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+
+        <spring.version>4.1.3.RELEASE</spring.version>
+
+        <mybatis.version>3.2.8</mybatis.version>
+        <mybatis.spring.version>1.3.0</mybatis.spring.version>
+        <mysql.version>5.1.40</mysql.version>
+        <druid.version>1.1.0</druid.version>
+
+        <aspectjweaver.version>1.8.9</aspectjweaver.version>
+
+        <commons-lang3.version>3.3.2</commons-lang3.version>
+        <commons-io.version>2.4</commons-io.version>
+        <commons-net.version>3.3</commons-net.version>
+
+        <jsqlparser.version>0.9.1</jsqlparser.version>
+        <commons-fileupload.version>1.3.1</commons-fileupload.version>
+
+        <fastjson.version>1.2.3</fastjson.version>
+
+    </properties>
+
     <modules>
-        <module>rest-api</module> <!-- 能力接口API -->
-        <module>rpc-api</module>  <!-- 内部Dubbo/Thrift RPC API -->
+        <module>rest-api</module> <!-- 能力接口 API -->
+        <module>rpc-api</module>  <!-- 内部 Dubbo/Thrift RPC API -->
         <module>mis</module>      <!-- 管理信息系统 -->
         <module>common</module>
     </modules>
+
 </project>
