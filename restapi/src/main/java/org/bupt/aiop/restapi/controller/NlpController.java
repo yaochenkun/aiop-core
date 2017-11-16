@@ -2,9 +2,9 @@ package org.bupt.aiop.restapi.controller;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.thrift.protocol.TProtocol;
-import org.bupt.aiop.common.bean.ResponseResult;
-import org.bupt.aiop.common.thrift.ThriftConnectionService;
-import org.bupt.aiop.common.util.Validator;
+import org.bupt.common.bean.ResponseResult;
+import org.bupt.common.thrift.ThriftConnectionService;
+import org.bupt.common.util.Validator;
 import org.bupt.aiop.restapi.constant.EnvConsts;
 import org.bupt.aiop.restapi.constant.ErrorConsts;
 import org.bupt.aiop.restapi.service.RedisService;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 /**

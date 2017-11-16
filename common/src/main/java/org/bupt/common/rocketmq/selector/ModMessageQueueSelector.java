@@ -1,4 +1,4 @@
-package org.bupt.aiop.common.rocketmq.selector;
+package org.bupt.common.rocketmq.selector;
 
 import com.alibaba.rocketmq.client.producer.MessageQueueSelector;
 import com.alibaba.rocketmq.common.message.Message;

@@ -3,16 +3,8 @@ package org.bupt.aiop.mis.controller;
 import org.apache.oltu.oauth2.as.issuer.MD5Generator;
 import org.apache.oltu.oauth2.as.issuer.OAuthIssuer;
 import org.apache.oltu.oauth2.as.issuer.OAuthIssuerImpl;
-import org.apache.oltu.oauth2.as.request.OAuthTokenRequest;
-import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
-import org.apache.oltu.oauth2.common.message.OAuthResponse;
-import org.bupt.aiop.common.bean.ResponseResult;
-import org.bupt.aiop.common.util.MD5Util;
-import org.bupt.aiop.common.util.Validator;
-import org.bupt.aiop.mis.constant.AuthConsts;
-import org.bupt.aiop.mis.constant.RoleConsts;
-import org.bupt.aiop.mis.pojo.po.User;
+import org.bupt.common.util.Validator;
 import org.bupt.aiop.mis.service.RedisService;
 import org.bupt.aiop.mis.service.UserService;
 import org.slf4j.Logger;
@@ -24,11 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 
 /**

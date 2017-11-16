@@ -1,4 +1,4 @@
-package org.bupt.aiop.common.util.excel;
+package org.bupt.common.util.excel;
 
 /**
  * Created by ken on 2017/6/6.

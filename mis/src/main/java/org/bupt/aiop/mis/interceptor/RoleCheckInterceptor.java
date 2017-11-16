@@ -1,7 +1,7 @@
 package org.bupt.aiop.mis.interceptor;
 
-import org.bupt.aiop.common.util.Validator;
-import org.bupt.aiop.common.util.token.Identity;
+import org.bupt.common.util.Validator;
+import org.bupt.common.util.token.Identity;
 
 import org.bupt.aiop.mis.annotation.RequiredRoles;
 import org.bupt.aiop.mis.constant.AuthConsts;

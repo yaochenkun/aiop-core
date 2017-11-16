@@ -1,4 +1,4 @@
-package org.bupt.aiop.common.util;
+package org.bupt.common.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

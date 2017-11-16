@@ -1,4 +1,4 @@
-package org.bupt.aiop.common.util;
+package org.bupt.common.util;
 
 /**
  * Created by zlren on 2017/7/3.

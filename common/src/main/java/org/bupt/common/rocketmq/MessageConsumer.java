@@ -1,4 +1,4 @@
-package org.bupt.aiop.common.rocketmq;
+package org.bupt.common.rocketmq;
 
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
 import com.alibaba.rocketmq.client.consumer.listener.MessageListenerOrderly;

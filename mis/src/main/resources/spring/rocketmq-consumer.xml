@@ -3,7 +3,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
     <!--<bean id="registerMessageConsumer"-->
-          <!--class="org.bupt.aiop.common.rocketmq.MessageConsumer"-->
+          <!--class="MessageConsumer"-->
           <!--init-method="init"-->
           <!--destroy-method="destroy">-->
         <!--<constructor-arg name="consumerGroup" value="${rocketmq.registerConsumerGroup}" />-->

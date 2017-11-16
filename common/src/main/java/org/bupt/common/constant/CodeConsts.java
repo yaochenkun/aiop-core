@@ -1,4 +1,4 @@
-package org.bupt.aiop.common.constant;
+package org.bupt.common.constant;
 
 /**
  * Created by ken on 2017/10/21.

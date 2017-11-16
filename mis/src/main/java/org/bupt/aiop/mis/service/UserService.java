@@ -1,11 +1,11 @@
 package org.bupt.aiop.mis.service;
 
 import com.github.pagehelper.PageHelper;
-import org.bupt.aiop.common.bean.ResponseResult;
-import org.bupt.aiop.common.util.MD5Util;
-import org.bupt.aiop.common.util.Validator;
-import org.bupt.aiop.common.util.token.Identity;
-import org.bupt.aiop.common.util.token.TokenUtil;
+import org.bupt.common.bean.ResponseResult;
+import org.bupt.common.util.MD5Util;
+import org.bupt.common.util.Validator;
+import org.bupt.common.util.token.Identity;
+import org.bupt.common.util.token.TokenUtil;
 import org.bupt.aiop.mis.constant.AuthConsts;
 import org.bupt.aiop.mis.constant.CodeConsts;
 import org.bupt.aiop.mis.pojo.po.User;

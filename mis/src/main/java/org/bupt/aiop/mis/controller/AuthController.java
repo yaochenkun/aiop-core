@@ -1,7 +1,7 @@
 package org.bupt.aiop.mis.controller;
 
-import org.bupt.aiop.common.bean.ResponseResult;
-import org.bupt.aiop.common.util.MD5Util;
+import org.bupt.common.bean.ResponseResult;
+import org.bupt.common.util.MD5Util;
 import org.bupt.aiop.mis.constant.AuthConsts;
 import org.bupt.aiop.mis.constant.RoleConsts;
 import org.bupt.aiop.mis.pojo.po.User;

@@ -1,4 +1,4 @@
-package org.bupt.aiop.common.util;
+package org.bupt.common.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

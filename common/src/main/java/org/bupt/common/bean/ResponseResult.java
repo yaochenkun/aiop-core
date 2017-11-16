@@ -1,6 +1,6 @@
-package org.bupt.aiop.common.bean;
+package org.bupt.common.bean;
 
-import org.bupt.aiop.common.constant.CodeConsts;
+import org.bupt.common.constant.CodeConsts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

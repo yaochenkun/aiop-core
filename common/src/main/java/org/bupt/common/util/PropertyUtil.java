@@ -1,6 +1,6 @@
-package org.bupt.aiop.common.util;
+package org.bupt.common.util;
 
-import org.bupt.aiop.common.constant.CodeConsts;
+import org.bupt.common.constant.CodeConsts;
 
 import java.io.*;
 import java.util.HashMap;

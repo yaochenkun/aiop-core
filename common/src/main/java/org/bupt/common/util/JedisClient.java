@@ -1,4 +1,4 @@
-package org.bupt.aiop.common.util;
+package org.bupt.common.util;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

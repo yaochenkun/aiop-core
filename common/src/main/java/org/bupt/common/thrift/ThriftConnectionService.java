@@ -1,4 +1,4 @@
-package org.bupt.aiop.common.thrift;
+package org.bupt.common.thrift;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;

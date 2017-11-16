@@ -32,6 +32,6 @@
         <constructor-arg name="port" value="${redis.port}"/>
         <constructor-arg name="poolConfig" ref="jedisPoolConfig"/>
     </bean>
-    <bean id="jedisClient" class="org.bupt.aiop.common.util.JedisClient"/>
+    <bean id="jedisClient" class="org.bupt.common.util.JedisClient"/>
 
 </beans>

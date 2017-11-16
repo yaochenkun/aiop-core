@@ -1,11 +1,6 @@
 package org.bupt.aiop.mis.service;
 
-import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
-import com.alibaba.rocketmq.client.producer.MessageQueueSelector;
-import com.alibaba.rocketmq.client.producer.SendResult;
-import com.alibaba.rocketmq.common.message.Message;
-import org.bupt.aiop.common.bean.ResponseResult;
-import org.bupt.aiop.common.rocketmq.MessageProducer;
+import org.bupt.common.bean.ResponseResult;
 import org.bupt.aiop.mis.constant.TagConsts;
 import org.bupt.aiop.mis.constant.TopicConsts;
 import org.bupt.aiop.mis.pojo.po.User;

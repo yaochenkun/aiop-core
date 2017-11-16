@@ -1,6 +1,6 @@
 package org.bupt.aiop.restapi.controller;
 
-import org.bupt.aiop.common.bean.ResponseResult;
+import org.bupt.common.bean.ResponseResult;
 import org.bupt.aiop.restapi.service.RedisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

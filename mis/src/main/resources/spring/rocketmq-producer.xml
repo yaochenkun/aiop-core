@@ -3,11 +3,11 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
     <!--&lt;!&ndash; 排队策略 &ndash;&gt;-->
-    <!--<bean id="modMessageQueueSelector" class="org.bupt.aiop.common.rocketmq.selector.ModMessageQueueSelector" />-->
+    <!--<bean id="modMessageQueueSelector" class="ModMessageQueueSelector" />-->
 
     <!--&lt;!&ndash;Email消息生产者&ndash;&gt;-->
     <!--<bean id="messageProducer"-->
-          <!--class="org.bupt.aiop.common.rocketmq.MessageProducer"-->
+          <!--class="MessageProducer"-->
           <!--init-method="init"-->
           <!--destroy-method="destroy">-->
 

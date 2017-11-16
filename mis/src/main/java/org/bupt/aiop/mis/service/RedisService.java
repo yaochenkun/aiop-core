@@ -1,6 +1,6 @@
 package org.bupt.aiop.mis.service;
 
-import org.bupt.aiop.common.util.JedisClient;
+import org.bupt.common.util.JedisClient;
 import org.bupt.aiop.mis.constant.AuthConsts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package org.bupt.aiop.common.util.pinyin;
+package org.bupt.common.util.pinyin;
 
 import java.util.LinkedList;
 import java.util.List;

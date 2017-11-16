@@ -2,12 +2,12 @@ package org.bupt.aiop.mis.controller;
 
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.fileupload.util.Streams;
-import org.bupt.aiop.common.bean.PageResult;
-import org.bupt.aiop.common.bean.ResponseResult;
-import org.bupt.aiop.common.util.FileUtil;
-import org.bupt.aiop.common.util.MD5Util;
-import org.bupt.aiop.common.util.Validator;
-import org.bupt.aiop.common.util.token.Identity;
+import org.bupt.common.bean.PageResult;
+import org.bupt.common.bean.ResponseResult;
+import org.bupt.common.util.FileUtil;
+import org.bupt.common.util.MD5Util;
+import org.bupt.common.util.Validator;
+import org.bupt.common.util.token.Identity;
 import org.bupt.aiop.mis.annotation.RequiredRoles;
 import org.bupt.aiop.mis.constant.AuthConsts;
 import org.bupt.aiop.mis.constant.EnvConsts;

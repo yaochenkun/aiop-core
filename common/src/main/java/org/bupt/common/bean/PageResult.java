@@ -1,4 +1,4 @@
-package org.bupt.aiop.common.bean;
+package org.bupt.common.bean;
 
 
 import com.github.pagehelper.PageInfo;

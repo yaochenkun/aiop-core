@@ -1,4 +1,4 @@
-package org.bupt.aiop.common.util.token;
+package org.bupt.common.util.token;
 
 /**
  * Token携带信息
