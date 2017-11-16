@@ -7,22 +7,12 @@ package org.bupt.aiop.common.util.token;
 public class Identity {
 
 	private String token;
-	private String id; // 对应user的id
+	private String id; // 对应id
 	private String issuer;
-	private String username;
-	private String role; // 角色
-	private String name;
+	private String clientId; //client_id/username
+	private String authority; // 可以是角色，也可以是权限
 	private Long duration; // 有效时长，单位毫秒
-	private String avatar;
-	private String doctorId;
 
-	public String getAvatar() {
-		return avatar;
-	}
-
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
-	}
 
 	public String getToken() {
 		return token;
@@ -48,20 +38,12 @@ public class Identity {
 		this.issuer = issuer;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getClientId() {
+		return clientId;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
 	}
 
 	public Long getDuration() {
@@ -72,19 +54,11 @@ public class Identity {
 		this.duration = duration;
 	}
 
-	public String getName() {
-		return name;
+	public String getAuthority() {
+		return authority;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDoctorId() {
-		return doctorId;
-	}
-
-	public void setDoctorId(String doctorId) {
-		this.doctorId = doctorId;
+	public void setAuthority(String authority) {
+		this.authority = authority;
 	}
 }

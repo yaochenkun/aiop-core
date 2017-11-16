@@ -92,12 +92,9 @@ public class UserService extends BaseService<User> {
                 AuthConsts.TOKEN_ISSUER,
                 targetUser.getUsername(),
                 targetUser.getRole(),
-                "/avatar/" + targetUser.getAvatar(),
                 AuthConsts.TOKEN_DURATION,
-                targetUser.getDoctorId() == null ? null : targetUser.getDoctorId().toString(),
                 AuthConsts.TOKEN_API_KEY_SECRET);
 
-        ((Identity) responseResult.getContent()).setName(targetUser.getName());
 
         return responseResult;
     }
@@ -105,27 +102,23 @@ public class UserService extends BaseService<User> {
 
     /**
      * 为通过登录验证的用户生成token
-     *
      * @param id
      * @param issuer
      * @param username
      * @param role
-     * @param avatar
      * @param duration
      * @param apiKeySecret
      * @return
      */
-    public ResponseResult generateToken(String id, String issuer, String username, String role, String avatar, Long
-            duration, String doctorId, String apiKeySecret) {
+    public ResponseResult generateToken(String id, String issuer, String username, String role, Long
+            duration, String apiKeySecret) {
 
         Identity identity = new Identity();
         identity.setId(id);
         identity.setIssuer(issuer);
-        identity.setUsername(username);
-        identity.setRole(role);
+        identity.setClientId(username);
+        identity.setAuthority(role);
         identity.setDuration(duration);
-        identity.setAvatar(avatar);
-        identity.setDoctorId(doctorId);
         String token = TokenUtil.createToken(identity, apiKeySecret);
 
         // 封装返回前端(除了用户名、角色、时间戳保留，其余消去)
