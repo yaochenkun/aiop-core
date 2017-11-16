@@ -1,14 +1,14 @@
-package org.bupt.aiop.mis.service;
+package org.bupt.aiop.restapi.service;
 
 import com.github.pagehelper.PageHelper;
 import org.bupt.aiop.common.bean.ResponseResult;
 import org.bupt.aiop.common.util.MD5Util;
 import org.bupt.aiop.common.util.Validator;
-import org.bupt.aiop.common.util.token.Identity;
 import org.bupt.aiop.common.util.token.TokenUtil;
-import org.bupt.aiop.mis.constant.AuthConsts;
-import org.bupt.aiop.mis.constant.CodeConsts;
-import org.bupt.aiop.mis.pojo.po.User;
+import org.bupt.aiop.common.util.token.Identity;
+import org.bupt.aiop.restapi.constant.AuthConsts;
+import org.bupt.aiop.restapi.constant.CodeConsts;
+import org.bupt.aiop.restapi.pojo.po.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -94,7 +94,6 @@ public class UserService extends BaseService<User> {
                 targetUser.getRole(),
                 AuthConsts.TOKEN_DURATION,
                 AuthConsts.TOKEN_API_KEY_SECRET);
-
 
         return responseResult;
     }

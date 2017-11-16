@@ -59,16 +59,16 @@ public class AuthController {
         String action = params.get("action");
         if (action.equals("注册") || action.equals("修改手机")) {
             if (user != null) {
-                return ResponseResult.failure("此号码已经注册");
+                return ResponseResult.error("此号码已经注册");
             }
         } else if (action.equals("找回密码")) {
             if (user == null) {
-                return ResponseResult.failure("此号码未注册");
+                return ResponseResult.error("此号码未注册");
             }
         }
 
         if (redisService.get(phone) != null) {
-            return ResponseResult.failure("请1分钟后再试");
+            return ResponseResult.error("请1分钟后再试");
         }
 
         StringBuilder code = new StringBuilder();
@@ -85,7 +85,7 @@ public class AuthController {
             // responseResult = SMSUtil.send(phone, String.valueOf(code));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseResult.failure("短信发送失败，请重试");
+            return ResponseResult.error("短信发送失败，请重试");
         }
 
 //        // 存储在redis中，过期时间为60s
@@ -115,13 +115,13 @@ public class AuthController {
 //        String code = redisService.get(Constant.REDIS_PRE_CODE + phone);
         String code = AuthConsts.AUTH_CODE;
         if (code == null) {
-            return ResponseResult.failure("验证码过期");
+            return ResponseResult.error("验证码过期");
         } else if (!code.equals(inputCode)) {
-            return ResponseResult.failure("验证码错误");
+            return ResponseResult.error("验证码错误");
         }
 
         if (this.userService.isExist(username)) {
-            return ResponseResult.failure("用户名已经存在");
+            return ResponseResult.error("用户名已经存在");
         }
 
         try {
@@ -134,7 +134,7 @@ public class AuthController {
             this.userService.save(user);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            return ResponseResult.failure("注册失败");
+            return ResponseResult.error("注册失败");
         }
 
         return ResponseResult.success("注册成功");
@@ -158,14 +158,14 @@ public class AuthController {
 
         //用户名是否存在
         if(!this.userService.isExist(username)){
-            return ResponseResult.failure("不存在该用户");
+            return ResponseResult.error("不存在该用户");
         }
 
         String code = AuthConsts.AUTH_CODE;
         if (code == null) {
-            return ResponseResult.failure("验证码过期");
+            return ResponseResult.error("验证码过期");
         } else if (!code.equals(inputCode)) {
-            return ResponseResult.failure("验证码错误");
+            return ResponseResult.error("验证码错误");
         }
 
         User record = new User();
@@ -202,7 +202,7 @@ public class AuthController {
     @ResponseBody
     public ResponseResult loginDenied() {
         logger.info("login_denied");
-        return ResponseResult.failure("请先登录");
+        return ResponseResult.error("请先登录");
     }
 
 
@@ -215,6 +215,6 @@ public class AuthController {
     @ResponseBody
     public ResponseResult roleDenied() {
         logger.info("role_denied");
-        return ResponseResult.failure("无此权限");
+        return ResponseResult.error("无此权限");
     }
 }

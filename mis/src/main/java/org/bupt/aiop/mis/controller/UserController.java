@@ -12,7 +12,6 @@ import org.bupt.aiop.mis.annotation.RequiredRoles;
 import org.bupt.aiop.mis.constant.AuthConsts;
 import org.bupt.aiop.mis.constant.EnvConsts;
 import org.bupt.aiop.mis.pojo.po.User;
-import org.bupt.aiop.mis.service.PropertyService;
 import org.bupt.aiop.mis.service.RedisService;
 import org.bupt.aiop.mis.service.TestService;
 import org.bupt.aiop.mis.service.UserService;
@@ -41,9 +40,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private PropertyService propertyService;
 
     @Autowired
     private RedisService redisService;
@@ -156,7 +152,7 @@ public class UserController {
         User user = new User();
 
         if (Validator.checkEmpty(name) || Validator.checkEmpty(username) || Validator.checkEmpty(role)) {
-            return ResponseResult.failure("添加失败，信息不完整");
+            return ResponseResult.error("添加失败，信息不完整");
         } else {
             user.setName(name);
             user.setUsername(username);
@@ -164,7 +160,7 @@ public class UserController {
         }
 
         if (this.userService.isExist(username)) {
-            return ResponseResult.failure("该用户名已被注册");
+            return ResponseResult.error("该用户名已被注册");
         }
 
         try {
@@ -173,7 +169,7 @@ public class UserController {
             this.userService.save(user);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            return ResponseResult.failure("添加失败，md5生成错误");
+            return ResponseResult.error("添加失败，md5生成错误");
         }
 
         return ResponseResult.success("添加成功");
@@ -225,7 +221,7 @@ public class UserController {
 
         User user = this.userService.queryById(userId);
         if (user == null) {
-            return ResponseResult.failure("用户不存在");
+            return ResponseResult.error("用户不存在");
         }
 
         return ResponseResult.success("查询成功", user);
@@ -246,7 +242,7 @@ public class UserController {
 
         User user = this.userService.queryById(userId);
         if (user == null) {
-            return ResponseResult.failure("用户不存在");
+            return ResponseResult.error("用户不存在");
         }
 
         // this.userService.deleteById(userId);
@@ -335,11 +331,11 @@ public class UserController {
                 oldPasswordMD5 = MD5Util.generate(oldPassword);
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
-                return ResponseResult.failure("md5加密失败！");
+                return ResponseResult.error("md5加密失败！");
             }
 
             if (!oldPasswordMD5.equals(user.getPassword())) {
-                return ResponseResult.failure("修改失败，原密码输入错误");
+                return ResponseResult.error("修改失败，原密码输入错误");
             }
         }
 
@@ -348,7 +344,7 @@ public class UserController {
             newPasswordMD5 = MD5Util.generate(newPassword);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            return ResponseResult.failure("md5加密失败");
+            return ResponseResult.error("md5加密失败");
         }
 
         user.setPassword(newPasswordMD5);
@@ -371,7 +367,7 @@ public class UserController {
 
         User user = this.userService.queryById(id);
         if (user == null) {
-            return ResponseResult.failure("上传失败，用户不存在");
+            return ResponseResult.error("上传失败，用户不存在");
         }
 
         String fileName;
@@ -384,13 +380,13 @@ public class UserController {
                         fileName), true);
             } catch (IOException e) {
                 e.printStackTrace();
-                return ResponseResult.failure("头像上传失败");
+                return ResponseResult.error("头像上传失败");
             }
 
             user.setAvatar(fileName);
             this.userService.update(user);
         } else {
-            return ResponseResult.failure("头像上传失败");
+            return ResponseResult.error("头像上传失败");
         }
 
         return ResponseResult.success("头像上传成功", "/avatar/" + fileName);

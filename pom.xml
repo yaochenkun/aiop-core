@@ -28,8 +28,7 @@
     </properties>
 
     <modules>
-        <module>rest-api</module> <!-- 能力接口 API -->
-        <module>rpc-api</module>  <!-- 内部 Dubbo/Thrift RPC API -->
+        <module>restapi</module> <!-- 能力接口 API -->
         <module>mis</module>      <!-- 管理信息系统 -->
         <module>common</module>
     </modules>
