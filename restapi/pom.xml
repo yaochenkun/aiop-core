@@ -119,30 +119,7 @@
 
     <build>
         <plugins>
-
-            <!-- 资源文件拷贝插件 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.7</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-
-            <!-- 编译插件指定jdk版本 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.0</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-
-            <!-- 配置插件 -->
+            <!-- tomcat插件 -->
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
@@ -151,15 +128,12 @@
                     <port>8080</port>
                     <path>/</path>
 
-                    <!-- 系统热部署配置 118.89.227.189 -->
-                    <!--<url>http://10.109.247.127:8080/manager/text</url>-->
-                    <!--&lt;!&ndash;<url>http://47.92.91.99:8080/manager/text</url>&ndash;&gt;-->
-                    <!--<username>tomcat</username>-->
-                    <!--<password>tomcat</password>-->
-
+                    <!--系统热部署配置 -->
+                    <url>http://10.109.246.88:8080/manager/text</url>
+                    <username>tomcat</username>
+                    <password>tomcat</password>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 
