@@ -1,7 +1,7 @@
 package org.bupt.aiop.mis.service;
 
+import org.bupt.aiop.mis.constant.EnvConsts;
 import org.bupt.common.util.JedisClient;
-import org.bupt.aiop.mis.constant.AuthConsts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +14,9 @@ public class RedisService {
 
     @Autowired(required = false)
     private JedisClient jedisClient;
+
+    @Autowired
+    private EnvConsts envConsts;
 
     public String get(String key) {
         return jedisClient.get(key);
@@ -39,6 +42,6 @@ public class RedisService {
      */
     public void setSmSCode(String key, String value) {
         this.set(key, value);
-        this.expire(key, AuthConsts.SMS_CODE_EXPIRE);
+        this.expire(key, envConsts.SMS_CODE_EXPIRE);
     }
 }

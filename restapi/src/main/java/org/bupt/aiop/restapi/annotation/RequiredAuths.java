@@ -1,4 +1,4 @@
-package org.bupt.aiop.mis.annotation;
+package org.bupt.aiop.restapi.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,7 +11,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface RequiredRoles {
-    // List<String> roles() default ;
-    String[] roles() default {};
+public @interface RequiredAuths {
+    String[] auths() default {};
 }

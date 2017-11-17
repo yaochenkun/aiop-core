@@ -22,8 +22,8 @@
             <mvc:exclude-mapping path="/auth/employee/login"/>
             <mvc:exclude-mapping path="/auth/register"/>
             <mvc:exclude-mapping path="/auth/send_sms"/>
-            <mvc:exclude-mapping path="/auth/login_denied"/>
-            <mvc:exclude-mapping path="/auth/role_denied"/>
+            <mvc:exclude-mapping path="/auth/login_deny"/>
+            <mvc:exclude-mapping path="/auth/auth_deny"/>
             <bean class="org.bupt.aiop.mis.interceptor.TokenCertifyInterceptor"/>
         </mvc:interceptor>
 

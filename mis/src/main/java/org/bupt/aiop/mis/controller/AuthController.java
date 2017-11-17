@@ -1,8 +1,8 @@
 package org.bupt.aiop.mis.controller;
 
+import org.bupt.aiop.mis.constant.EnvConsts;
 import org.bupt.common.bean.ResponseResult;
 import org.bupt.common.util.MD5Util;
-import org.bupt.aiop.mis.constant.AuthConsts;
 import org.bupt.aiop.mis.constant.RoleConsts;
 import org.bupt.aiop.mis.pojo.po.User;
 import org.bupt.aiop.mis.service.RedisService;
@@ -35,6 +35,9 @@ public class AuthController {
 
     @Autowired
     private RedisService redisService;
+
+    @Autowired
+    private EnvConsts envConsts;
 
 //    @Reference
 //    private static SayHelloService sayHelloService;
@@ -73,7 +76,7 @@ public class AuthController {
 
         StringBuilder code = new StringBuilder();
         Random random = new Random();
-        for (int i = 0; i < AuthConsts.SMS_CODE_LEN; i++) {
+        for (int i = 0; i < envConsts.SMS_CODE_LEN; i++) {
             code.append(String.valueOf(random.nextInt(10)));
         }
 
@@ -113,7 +116,7 @@ public class AuthController {
         logger.info("inputCode = {}", inputCode);
 
 //        String code = redisService.get(Constant.REDIS_PRE_CODE + phone);
-        String code = AuthConsts.AUTH_CODE;
+        String code = "1993";
         if (code == null) {
             return ResponseResult.error("验证码过期");
         } else if (!code.equals(inputCode)) {
@@ -161,7 +164,7 @@ public class AuthController {
             return ResponseResult.error("不存在该用户");
         }
 
-        String code = AuthConsts.AUTH_CODE;
+        String code = "1993";
         if (code == null) {
             return ResponseResult.error("验证码过期");
         } else if (!code.equals(inputCode)) {
@@ -198,10 +201,10 @@ public class AuthController {
      *
      * @return
      */
-    @RequestMapping(value = "login_denied")
+    @RequestMapping(value = "login_deny")
     @ResponseBody
-    public ResponseResult loginDenied() {
-        logger.info("login_denied");
+    public ResponseResult loginDeny() {
+        logger.info("login_deny");
         return ResponseResult.error("请先登录");
     }
 
@@ -211,10 +214,10 @@ public class AuthController {
      *
      * @return
      */
-    @RequestMapping(value = "role_denied")
+    @RequestMapping(value = "auth_deny")
     @ResponseBody
-    public ResponseResult roleDenied() {
-        logger.info("role_denied");
+    public ResponseResult authDeny() {
+        logger.info("auth_deny");
         return ResponseResult.error("无此权限");
     }
 }

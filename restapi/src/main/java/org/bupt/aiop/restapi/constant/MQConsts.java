@@ -10,13 +10,11 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class TagConsts {
+public class MQConsts {
 
-
-	@Value("${rocketmq.sendEmailTag}")
-	public String SEND_EMAIL_TAG;
-
-	@Value("${rocketmq.sendSmsTag}")
-	public String SEND_SMS_TAG;
+	//注册
+	public static final String REGISTER_TOPIC = "REGISTER_TOPIC";
+	public static final String SEND_EMAIL_TAG = "SEND_EMAIL_TAG";
+	public static final String SEND_SMS_TAG = "SEND_SMS_TAG";
 
 }

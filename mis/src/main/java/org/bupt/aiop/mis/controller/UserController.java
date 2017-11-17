@@ -2,14 +2,13 @@ package org.bupt.aiop.mis.controller;
 
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.fileupload.util.Streams;
+import org.bupt.aiop.mis.annotation.RequiredAuths;
 import org.bupt.common.bean.PageResult;
 import org.bupt.common.bean.ResponseResult;
 import org.bupt.common.util.FileUtil;
 import org.bupt.common.util.MD5Util;
 import org.bupt.common.util.Validator;
 import org.bupt.common.util.token.Identity;
-import org.bupt.aiop.mis.annotation.RequiredRoles;
-import org.bupt.aiop.mis.constant.AuthConsts;
 import org.bupt.aiop.mis.constant.EnvConsts;
 import org.bupt.aiop.mis.pojo.po.User;
 import org.bupt.aiop.mis.service.RedisService;
@@ -164,7 +163,7 @@ public class UserController {
         }
 
         try {
-            user.setPassword(MD5Util.generate(AuthConsts.DEFAULT_PASSWORD));
+            user.setPassword(MD5Util.generate(envConsts.DEFAULT_PASSWORD));
             user.setAvatar("avatar_default.png"); // 默认头像
             this.userService.save(user);
         } catch (NoSuchAlgorithmException e) {
@@ -237,7 +236,7 @@ public class UserController {
      */
     @RequestMapping(value = "{userId}", method = RequestMethod.DELETE)
     @ResponseBody
-    @RequiredRoles(roles = {"系统管理员"})
+    @RequiredAuths(auths = {"系统管理员"})
     public ResponseResult deleteById(@PathVariable("userId") Integer userId) {
 
         User user = this.userService.queryById(userId);
@@ -299,7 +298,7 @@ public class UserController {
         String username = (String) params.get("username");
         String name = (String) params.get("name");
 
-        Identity identity = (Identity) session.getAttribute(AuthConsts.IDENTITY);
+        Identity identity = (Identity) session.getAttribute("identity");
 
         List<User> userList = this.userService.queryUserList(pageNow, pageSize, role, username, name, identity);
         PageResult pageResult = new PageResult(new PageInfo<>(userList));

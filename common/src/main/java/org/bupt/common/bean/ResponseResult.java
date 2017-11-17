@@ -1,6 +1,6 @@
 package org.bupt.common.bean;
 
-import org.bupt.common.constant.CodeConsts;
+import org.bupt.common.constant.ResponseConsts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +20,7 @@ public class ResponseResult {
      * @return
      */
     public static ResponseResult success() {
-        return new ResponseResult(CodeConsts.SUCCESS, null, null);
+        return new ResponseResult(ResponseConsts.SUCCESS, null, null);
     }
 
     /**
@@ -28,7 +28,7 @@ public class ResponseResult {
      * @return
      */
     public static ResponseResult success(String reason) {
-        return new ResponseResult(CodeConsts.SUCCESS, reason, null);
+        return new ResponseResult(ResponseConsts.SUCCESS, reason, null);
     }
 
     /**
@@ -37,7 +37,7 @@ public class ResponseResult {
      * @return
      */
     public static ResponseResult success(Object result) {
-        return new ResponseResult(CodeConsts.SUCCESS, CodeConsts.SUCCESS, result);
+        return new ResponseResult(ResponseConsts.SUCCESS, ResponseConsts.SUCCESS, result);
     }
 
     /**
@@ -46,7 +46,7 @@ public class ResponseResult {
      * @return
      */
     public static ResponseResult success(String reason, Object result) {
-        return new ResponseResult(CodeConsts.SUCCESS, reason, result);
+        return new ResponseResult(ResponseConsts.SUCCESS, reason, result);
     }
 
 
@@ -55,7 +55,7 @@ public class ResponseResult {
      * @return
      */
     public static ResponseResult error(String reason) {
-        return new ResponseResult(CodeConsts.ERROR, reason, null);
+        return new ResponseResult(ResponseConsts.ERROR, reason, null);
     }
 
     /**
@@ -65,7 +65,7 @@ public class ResponseResult {
      * @return
      */
     public static ResponseResult error(String reason, Object result) {
-        return new ResponseResult(CodeConsts.ERROR, reason, result);
+        return new ResponseResult(ResponseConsts.ERROR, reason, result);
     }
 
 

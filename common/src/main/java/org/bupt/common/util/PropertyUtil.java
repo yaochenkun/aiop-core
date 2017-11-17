@@ -1,6 +1,6 @@
 package org.bupt.common.util;
 
-import org.bupt.common.constant.CodeConsts;
+import org.bupt.common.constant.ResponseConsts;
 
 import java.io.*;
 import java.util.HashMap;
@@ -234,12 +234,12 @@ public class PropertyUtil {
 			outputStream.close();
 			bufferedWriter.close();
 
-			return CodeConsts.CRUD_SUCCESS;
+			return ResponseConsts.CRUD_SUCCESS;
 
 		} catch (IOException e) {
 
 			System.err.println("属性文件更新错误");
-			return CodeConsts.CRUD_ERROR;
+			return ResponseConsts.CRUD_ERROR;
 
 		}
 	}
@@ -278,12 +278,12 @@ public class PropertyUtil {
 			bufferedWriter.close();
 
 
-			return CodeConsts.CRUD_SUCCESS;
+			return ResponseConsts.CRUD_SUCCESS;
 
 		} catch (IOException e) {
 
 			System.err.println("属性文件更新错误");
-			return CodeConsts.CRUD_ERROR;
+			return ResponseConsts.CRUD_ERROR;
 		}
 	}
 

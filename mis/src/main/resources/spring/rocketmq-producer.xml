@@ -10,10 +10,9 @@
           <!--class="MessageProducer"-->
           <!--init-method="init"-->
           <!--destroy-method="destroy">-->
-
-        <!--<constructor-arg name="producerGroup" value="${rocketmq.producerGroup}"/>-->
         <!--<constructor-arg name="namesrvAddr" value="${rocketmq.namesrvAddr}"/>-->
-        <!--<constructor-arg name="instanceName" value="${rocketmq.instanceName}"/>-->
+        <!--<constructor-arg name="producerGroup" value="MESSAGE_PRODUCER_GROUP"/>-->
+        <!--<constructor-arg name="instanceName" value="MESSAGE_PRODUCER"/>-->
     <!--</bean>-->
 
 </beans>

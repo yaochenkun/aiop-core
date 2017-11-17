@@ -1,9 +1,13 @@
 package org.bupt.aiop.restapi.service;
 
+import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
+import com.alibaba.rocketmq.client.producer.MessageQueueSelector;
+import com.alibaba.rocketmq.client.producer.SendResult;
+import com.alibaba.rocketmq.common.message.Message;
 import org.bupt.common.bean.ResponseResult;
-import org.bupt.aiop.restapi.constant.TagConsts;
-import org.bupt.aiop.restapi.constant.TopicConsts;
+import org.bupt.aiop.restapi.constant.MQConsts;
 import org.bupt.aiop.restapi.pojo.po.User;
+import org.bupt.common.rocketmq.MessageProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +27,6 @@ public class TestService extends BaseService<User> {
 //	@Autowired
 //	private MessageProducer messageProducer;
 
-	@Autowired
-	private TopicConsts topicConsts;
-
-	@Autowired
-	private TagConsts tagConsts;
-
 	/**
 	 * 注册成功后分别给邮箱和手机发送邮件、短信通知
 	 *
@@ -37,22 +35,17 @@ public class TestService extends BaseService<User> {
 	 */
 	public ResponseResult registerSuccessNotify(Integer userId) {
 
-
-		/*
-		** RocketMQ测试
-		 */
-
 //		DefaultMQProducer producer = messageProducer.getProducer();
 //
 //		//构建依次要发送的Tag
-//		String[] tags = {tagConsts.SEND_EMAIL_TAG,
-//				         tagConsts.SEND_SMS_TAG};
+//		String[] tags = {MQConsts.SEND_EMAIL_TAG,
+//						 MQConsts.SEND_SMS_TAG};
 //
 //		//依次通知发送邮件、短信
 //		for (int i = 0; i < tags.length; i++) {
 //
 //			//构造消息体
-//			Message msg = new Message(topicConsts.REGISTER_TOPIC,
+//			Message msg = new Message(MQConsts.REGISTER_TOPIC,
 //									  tags[i % tags.length],
 //									  "KEY" + i,
 //									  ("第1个用户 " + i).getBytes());
@@ -65,12 +58,12 @@ public class TestService extends BaseService<User> {
 //				e.printStackTrace();
 //			}
 //		}
-
+//
 //		//依次通知发送邮件、短信
 //		for (int i = 0; i < tags.length; i++) {
 //
 //			//构造消息体
-//			Message msg = new Message(topicConsts.REGISTER_TOPIC,
+//			Message msg = new Message(MQConsts.REGISTER_TOPIC,
 //					tags[i % tags.length],
 //					"KEY" + i,
 //					("第2个用户" + i).getBytes());
@@ -88,7 +81,7 @@ public class TestService extends BaseService<User> {
 //		for (int i = 0; i < tags.length; i++) {
 //
 //			//构造消息体
-//			Message msg = new Message(topicConsts.REGISTER_TOPIC,
+//			Message msg = new Message(MQConsts.REGISTER_TOPIC,
 //					tags[i % tags.length],
 //					"KEY" + i,
 //					("第3个用户" + i).getBytes());

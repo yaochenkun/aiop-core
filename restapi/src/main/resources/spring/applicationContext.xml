@@ -7,10 +7,6 @@
 
     <context:property-placeholder location="classpath:*.properties"/>
 
-    <!-- 扫描包 -->
     <context:component-scan base-package="org.bupt.aiop.restapi"/>
-
-    <!-- 扫描包 -->
-    <context:component-scan base-package="org.bupt.aiop.rpcapi"/>
 
 </beans>

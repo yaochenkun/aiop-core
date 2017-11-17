@@ -1,10 +1,8 @@
 package org.bupt.aiop.mis.interceptor;
 
+import org.bupt.aiop.mis.annotation.RequiredAuths;
 import org.bupt.common.util.Validator;
 import org.bupt.common.util.token.Identity;
-
-import org.bupt.aiop.mis.annotation.RequiredRoles;
-import org.bupt.aiop.mis.constant.AuthConsts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.method.HandlerMethod;
@@ -21,9 +19,9 @@ import java.util.Set;
  * 自定义注解
  * Created by zlren on 17/6/10.
  */
-public class RoleCheckInterceptor extends HandlerInterceptorAdapter {
+public class AuthCheckInterceptor extends HandlerInterceptorAdapter {
 
-    private static final Logger logger = LoggerFactory.getLogger(RoleCheckInterceptor.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthCheckInterceptor.class);
 
     // 在调用方法之前执行拦截
     @Override
@@ -33,28 +31,28 @@ public class RoleCheckInterceptor extends HandlerInterceptorAdapter {
         // 从方法处理器中获取出要调用的方法
         Method method = handlerMethod.getMethod();
         // 获取出方法上的Access注解
-        RequiredRoles roleCheck = method.getAnnotation(RequiredRoles.class);
-        if (roleCheck == null) {
+        RequiredAuths authCheck = method.getAnnotation(RequiredAuths.class);
+        if (authCheck == null) {
             // 如果注解为null, 说明不需要拦截, 直接放过
             return true;
         }
 
-        if (roleCheck.roles().length > 0) {
+        if (authCheck.auths().length > 0) {
 
-            for (String s : roleCheck.roles()) {
+            for (String s : authCheck.auths()) {
                 logger.info(s);
             }
 
             // 如果权限配置不为空, 则取出配置值
-            String[] authorities = roleCheck.roles();
+            String[] authorities = authCheck.auths();
             Set<String> authSet = new HashSet<>();
             // 将权限加入一个set集合中
             authSet.addAll(Arrays.asList(authorities));
             // 这里我为了方便是直接参数传入权限, 在实际操作中应该是从参数中获取用户Id
             // 到数据库权限表中查询用户拥有的权限集合, 与set集合中的权限进行对比完成权限校验
 
-            String authority = ((Identity) request.getSession().getAttribute(AuthConsts.IDENTITY)).getAuthority();
-            logger.info("用户的角色是 {}", authority);
+            String authority = ((Identity) request.getSession().getAttribute("identity")).getAuthority();
+            logger.info("用户的权限是 {}", authority);
             // String role = request.getParameter("role");
             if (!Validator.checkEmpty(authority)) {
                 if (authSet.contains(authority)) {
@@ -67,7 +65,7 @@ public class RoleCheckInterceptor extends HandlerInterceptorAdapter {
 
         logger.info("权限拒绝");
         // 拦截之后应该返回公共结果, 这里没做处理
-        response.sendRedirect("/api/auth/role_denied");
+        response.sendRedirect("/api/oauth/deny");
         return false;
     }
 }

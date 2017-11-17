@@ -3,10 +3,10 @@ package org.bupt.aiop.restapi.controller;
 import com.alibaba.fastjson.JSON;
 import org.apache.thrift.protocol.TProtocol;
 import org.bupt.common.bean.ResponseResult;
+import org.bupt.common.constant.ResponseConsts;
 import org.bupt.common.thrift.ThriftConnectionService;
 import org.bupt.common.util.Validator;
 import org.bupt.aiop.restapi.constant.EnvConsts;
-import org.bupt.aiop.restapi.constant.ErrorConsts;
 import org.bupt.aiop.restapi.service.RedisService;
 import org.bupt.aiop.restapi.service.thrift.NlpAlgService;
 import org.slf4j.Logger;
@@ -47,19 +47,19 @@ public class NlpController {
         String text = (String) params.get("text");
 
         /**
-         * 2.校验
+         * 2.校验输入
          */
 
         //判空
         if (Validator.checkEmpty(text)) {
-            return ResponseResult.error(ErrorConsts.MSG_INVALID_PARAM);
+            return ResponseResult.error("invalid input param");
         }
 
         //判长
 
 
         /**
-         * 3.处理
+         * 3.算法处理
          */
         TProtocol protocol = thriftNlpConnectionService.getConnection();
         NlpAlgService.Client nlpAlgSerivce = new NlpAlgService.Client(protocol);

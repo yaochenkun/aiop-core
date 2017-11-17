@@ -4,6 +4,7 @@ import org.apache.oltu.oauth2.as.issuer.MD5Generator;
 import org.apache.oltu.oauth2.as.issuer.OAuthIssuer;
 import org.apache.oltu.oauth2.as.issuer.OAuthIssuerImpl;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
+import org.bupt.aiop.mis.constant.OauthConsts;
 import org.bupt.common.util.Validator;
 import org.bupt.aiop.mis.service.RedisService;
 import org.bupt.aiop.mis.service.UserService;
@@ -52,35 +53,36 @@ public class OauthController {
 		Map<String, Object> oauthResponse = new HashMap<>();
 
 		//获取数据
-		String grantType = params.get("grant_type");
-		String clientId = params.get("client_id");
-		String clientSecret = params.get("client_secret");
+		String grantType = params.get(OauthConsts.KEY_GRANT_TYPE);
+		String clientId = params.get(OauthConsts.KEY_CLIENT_ID);
+		String clientSecret = params.get(OauthConsts.KEY_CLIENT_SECRET);
 		logger.info("grantType = {}, clientId = {}, clientSecret = {}", grantType, clientId, clientSecret);
 
 		//数据格式校验
-		if (Validator.checkEmpty(grantType)) {
+		if (Validator.checkEmpty(grantType) || !OauthConsts.CLIENT_CREDENTIALS.equals(grantType)) {
 
-			oauthResponse.put("error", "invalid_grant_type");
-			oauthResponse.put("error_description", "unsupported grant type");
+			oauthResponse.put(OauthConsts.KEY_ERROR_CODE, OauthConsts.ERROR_CODE_INVALID_GRANT_TYPE);
+			oauthResponse.put(OauthConsts.KEY_ERROR_MSG, OauthConsts.ERROR_MSG_INVALID_GRANT_TYPE);
 			return oauthResponse;
 		}
 		if (Validator.checkEmpty(clientId)) {
 
-			oauthResponse.put("error", "invalid_client");
-			oauthResponse.put("error_description", "empty client id");
+			oauthResponse.put(OauthConsts.KEY_ERROR_CODE, OauthConsts.ERROR_CODE_INVALID_CLIENT);
+			oauthResponse.put(OauthConsts.KEY_ERROR_MSG, OauthConsts.ERROR_MSG_INVALID_CLIENT_ID);
 			return oauthResponse;
 		}
 		if (Validator.checkEmpty(clientSecret)) {
 
-			oauthResponse.put("error", "invalid_client");
-			oauthResponse.put("error_description", "empty client secret");
+			oauthResponse.put(OauthConsts.KEY_ERROR_CODE, OauthConsts.ERROR_CODE_INVALID_CLIENT);
+			oauthResponse.put(OauthConsts.KEY_ERROR_MSG, OauthConsts.ERROR_MSG_INVALID_CLIENT_SECRET);
 			return oauthResponse;
 		}
 
-		//进入数据库验证clientId和clientSecret
+		//进入数据库验证clientId / clientSecret
+		
 
 
-		//若验证通过，获取其权限信息
+		//若验证通过，读取数据库中该用户的权限信息
 
 
 
@@ -88,19 +90,19 @@ public class OauthController {
 		OAuthIssuer oauthIssuerImpl = new OAuthIssuerImpl(new MD5Generator());
 		try {
 
-			oauthResponse.put("access_token", oauthIssuerImpl.accessToken());
-			oauthResponse.put("refresh_token", oauthIssuerImpl.refreshToken());
-			oauthResponse.put("expires_in", 259200);
-			oauthResponse.put("scope", "");
-			oauthResponse.put("session_key", "");
-			oauthResponse.put("session_secret", "");
+			oauthResponse.put(OauthConsts.KEY_ACCESS_TOKEN, oauthIssuerImpl.accessToken());
+			oauthResponse.put(OauthConsts.KEY_REFRESH_TOKEN, oauthIssuerImpl.refreshToken());
+			oauthResponse.put(OauthConsts.KEY_EXPIRES_IN, 259200);
+			oauthResponse.put(OauthConsts.KEY_SCOPE, "");
+			oauthResponse.put(OauthConsts.KEY_SESSION_KEY, "");
+			oauthResponse.put(OauthConsts.KEY_SESSION_SECRET, "");
 
 			return oauthResponse;
 		} catch (OAuthSystemException e) {
 
 			e.printStackTrace();
-			oauthResponse.put("error", "system_error");
-			oauthResponse.put("error_description", "system_error");
+			oauthResponse.put(OauthConsts.KEY_ERROR_CODE, OauthConsts.ERROR_CODE_SYSTEM_ERROR);
+			oauthResponse.put(OauthConsts.KEY_ERROR_MSG, OauthConsts.ERROR_MSG_SYSTEM_ERROR);
 			return oauthResponse;
 		}
 	}

@@ -1,16 +1,17 @@
 package org.bupt.aiop.restapi.service;
 
 import com.github.pagehelper.PageHelper;
+import org.bupt.aiop.restapi.constant.EnvConsts;
+import org.bupt.common.constant.ResponseConsts;
 import org.bupt.common.bean.ResponseResult;
 import org.bupt.common.util.MD5Util;
 import org.bupt.common.util.Validator;
 import org.bupt.common.util.token.TokenUtil;
 import org.bupt.common.util.token.Identity;
-import org.bupt.aiop.restapi.constant.AuthConsts;
-import org.bupt.aiop.restapi.constant.CodeConsts;
 import org.bupt.aiop.restapi.pojo.po.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -23,6 +24,9 @@ import java.util.Set;
 public class UserService extends BaseService<User> {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
+    @Autowired
+    private EnvConsts envConsts;
 
 
     /**
@@ -89,11 +93,11 @@ public class UserService extends BaseService<User> {
 
         // 生成token
         ResponseResult responseResult = this.generateToken(targetUser.getId().toString(),
-                AuthConsts.TOKEN_ISSUER,
+                envConsts.TOKEN_ISSUER,
                 targetUser.getUsername(),
                 targetUser.getRole(),
-                AuthConsts.TOKEN_DURATION,
-                AuthConsts.TOKEN_API_KEY_SECRET);
+                envConsts.TOKEN_DURATION,
+                envConsts.TOKEN_API_KEY_SECRET);
 
         return responseResult;
     }
@@ -243,7 +247,7 @@ public class UserService extends BaseService<User> {
 
         this.getMapper().delete(user);
 
-        return CodeConsts.CRUD_SUCCESS;
+        return ResponseConsts.CRUD_SUCCESS;
     }
 
 
