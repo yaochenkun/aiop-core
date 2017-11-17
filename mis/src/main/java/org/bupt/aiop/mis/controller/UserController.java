@@ -12,12 +12,10 @@ import org.bupt.common.util.token.Identity;
 import org.bupt.aiop.mis.constant.EnvConsts;
 import org.bupt.aiop.mis.pojo.po.User;
 import org.bupt.aiop.mis.service.RedisService;
-import org.bupt.aiop.mis.service.TestService;
 import org.bupt.aiop.mis.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,9 +27,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * UserController
+ * 用户相关控制器
  */
-@Controller
+@RestController
 @RequestMapping("user")
 public class UserController {
 
@@ -47,93 +45,6 @@ public class UserController {
     private EnvConsts envConsts;
 
 
-
-    @Autowired
-    private TestService testService;
-
-
-    @RequestMapping(value = "test", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseResult test() {
-
-//        /*
-//        ** RPC测试
-//         */
-//
-//        // 1.自然语言处理技术
-//        TProtocol protocol = thriftNlpConnectionService.getConnection();
-//        NlpAlgService.Client nlpAlgSerivce = new NlpAlgService.Client(protocol);
-//        try {
-//            System.out.println(nlpAlgSerivce.hello("yaochenkun"));
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            thriftNlpConnectionService.returnConnection(protocol);
-//        }
-//
-//        // 2.图像技术
-//        protocol = thriftImageConnectionService.getConnection();
-//        ImageAlgService.Client imageAlgSerivce = new ImageAlgService.Client(protocol);
-//        try {
-//            System.out.println(imageAlgSerivce.hello("yaochenkun"));
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            thriftImageConnectionService.returnConnection(protocol);
-//        }
-//
-//        // 3.语音技术
-//        protocol = thriftSpeechConnectionService.getConnection();
-//        SpeechAlgService.Client speechAlgSerivce = new SpeechAlgService.Client(protocol);
-//        try {
-//            System.out.println(speechAlgSerivce.hello("yaochenkun"));
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            thriftSpeechConnectionService.returnConnection(protocol);
-//        }
-//
-//        // 4.视频技术
-//        protocol = thriftVideoConnectionService.getConnection();
-//        VideoAlgService.Client videoAlgSerivce = new VideoAlgService.Client(protocol);
-//        try {
-//            System.out.println(videoAlgSerivce.hello("yaochenkun"));
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            thriftVideoConnectionService.returnConnection(protocol);
-//        }
-
-
-        /*
-        **RocketMQ测试
-         */
-//        testService.registerSuccessNotify(1);
-
-
-        /**
-         ** OAuth2.0测试
-         */
-
-        //生成token
-
-
-        //验证token
-
-
-
-
-
-        return ResponseResult.success();
-    }
-
-
-
-
     /**
      * 添加员工
      *
@@ -141,7 +52,6 @@ public class UserController {
      * @return
      */
     @RequestMapping(method = RequestMethod.POST)
-    @ResponseBody
     public ResponseResult addUser(@RequestBody Map<String, Object> params) {
 
         String name = (String) params.get("name");
@@ -182,7 +92,6 @@ public class UserController {
      * @return
      */
     @RequestMapping(method = RequestMethod.PUT)
-    @ResponseBody
     public ResponseResult updateOtherUser(@RequestBody Map<String, Object> params) {
 
         Integer userId = (Integer) params.get("userId");
@@ -215,7 +124,6 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "{userId}", method = RequestMethod.GET)
-    @ResponseBody
     public ResponseResult queryById(@PathVariable("userId") Integer userId) {
 
         User user = this.userService.queryById(userId);
@@ -235,7 +143,6 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "{userId}", method = RequestMethod.DELETE)
-    @ResponseBody
     @RequiredAuths(auths = {"系统管理员"})
     public ResponseResult deleteById(@PathVariable("userId") Integer userId) {
 
@@ -261,7 +168,6 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "{userId}", method = RequestMethod.PUT)
-    @ResponseBody
     public ResponseResult updateById(@PathVariable("userId") Integer userId, @RequestBody Map<String, Object> params) {
 
         // 自己可以修改自己的name和phone
@@ -288,7 +194,6 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "list", method = RequestMethod.POST)
-    @ResponseBody
     public ResponseResult queryUsers(@RequestBody Map<String, Object> params, HttpSession session) {
 
         Integer pageNow = (Integer) params.get("pageNow");
@@ -314,7 +219,6 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "password/{userId}", method = RequestMethod.PUT)
-    @ResponseBody
     public ResponseResult changePassword(@RequestBody Map<String, Object> params, @PathVariable("userId") Integer
             userId) {
 
@@ -361,7 +265,6 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "avatar", method = RequestMethod.POST)
-    @ResponseBody
     public ResponseResult uploadAvatar(@RequestParam("file") MultipartFile file, Integer id) {
 
         User user = this.userService.queryById(id);

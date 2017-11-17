@@ -5,15 +5,15 @@ import org.bupt.aiop.restapi.service.RedisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 
 /**
  * 平台账户认证控制器
  */
-@Controller
+@RestController
 @RequestMapping("oauth")
 public class OauthController {
 
@@ -30,7 +30,6 @@ public class OauthController {
      * @return
      */
     @RequestMapping(value = "deny")
-    @ResponseBody
     public ResponseResult authDeny() {
         logger.info("该用户能力权限不够");
         return ResponseResult.error("能力权限不够");

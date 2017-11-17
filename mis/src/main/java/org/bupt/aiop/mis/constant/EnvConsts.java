@@ -35,6 +35,4 @@ public class EnvConsts {
 
 	@Value("${sms.code.len}")
 	public Integer SMS_CODE_LEN;
-
-	public String IDENTITY = "IDENTITY";
 }

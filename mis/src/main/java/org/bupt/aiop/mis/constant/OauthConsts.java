@@ -26,7 +26,7 @@ public class OauthConsts {
 
 
 	//值变量
-	//错误码
+	//错误码(100-199)
 	public static final Integer ERROR_CODE_SYSTEM_ERROR = 100;
 	public static final Integer ERROR_CODE_INVALID_GRANT_TYPE = 101;
 	public static final Integer ERROR_CODE_INVALID_CLIENT = 102;

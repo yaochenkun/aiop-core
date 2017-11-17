@@ -1,12 +1,12 @@
-package org.bupt.aiop.mis.service;
+package org.bupt.aiop.restapi.service;
 
 import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.client.producer.MessageQueueSelector;
 import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.common.message.Message;
-import org.bupt.aiop.mis.constant.MQConsts;
 import org.bupt.common.bean.ResponseResult;
-import org.bupt.aiop.mis.pojo.po.User;
+import org.bupt.aiop.restapi.constant.MQConsts;
+import org.bupt.aiop.restapi.pojo.po.User;
 import org.bupt.common.rocketmq.MessageProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +17,9 @@ import org.springframework.stereotype.Service;
  * Created by ken on 2017/11/1.
  */
 @Service
-public class TestService extends BaseService<User> {
+public class MqService extends BaseService<User> {
 
-	private static final Logger logger = LoggerFactory.getLogger(TestService.class);
+	private static final Logger logger = LoggerFactory.getLogger(MqService.class);
 
 //	@Autowired
 //	private MessageQueueSelector modMessageQueueSelector;

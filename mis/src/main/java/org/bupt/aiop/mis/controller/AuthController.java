@@ -11,10 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -24,7 +21,7 @@ import java.util.Random;
 /**
  * 平台账户认证控制器
  */
-@Controller
+@RestController
 @RequestMapping("auth")
 public class AuthController {
 
@@ -51,7 +48,6 @@ public class AuthController {
      * @return
      */
     @RequestMapping(value = "send_sms", method = RequestMethod.POST)
-    @ResponseBody
     public ResponseResult sendSms(@RequestBody Map<String, String> params) {
 
         String phone = params.get("username");
@@ -104,7 +100,6 @@ public class AuthController {
      * @return
      */
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    @ResponseBody
     public ResponseResult register(@RequestBody Map<String, String> params) {
 
         // username就是手机号
@@ -151,7 +146,6 @@ public class AuthController {
      * @return
      */
     @RequestMapping(value = "check_code", method = RequestMethod.POST)
-    @ResponseBody
     public ResponseResult checkSMSCode(@RequestBody Map<String, String> params) {
 
         String inputCode = params.get("inputCode");
@@ -185,7 +179,6 @@ public class AuthController {
      * @return
      */
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    @ResponseBody
     public ResponseResult login(@RequestBody Map<String, String> params) {
 
         // 得到用户名和密码，用户名就是phone
@@ -202,7 +195,6 @@ public class AuthController {
      * @return
      */
     @RequestMapping(value = "login_deny")
-    @ResponseBody
     public ResponseResult loginDeny() {
         logger.info("login_deny");
         return ResponseResult.error("请先登录");
@@ -215,7 +207,6 @@ public class AuthController {
      * @return
      */
     @RequestMapping(value = "auth_deny")
-    @ResponseBody
     public ResponseResult authDeny() {
         logger.info("auth_deny");
         return ResponseResult.error("无此权限");

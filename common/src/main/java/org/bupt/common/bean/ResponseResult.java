@@ -14,7 +14,7 @@ public class ResponseResult {
 
     private String code;
     private String reason;
-    private Object result; // 数据
+    private Object content; // 数据
 
     /**
      * @return
@@ -23,30 +23,23 @@ public class ResponseResult {
         return new ResponseResult(ResponseConsts.SUCCESS, null, null);
     }
 
-    /**
-     * @param reason
-     * @return
-     */
-    public static ResponseResult success(String reason) {
-        return new ResponseResult(ResponseConsts.SUCCESS, reason, null);
-    }
 
     /**
      *
-     * @param result
+     * @param content
      * @return
      */
-    public static ResponseResult success(Object result) {
-        return new ResponseResult(ResponseConsts.SUCCESS, ResponseConsts.SUCCESS, result);
+    public static ResponseResult success(Object content) {
+        return new ResponseResult(ResponseConsts.SUCCESS, ResponseConsts.SUCCESS, content);
     }
 
     /**
      * @param reason
-     * @param result
+     * @param content
      * @return
      */
-    public static ResponseResult success(String reason, Object result) {
-        return new ResponseResult(ResponseConsts.SUCCESS, reason, result);
+    public static ResponseResult success(String reason, Object content) {
+        return new ResponseResult(ResponseConsts.SUCCESS, reason, content);
     }
 
 
@@ -61,20 +54,18 @@ public class ResponseResult {
     /**
      *
      * @param reason
-     * @param result
+     * @param content
      * @return
      */
-    public static ResponseResult error(String reason, Object result) {
-        return new ResponseResult(ResponseConsts.ERROR, reason, result);
+    public static ResponseResult error(String reason, Object content) {
+        return new ResponseResult(ResponseConsts.ERROR, reason, content);
     }
 
 
-    private ResponseResult(String code, String reason, Object result) {
+    private ResponseResult(String code, String reason, Object content) {
         this.code = code;
         this.reason = reason;
-        this.result = result;
-
-        logger.info(toString());
+        this.content = content;
     }
 
     public String getCode() {
@@ -93,20 +84,11 @@ public class ResponseResult {
         this.reason = reason;
     }
 
-    public Object getResult() {
-        return result;
+    public Object getContent() {
+        return content;
     }
 
-    public void setResult(Object result) {
-        this.result = result;
-    }
-
-    @Override
-    public String toString() {
-        return "ResponseResult {" +
-                "code = '" + code + '\'' +
-                ", reason = '" + reason + '\'' +
-                ", result = " + result +
-                '}';
+    public void setContent(Object content) {
+        this.content = content;
     }
 }
