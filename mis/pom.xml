@@ -133,9 +133,9 @@
                     <path>/mis</path>
 
                     <!--系统热部署配置 -->
-                    <url>http://10.109.246.88:8080/manager/text</url>
-                    <username>tomcat</username>
-                    <password>tomcat</password>
+                    <!--<url>http://10.109.246.88:8080/manager/text</url>-->
+                    <!--<username>tomcat</username>-->
+                    <!--<password>tomcat</password>-->
                 </configuration>
             </plugin>
         </plugins>
