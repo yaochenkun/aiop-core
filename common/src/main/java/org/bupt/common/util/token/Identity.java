@@ -10,7 +10,7 @@ public class Identity {
 	private String id; // 对应id
 	private String issuer;
 	private String clientId; //client_id/username
-	private String authority; // 可以是角色，也可以是权限
+	private String permission; // 可以是角色，也可以是权限
 	private Long duration; // 有效时长，单位毫秒
 
 
@@ -54,11 +54,11 @@ public class Identity {
 		this.duration = duration;
 	}
 
-	public String getAuthority() {
-		return authority;
+	public String getPermission() {
+		return permission;
 	}
 
-	public void setAuthority(String authority) {
-		this.authority = authority;
+	public void setPermission(String permission) {
+		this.permission = permission;
 	}
 }

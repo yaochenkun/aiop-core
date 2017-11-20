@@ -10,7 +10,7 @@
     <version>1.0</version>
 
     <modules>
-        <module>restapi</module>  <!-- REST API -->
+        <module>platform</module>  <!-- 平台REST API -->
         <module>mis</module>      <!-- 管理信息系统 -->
         <module>rpcapi</module>   <!-- RPC API -->
         <module>aialg</module>   <!-- JAVA算法工程 -->

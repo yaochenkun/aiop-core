@@ -2,7 +2,7 @@ package org.bupt.aiop.mis.controller;
 
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.fileupload.util.Streams;
-import org.bupt.aiop.mis.annotation.RequiredAuths;
+import org.bupt.aiop.mis.annotation.RequiredRoles;
 import org.bupt.common.bean.PageResult;
 import org.bupt.common.bean.ResponseResult;
 import org.bupt.common.util.FileUtil;
@@ -143,7 +143,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "{userId}", method = RequestMethod.DELETE)
-    @RequiredAuths(auths = {"系统管理员"})
+    @RequiredRoles(roles = {"系统管理员"})
     public ResponseResult deleteById(@PathVariable("userId") Integer userId) {
 
         User user = this.userService.queryById(userId);

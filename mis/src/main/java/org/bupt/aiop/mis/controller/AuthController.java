@@ -7,10 +7,11 @@ import org.bupt.aiop.mis.constant.RoleConsts;
 import org.bupt.aiop.mis.pojo.po.User;
 import org.bupt.aiop.mis.service.RedisService;
 import org.bupt.aiop.mis.service.UserService;
+import org.bupt.common.util.token.Identity;
+import org.bupt.common.util.token.TokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
@@ -35,10 +36,6 @@ public class AuthController {
 
     @Autowired
     private EnvConsts envConsts;
-
-//    @Reference
-//    private static SayHelloService sayHelloService;
-
 
 
     /**
@@ -181,11 +178,53 @@ public class AuthController {
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public ResponseResult login(@RequestBody Map<String, String> params) {
 
-        // 得到用户名和密码，用户名就是phone
+        // 得到用户名和密码
         String username = params.get("username");
         String password = params.get("password");
 
-        return this.userService.login(username, password, "null");
+        logger.info("{} 用户请求登录", username);
+
+        // 模拟网络延迟600ms
+        try {
+            Thread.sleep(600);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // 查询用户是否存在
+        User record = new User();
+        record.setUsername(username);
+        User user = userService.queryOne(record);
+        if (user == null) {
+            return ResponseResult.error("登录失败：用户不存在");
+        }
+
+        // 密码加密
+        String md5Password;
+        try {
+            md5Password = MD5Util.generate(password);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return ResponseResult.error("MD5加密失败");
+        }
+
+        // 检验密码
+        if (!user.getPassword().equals(md5Password)) {
+            return ResponseResult.error("密码错误");
+        }
+
+        // 生成token
+        Identity identity = new Identity();
+        identity.setId(user.getId().toString());
+        identity.setIssuer(envConsts.TOKEN_ISSUER);
+        identity.setClientId(user.getUsername());
+        identity.setPermission(user.getRole());
+        identity.setDuration(envConsts.TOKEN_DURATION);
+        String token = TokenUtil.createToken(identity, envConsts.TOKEN_API_KEY_SECRET);
+        identity.setToken(token);
+
+        logger.info("{} 用户请求登录成功, 身份信息为 {}", identity);
+        return ResponseResult.success("登录成功", identity);
     }
 
 
@@ -194,9 +233,9 @@ public class AuthController {
      *
      * @return
      */
-    @RequestMapping(value = "login_deny")
-    public ResponseResult loginDeny() {
-        logger.info("login_deny");
+    @RequestMapping(value = "token_deny")
+    public ResponseResult tokenDeny() {
+        logger.info("登录认证失败");
         return ResponseResult.error("请先登录");
     }
 
@@ -206,9 +245,9 @@ public class AuthController {
      *
      * @return
      */
-    @RequestMapping(value = "auth_deny")
-    public ResponseResult authDeny() {
-        logger.info("auth_deny");
+    @RequestMapping(value = "role_deny")
+    public ResponseResult roleDeny() {
+        logger.info("权限认证失败");
         return ResponseResult.error("无此权限");
     }
 }

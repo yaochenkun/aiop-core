@@ -38,7 +38,7 @@ public class TokenCertifyInterceptor implements HandlerInterceptor {
 //        } catch (Exception e) {
 //
 //            logger.info("token无效，转到登录界面");
-//            response.sendRedirect("/api/auth/login_denied");
+//            response.sendRedirect("/api/auth/token_deny");
 //
 //            return false;
 //        }

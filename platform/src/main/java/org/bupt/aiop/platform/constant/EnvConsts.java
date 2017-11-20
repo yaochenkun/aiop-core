@@ -1,4 +1,4 @@
-package org.bupt.aiop.mis.constant;
+package org.bupt.aiop.platform.constant;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,16 +29,11 @@ public class EnvConsts {
 	@Value("${token.apiKeySecret}")
 	public String TOKEN_API_KEY_SECRET;
 
-	@Value("${accesstoken.duration}")
-	public Long ACCESS_TOKEN_DURATION;
-
-	@Value("${refreshtoken.duration}")
-	public Long REFRESH_TOKEN_DURATION;
-
 	//SMS
 	@Value("${sms.code.expire}")
 	public Integer SMS_CODE_EXPIRE;
 
 	@Value("${sms.code.len}")
 	public Integer SMS_CODE_LEN;
+
 }
