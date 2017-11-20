@@ -1,9 +1,6 @@
 package org.bupt.common.util.token;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +51,7 @@ public class TokenUtil {
         return builder.compact();
     }
 
-    public static Identity parseToken(String token, String apiKeySecret) throws Exception {
+    public static Identity parseToken(String token, String apiKeySecret) throws SignatureException {
         Claims claims = Jwts.parser()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(apiKeySecret))
                 .parseClaimsJws(token).getBody();

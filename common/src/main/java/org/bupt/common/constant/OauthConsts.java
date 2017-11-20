@@ -16,6 +16,7 @@ public class OauthConsts {
 	public static final String KEY_SCOPE = "scope";
 	public static final String KEY_SESSION_KEY = "session_key";
 	public static final String KEY_SESSION_SECRET = "session_secret";
+	public static final String KEY_TOKEN = "token";
 
 	public static final String KEY_ERROR_CODE = "error_code";
 	public static final String KEY_ERROR_MSG = "error_msg";

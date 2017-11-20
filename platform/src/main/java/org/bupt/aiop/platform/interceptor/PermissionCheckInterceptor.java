@@ -22,6 +22,9 @@ public class PermissionCheckInterceptor extends HandlerInterceptorAdapter {
     // 在调用方法之前执行拦截
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+        logger.info("进入PermissionCheckInterceptor");
+
         // 将handler强转为HandlerMethod, 前面已经证实这个handler就是HandlerMethod
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         // 从方法处理器中获取出要调用的方法

@@ -1,8 +1,8 @@
 package org.bupt.aiop.mis.controller;
 
 import org.bupt.aiop.mis.constant.EnvConsts;
-import org.bupt.aiop.mis.constant.OauthConsts;
 import org.bupt.common.bean.ErrorResult;
+import org.bupt.common.constant.OauthConsts;
 import org.bupt.common.util.Validator;
 import org.bupt.aiop.mis.service.RedisService;
 import org.bupt.aiop.mis.service.UserService;
@@ -83,11 +83,11 @@ public class OauthController {
 				identity.setClientId(clientId);
 				identity.setPermission(auth);
 				identity.setDuration(envConsts.ACCESS_TOKEN_DURATION);
-				String accessToken = TokenUtil.createToken(identity, envConsts.TOKEN_API_KEY_SECRET);
+				String accessToken = TokenUtil.createToken(identity, envConsts.ACCESS_TOKEN_API_KEY_SECRET);
 
 				// 封装生成refresh_token需要的身份信息
 				identity.setDuration(envConsts.REFRESH_TOKEN_DURATION);
-				String refreshToken = TokenUtil.createToken(identity, envConsts.TOKEN_API_KEY_SECRET);
+				String refreshToken = TokenUtil.createToken(identity, envConsts.REFRESH_TOKEN_API_KEY_SECRET);
 
 				Map<String, Object> response = new HashMap<>();
 				response.put(OauthConsts.KEY_ACCESS_TOKEN, accessToken);

@@ -229,25 +229,25 @@ public class AuthController {
 
 
     /**
-     * 未验证跳转
+     * token失效错误
      *
      * @return
      */
     @RequestMapping(value = "token_deny")
     public ResponseResult tokenDeny() {
-        logger.info("登录认证失败");
-        return ResponseResult.error("请先登录");
+        logger.info("token已失效");
+        return ResponseResult.error("token已失效");
     }
 
 
     /**
-     * 权限拒绝
+     * 角色权限不够错误
      *
      * @return
      */
     @RequestMapping(value = "role_deny")
     public ResponseResult roleDeny() {
-        logger.info("权限认证失败");
-        return ResponseResult.error("无此权限");
+        logger.info("角色权限认证失败");
+        return ResponseResult.error("角色权限认证失败");
     }
 }

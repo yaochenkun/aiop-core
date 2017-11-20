@@ -18,7 +18,7 @@
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/oauth/access_token_deny"/>
             <mvc:exclude-mapping path="/oauth/permission_deny"/>
-            <bean class="org.bupt.aiop.platform.interceptor.AccessTokenCertifyInterceptor"/>
+            <bean class="org.bupt.aiop.platform.interceptor.AccessTokenCheckInterceptor"/>
         </mvc:interceptor>
 
         <mvc:interceptor>

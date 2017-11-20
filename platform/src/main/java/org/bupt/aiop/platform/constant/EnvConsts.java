@@ -29,6 +29,12 @@ public class EnvConsts {
 	@Value("${token.apiKeySecret}")
 	public String TOKEN_API_KEY_SECRET;
 
+	@Value("${accesstoken.apiKeySecret}")
+	public String ACCESS_TOKEN_API_KEY_SECRET;
+
+	@Value("${refreshtoken.apiKeySecret}")
+	public String REFRESH_TOKEN_API_KEY_SECRET;
+
 	//SMS
 	@Value("${sms.code.expire}")
 	public Integer SMS_CODE_EXPIRE;

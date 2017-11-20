@@ -1,6 +1,6 @@
-package org.bupt.aiop.platform.interceptor;
+package org.bupt.aiop.mis.interceptor;
 
-import org.bupt.aiop.platform.constant.EnvConsts;
+import org.bupt.aiop.mis.constant.EnvConsts;
 import org.bupt.common.constant.OauthConsts;
 import org.bupt.common.util.token.Identity;
 import org.bupt.common.util.token.TokenUtil;
@@ -14,12 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 能力使用权限认证拦截器（判断access_token有效性）
+ * 登录认证拦截器（判断token有效性）
  * Created by ken on 2017/6/8.
  */
-public class AccessTokenCertifyInterceptor implements HandlerInterceptor {
+public class TokenCheckInterceptor implements HandlerInterceptor {
 
-    private static final Logger logger = LoggerFactory.getLogger(AccessTokenCertifyInterceptor.class);
+    private static final Logger logger = LoggerFactory.getLogger(TokenCheckInterceptor.class);
 
     @Autowired
     private EnvConsts envConsts;
@@ -28,24 +28,24 @@ public class AccessTokenCertifyInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
 			Exception {
 
-        logger.info("进入AccessTokenCertifyInterceptor");
+        logger.info("进入TokenCheckInterceptor");
 
         // 验证token的有效性
         try {
 
-            String accessToken = request.getHeader(OauthConsts.KEY_ACCESS_TOKEN);
+            String accessToken = request.getHeader(OauthConsts.KEY_TOKEN);
             Identity identity = TokenUtil.parseToken(accessToken, envConsts.TOKEN_API_KEY_SECRET);
 
             //把identity存入session中(其中包含用户名、角色、过期时间戳等)
             request.getSession().setAttribute("identity", identity);
 
-            logger.info("应用={}: access_token通过认证", identity.getClientId());
+            logger.info("应用={}: token通过认证", identity.getClientId());
             return true;
 
         } catch (Exception e) {
-
-            logger.info("access_token无效，正转向认证失败控制器");
-            response.sendRedirect("/restapi/oauth/access_token_deny");
+            logger.info("token无效, 原因为: {}", e.getMessage());
+            logger.info("正转向认证失败控制器");
+            response.sendRedirect("/api/auth/token_deny");
 
             return false;
         }
