@@ -16,8 +16,8 @@
         <!--token认证拦截器-->
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
-            <mvc:exclude-mapping path="/oauth/access_token_deny"/>
-            <mvc:exclude-mapping path="/oauth/permission_deny"/>
+            <mvc:exclude-mapping path="/api/oauth/access_token_deny"/>
+            <mvc:exclude-mapping path="/api/oauth/permission_deny"/>
             <bean class="org.bupt.aiop.platform.interceptor.AccessTokenCheckInterceptor"/>
         </mvc:interceptor>
 

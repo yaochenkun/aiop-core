@@ -33,7 +33,7 @@ public class TokenUtil {
         //Let's set the JWT Claims
         JwtBuilder builder = Jwts.builder().setId(String.valueOf(identity.getId()))
                 .setIssuedAt(now)
-                .setSubject(identity.getId() + "," + identity.getClientId() + "," + identity.getPermission())
+                .setSubject(identity.getId() + "/" + identity.getClientId() + "/" + identity.getPermission())
                 .setIssuer(identity.getIssuer())
                 .signWith(signatureAlgorithm, signingKey);
 
@@ -56,7 +56,7 @@ public class TokenUtil {
                 .setSigningKey(DatatypeConverter.parseBase64Binary(apiKeySecret))
                 .parseClaimsJws(token).getBody();
 
-        String[] subjectInfos = claims.getSubject().split(",");
+        String[] subjectInfos = claims.getSubject().split("/");
         String id = subjectInfos[0];
         String clientId = subjectInfos[1];
         String permission = subjectInfos[2];

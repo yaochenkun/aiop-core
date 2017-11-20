@@ -39,13 +39,13 @@ public class AccessTokenCheckInterceptor implements HandlerInterceptor {
             //把identity存入session中(其中包含用户名、角色、过期时间戳等)
             request.getSession().setAttribute("identity", identity);
 
-            logger.info("应用={}: access_token通过认证", identity.getClientId());
+            logger.info("应用={}: access_token通过认证, identity.permission={}", identity.getClientId(), identity.getPermission());
             return true;
 
         } catch (Exception e) {
             logger.info("access_token无效, 原因为: {}", e.getMessage());
             logger.info("正转向认证失败控制器");
-            response.sendRedirect("/restapi/oauth/access_token_deny");
+            response.sendRedirect("/api/oauth/access_token_deny");
 
             return false;
         }

@@ -62,7 +62,7 @@ public class OauthController {
 			return new ErrorResult(OauthConsts.ERROR_CODE_INVALID_CLIENT, OauthConsts.ERROR_MSG_INVALID_CLIENT_SECRET);
 		}
 
-		//判断下发类型: \client_credentials / refresh_token
+		//判断下发类型: client_credentials / refresh_token
 		if (OauthConsts.CLIENT_CREDENTIALS.equals(grantType)) {
 
 			//进入数据库验证clientId / clientSecret
@@ -74,14 +74,14 @@ public class OauthController {
 
 				//test
 				String id = "1"; //应用的id
-				String auth = "text_keywords,word_pos,word_seg"; //权限
+				String scope = "text_keywords,word_pos,word_seg"; //能力权限(注意如果一个权限也没有是none)
 
 				// 封装生成access_token需要的身份信息
 				Identity identity = new Identity();
 				identity.setId(id);
 				identity.setIssuer(envConsts.TOKEN_ISSUER);
 				identity.setClientId(clientId);
-				identity.setPermission(auth);
+				identity.setPermission(scope);
 				identity.setDuration(envConsts.ACCESS_TOKEN_DURATION);
 				String accessToken = TokenUtil.createToken(identity, envConsts.ACCESS_TOKEN_API_KEY_SECRET);
 
@@ -93,7 +93,7 @@ public class OauthController {
 				response.put(OauthConsts.KEY_ACCESS_TOKEN, accessToken);
 				response.put(OauthConsts.KEY_REFRESH_TOKEN, refreshToken);
 				response.put(OauthConsts.KEY_EXPIRES_IN, envConsts.ACCESS_TOKEN_DURATION);
-				response.put(OauthConsts.KEY_SCOPE, auth);
+				response.put(OauthConsts.KEY_SCOPE, scope);
 				response.put(OauthConsts.KEY_SESSION_KEY, "");
 				response.put(OauthConsts.KEY_SESSION_SECRET, "");
 

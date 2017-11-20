@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 平台账户认证控制器
  */
 @RestController
-@RequestMapping("oauth")
+@RequestMapping("api/oauth")
 public class OauthController {
 
     private static final Logger logger = LoggerFactory.getLogger(OauthController.class);
@@ -36,7 +36,7 @@ public class OauthController {
      */
     @RequestMapping(value = "permission_deny")
     public ErrorResult permissionDeny() {
-        logger.info("进入access_token有效，但该用户能力访问不够错误返回控制器");
+        logger.info("access_token有效，但该用户能力访问权限不够错误返回控制器");
         return new ErrorResult(OauthConsts.ERROR_CODE_PERMISSION_DENIED, OauthConsts.ERROR_MSG_PERMISSION_DENIED);
     }
 }

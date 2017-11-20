@@ -3,6 +3,7 @@ package org.bupt.aiop.platform.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
 import org.apache.thrift.protocol.TProtocol;
+import org.bupt.aiop.platform.annotation.RequiredPermission;
 import org.bupt.aiop.platform.constant.ResponseConsts;
 import org.bupt.aiop.rpcapi.dubbo.NlpAlgDubboService;
 import org.bupt.aiop.rpcapi.thrift.NlpAlgThriftService;
@@ -23,7 +24,7 @@ import java.util.Map;
  * UserController
  */
 @RestController
-@RequestMapping("nlp")
+@RequestMapping("restapi/nlp")
 public class NlpController {
 
 	private static final Logger logger = LoggerFactory.getLogger(NlpController.class);
@@ -145,6 +146,7 @@ public class NlpController {
 	 * @return
 	 */
 	@RequestMapping(value = "v1/text_keywords", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
+//	@RequiredPermission(permission = "text_keywords")
 	public String text_keywords(@RequestBody Map<String, Object> params) {
 
 		String response = null;

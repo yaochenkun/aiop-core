@@ -18,18 +18,16 @@
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/auth/login"/>
-            <mvc:exclude-mapping path="/auth/member/login"/>
-            <mvc:exclude-mapping path="/auth/employee/login"/>
             <mvc:exclude-mapping path="/auth/register"/>
             <mvc:exclude-mapping path="/auth/send_sms"/>
             <mvc:exclude-mapping path="/auth/token_deny"/>
             <mvc:exclude-mapping path="/auth/role_deny"/>
+            <mvc:exclude-mapping path="/oauth/access_token"/>
             <bean class="org.bupt.aiop.mis.interceptor.TokenCheckInterceptor"/>
         </mvc:interceptor>
 
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
-            <!-- 如果不定义 mvc:mapping path 将拦截所有的URL请求 -->
             <bean class="org.bupt.aiop.mis.interceptor.RoleCheckInterceptor"/>
         </mvc:interceptor>
 
