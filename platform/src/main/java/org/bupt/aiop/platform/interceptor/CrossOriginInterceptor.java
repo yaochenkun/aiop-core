@@ -35,7 +35,7 @@ public class CrossOriginInterceptor implements Filter {
                 "Content-Range, Content-Disposition, Content-Description");
         filterChain.doFilter(servletRequest, servletResponse);
     }
-
+    
     @Override
     public void destroy() {
 

@@ -1,6 +1,7 @@
 package org.bupt.aiop.platform.interceptor;
 
 import org.bupt.aiop.platform.annotation.RequiredPermission;
+import org.bupt.common.constant.ErrorConsts;
 import org.bupt.common.util.Validator;
 import org.bupt.common.util.token.Identity;
 import org.slf4j.Logger;
@@ -65,7 +66,7 @@ public class PermissionCheckInterceptor extends HandlerInterceptorAdapter {
 
         logger.info("权限拒绝");
         // 拦截之后应该返回公共结果, 这里没做处理
-        response.sendRedirect("/api/oauth/permission_deny");
+        response.sendRedirect("/api/error/oauth/" + ErrorConsts.OAUTH_CODE_PERMISSION_DENIED);
         return false;
     }
 }

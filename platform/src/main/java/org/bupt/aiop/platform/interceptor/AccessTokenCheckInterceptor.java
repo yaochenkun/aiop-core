@@ -1,6 +1,7 @@
 package org.bupt.aiop.platform.interceptor;
 
 import org.bupt.aiop.platform.constant.EnvConsts;
+import org.bupt.common.constant.ErrorConsts;
 import org.bupt.common.constant.OauthConsts;
 import org.bupt.common.util.token.Identity;
 import org.bupt.common.util.token.TokenUtil;
@@ -45,7 +46,7 @@ public class AccessTokenCheckInterceptor implements HandlerInterceptor {
         } catch (Exception e) {
             logger.info("access_token无效, 原因为: {}", e.getMessage());
             logger.info("正转向认证失败控制器");
-            response.sendRedirect("/api/oauth/access_token_deny");
+            response.sendRedirect("/api/error/oauth/" + ErrorConsts.OAUTH_CODE_ACCESS_TOKEN_INVALID);
 
             return false;
         }

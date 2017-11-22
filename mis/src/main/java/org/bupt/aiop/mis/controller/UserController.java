@@ -30,7 +30,7 @@ import java.util.Map;
  * 用户相关控制器
  */
 @RestController
-@RequestMapping("user")
+@RequestMapping("api/user")
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);

@@ -66,6 +66,8 @@ public class ResponseResult {
         this.code = code;
         this.reason = reason;
         this.content = content;
+
+        logger.info("RESPONSE: code={}, reason={}, content={}", code, reason, content.toString());
     }
 
     public String getCode() {

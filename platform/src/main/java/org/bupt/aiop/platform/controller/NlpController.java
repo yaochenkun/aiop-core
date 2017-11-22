@@ -60,8 +60,6 @@ public class NlpController {
 			text = (String) params.get("text");
 		} catch (Exception e) {
 			response = JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INVALID_PARAM, ResponseConsts.ERROR_MSG_INVALID_PARAM));
-
-			logger.info(response);
 			return response;
 		}
 
@@ -69,8 +67,6 @@ public class NlpController {
 		// 校验初始输入
 		if (Validator.checkEmpty(text)) {
 			response = JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
-
-			logger.info(response);
 			return response;
 		}
 
@@ -87,7 +83,6 @@ public class NlpController {
 			thriftNlpConnectionService.returnConnection(protocol);
 		}
 
-		logger.info(response);
 		return response;
 	}
 
@@ -108,8 +103,6 @@ public class NlpController {
 			text = (String) params.get("text");
 		} catch (Exception e) {
 			response = JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INVALID_PARAM, ResponseConsts.ERROR_MSG_INVALID_PARAM));
-
-			logger.info(response);
 			return response;
 		}
 
@@ -117,8 +110,6 @@ public class NlpController {
 		// 校验初始输入
 		if (Validator.checkEmpty(text)) {
 			response = JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
-
-			logger.info(response);
 			return response;
 		}
 
@@ -135,7 +126,6 @@ public class NlpController {
 			thriftNlpConnectionService.returnConnection(protocol);
 		}
 
-		logger.info(response);
 		return response;
 	}
 
@@ -159,8 +149,6 @@ public class NlpController {
 			size = (Integer) params.get("size");
 		} catch (Exception e) {
 			response = JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INVALID_PARAM, ResponseConsts.ERROR_MSG_INVALID_PARAM));
-
-			logger.info(response);
 			return response;
 		}
 
@@ -168,16 +156,11 @@ public class NlpController {
 		// 校验初始输入
 		if (Validator.checkEmpty(text)) {
 			response = JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
-
-			logger.info(response);
 			return response;
 		}
 
 		// 算法处理
 		response = nlpAlgDubboService.text_keywords(text, size);
-
-
-		logger.info(response);
 		return response;
 	}
 

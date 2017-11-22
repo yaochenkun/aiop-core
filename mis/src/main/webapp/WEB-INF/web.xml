@@ -39,7 +39,7 @@
     </filter>
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
-        <url-pattern>/api/*</url-pattern>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
 
     <!--解决跨域访问-->
@@ -49,7 +49,7 @@
     </filter>
     <filter-mapping>
         <filter-name>crossOriginFilter</filter-name>
-        <url-pattern>/api/*</url-pattern>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
 
 
@@ -73,7 +73,104 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>springmvc-servlet</servlet-name>
-        <url-pattern>/api/*</url-pattern>
+        <url-pattern>/*</url-pattern>
     </servlet-mapping>
 
+    <!-- HTTP错误码及定位 -->
+    <error-page>
+        <error-code>400</error-code>
+        <location>/api/error/http/400</location>
+    </error-page>
+    <error-page>
+        <error-code>401</error-code>
+        <location>/api/error/http/401</location>
+    </error-page>
+    <error-page>
+        <error-code>402</error-code>
+        <location>/api/error/http/402</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/api/error/http/403</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/api/error/http/404</location>
+    </error-page>
+    <error-page>
+        <error-code>405</error-code>
+        <location>/api/error/http/405</location>
+    </error-page>
+    <error-page>
+        <error-code>406</error-code>
+        <location>/api/error/http/406</location>
+    </error-page>
+    <error-page>
+        <error-code>407</error-code>
+        <location>/api/error/http/407</location>
+    </error-page>
+    <error-page>
+        <error-code>408</error-code>
+        <location>/api/error/http/408</location>
+    </error-page>
+    <error-page>
+        <error-code>409</error-code>
+        <location>/api/error/http/409</location>
+    </error-page>
+    <error-page>
+        <error-code>410</error-code>
+        <location>/api/error/http/410</location>
+    </error-page>
+    <error-page>
+        <error-code>411</error-code>
+        <location>/api/error/http/411</location>
+    </error-page>
+    <error-page>
+        <error-code>412</error-code>
+        <location>/api/error/http/412</location>
+    </error-page>
+    <error-page>
+        <error-code>413</error-code>
+        <location>/api/error/http/413</location>
+    </error-page>
+    <error-page>
+        <error-code>414</error-code>
+        <location>/api/error/http/414</location>
+    </error-page>
+    <error-page>
+        <error-code>415</error-code>
+        <location>/api/error/http/415</location>
+    </error-page>
+    <error-page>
+        <error-code>416</error-code>
+        <location>/api/error/http/416</location>
+    </error-page>
+    <error-page>
+        <error-code>417</error-code>
+        <location>/api/error/http/417</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/api/error/http/500</location>
+    </error-page>
+    <error-page>
+        <error-code>501</error-code>
+        <location>/api/error/http/501</location>
+    </error-page>
+    <error-page>
+        <error-code>502</error-code>
+        <location>/api/error/http/502</location>
+    </error-page>
+    <error-page>
+        <error-code>503</error-code>
+        <location>/api/error/http/503</location>
+    </error-page>
+    <error-page>
+        <error-code>504</error-code>
+        <location>/api/error/http/504</location>
+    </error-page>
+    <error-page>
+        <error-code>505</error-code>
+        <location>/api/error/http/505</location>
+    </error-page>
 </web-app>
