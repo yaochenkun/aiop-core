@@ -7,4 +7,8 @@ package org.bupt.aiop.rpcapi.dubbo;
 public interface NlpAlgDubboService {
 
 	String text_keywords(String text, Integer size);
+
+	String word_pos(String text);
+
+	String word_2_vec(String text);
 }
