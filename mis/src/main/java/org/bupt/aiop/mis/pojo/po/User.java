@@ -14,14 +14,10 @@ public class User {
 
     private String password;
 
-    private String name;
-
     private String role;
 
-    @Column(name = "doctor_id")
-    private Integer doctorId;
-
-    private String avatar;
+    @Column(name = "avatar_file")
+    private String avatarFile;
 
     /**
      * @return id
@@ -66,20 +62,6 @@ public class User {
     }
 
     /**
-     * @return name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
      * @return role
      */
     public String getRole() {
@@ -94,30 +76,16 @@ public class User {
     }
 
     /**
-     * @return doctor_id
+     * @return avatar_file
      */
-    public Integer getDoctorId() {
-        return doctorId;
+    public String getAvatarFile() {
+        return avatarFile;
     }
 
     /**
-     * @param doctorId
+     * @param avatarFile
      */
-    public void setDoctorId(Integer doctorId) {
-        this.doctorId = doctorId;
-    }
-
-    /**
-     * @return avatar
-     */
-    public String getAvatar() {
-        return avatar;
-    }
-
-    /**
-     * @param avatar
-     */
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setAvatarFile(String avatarFile) {
+        this.avatarFile = avatarFile;
     }
 }

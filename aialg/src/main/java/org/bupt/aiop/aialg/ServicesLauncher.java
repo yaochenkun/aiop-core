@@ -1,5 +1,6 @@
 package org.bupt.aiop.aialg;
 
+import com.hankcs.hanlp.mining.word2vec.Train;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.lang.management.ManagementFactory;

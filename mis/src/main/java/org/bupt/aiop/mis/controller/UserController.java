@@ -63,7 +63,7 @@ public class UserController {
         if (Validator.checkEmpty(name) || Validator.checkEmpty(username) || Validator.checkEmpty(role)) {
             return ResponseResult.error("添加失败，信息不完整");
         } else {
-            user.setName(name);
+//            user.setName(name);
             user.setUsername(username);
             user.setRole(role);
         }
@@ -74,7 +74,7 @@ public class UserController {
 
         try {
             user.setPassword(MD5Util.generate(envConsts.DEFAULT_PASSWORD));
-            user.setAvatar("avatar_default.png"); // 默认头像
+            user.setAvatarFile("avatar_default.png"); // 默认头像
             this.userService.save(user);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -103,7 +103,7 @@ public class UserController {
         User user = this.userService.queryById(userId);
 
         if (!Validator.checkEmpty(name)) {
-            user.setName(name);
+//            user.setName(name);
         }
 
         // role
@@ -154,7 +154,7 @@ public class UserController {
         // this.userService.deleteById(userId);
         this.userService.delete(user);
 
-        logger.info("删除用户：{}", user.getName());
+//        logger.info("删除用户：{}", user.getName());
 
         return ResponseResult.success("删除成功");
     }
@@ -177,7 +177,7 @@ public class UserController {
         User user = this.userService.queryById(userId);
 
         if (!Validator.checkEmpty(name)) {
-            user.setName(name);
+//            user.setName(name);
         }
 
         this.userService.update(user);
@@ -285,7 +285,7 @@ public class UserController {
                 return ResponseResult.error("头像上传失败");
             }
 
-            user.setAvatar(fileName);
+            user.setAvatarFile(fileName);
             this.userService.update(user);
         } else {
             return ResponseResult.error("头像上传失败");

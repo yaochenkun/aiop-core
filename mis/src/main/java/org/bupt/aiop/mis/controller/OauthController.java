@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.relation.Role;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
@@ -115,57 +116,6 @@ public class OauthController {
 		}
 	}
 
-	/**
-	 * 发送短信验证码
-	 *
-	 * @param params
-	 * @return
-	 */
-	@RequestMapping(value = "send_sms", method = RequestMethod.POST)
-	public ResponseResult sendSms(@RequestBody Map<String, String> params) {
-
-		String phone = params.get("username");
-
-		User record = new User();
-		record.setUsername(phone);
-		User user = this.userService.queryOne(record);
-		String action = params.get("action");
-		if (action.equals("注册") || action.equals("修改手机")) {
-			if (user != null) {
-				return ResponseResult.error("此号码已经注册");
-			}
-		} else if (action.equals("找回密码")) {
-			if (user == null) {
-				return ResponseResult.error("此号码未注册");
-			}
-		}
-
-		if (redisService.get(phone) != null) {
-			return ResponseResult.error("请1分钟后再试");
-		}
-
-		StringBuilder code = new StringBuilder();
-		Random random = new Random();
-		for (int i = 0; i < envConsts.SMS_CODE_LEN; i++) {
-			code.append(String.valueOf(random.nextInt(10)));
-		}
-
-		logger.info("验证码，手机号：{}，验证码：{}", phone, code);
-
-		ResponseResult responseResult;
-		try {
-			responseResult = ResponseResult.success("已发送验证码", record.getId());
-			// responseResult = SMSUtil.send(phone, String.valueOf(code));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseResult.error("短信发送失败，请重试");
-		}
-
-//        // 存储在redis中，过期时间为60s
-//        redisService.setSmSCode(Constant.REDIS_PRE_CODE + phone, String.valueOf(code));
-
-		return responseResult;
-	}
 
 	/**
 	 * 注册
@@ -173,16 +123,13 @@ public class OauthController {
 	 * @param params
 	 * @return
 	 */
-	@RequestMapping(value = "register", method = RequestMethod.POST)
-	public ResponseResult register(@RequestBody Map<String, String> params) {
-
-		// username就是手机号
+	@RequestMapping(value = "register/{roleType}", method = RequestMethod.POST)
+	public ResponseResult register(@RequestBody Map<String, String> params,
+								   @PathVariable String roleType) {
+		
 		String username = params.get("username");
 		String password = params.get("password");
 		String inputCode = params.get("inputCode");
-		String name = params.get("name");
-		logger.info("name = {}", name);
-		logger.info("inputCode = {}", inputCode);
 
 //        String code = redisService.get(Constant.REDIS_PRE_CODE + phone);
 		String code = "1993";
@@ -192,7 +139,7 @@ public class OauthController {
 			return ResponseResult.error("验证码错误");
 		}
 
-		if (this.userService.isExist(username)) {
+		if (userService.isExist(username)) {
 			return ResponseResult.error("用户名已经存在");
 		}
 
@@ -200,49 +147,17 @@ public class OauthController {
 			User user = new User();
 			user.setUsername(username);
 			user.setPassword(MD5Util.generate(password));
-			user.setRole(RoleConsts.DEVELOPER);
-			user.setName(name);
-			user.setAvatar("avatar_default.png"); // 默认头像
-			this.userService.save(user);
+			user.setRole(RoleConsts.TYPE_ADMIN.equals(roleType) ? RoleConsts.BUSINESS_ADMIN : RoleConsts.DEVELOPER);
+			user.setAvatarFile(envConsts.DEFAULT_AVATAR); // 默认头像
+			userService.save(user);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
+			logger.info("注册失败，原因={}", e.getMessage());
 			return ResponseResult.error("注册失败");
 		}
 
+		logger.info("用户={}，注册成功", username);
 		return ResponseResult.success("注册成功");
-	}
-
-
-	/**
-	 * 校验验证码
-	 *
-	 * @param params
-	 * @return
-	 */
-	@RequestMapping(value = "check_code", method = RequestMethod.POST)
-	public ResponseResult checkSMSCode(@RequestBody Map<String, String> params) {
-
-		String inputCode = params.get("inputCode");
-		String username = params.get("username");
-
-		logger.info("传过来的验证码是: {}， 手机是：{}", inputCode, username);
-
-		//用户名是否存在
-		if(!this.userService.isExist(username)){
-			return ResponseResult.error("不存在该用户");
-		}
-
-		String code = "1993";
-		if (code == null) {
-			return ResponseResult.error("验证码过期");
-		} else if (!code.equals(inputCode)) {
-			return ResponseResult.error("验证码错误");
-		}
-
-		User record = new User();
-		record.setUsername(username);
-
-		return ResponseResult.success("验证成功", this.userService.queryOne(record).getId());
 	}
 
 
@@ -300,8 +215,94 @@ public class OauthController {
 		String token = TokenUtil.createToken(identity, envConsts.TOKEN_API_KEY_SECRET);
 		identity.setToken(token);
 
-		logger.info("{} 用户请求登录成功, 身份信息为 {}", identity);
+		logger.info("用户={} 请求登录成功, 身份信息={}", identity);
 		return ResponseResult.success("登录成功", identity);
 	}
+
+
+//	/**
+//	 * 发送短信验证码
+//	 *
+//	 * @param params
+//	 * @return
+//	 */
+//	@RequestMapping(value = "send_sms", method = RequestMethod.POST)
+//	public ResponseResult sendSms(@RequestBody Map<String, String> params) {
+//
+//		String phone = params.get("username");
+//
+//		User record = new User();
+//		record.setUsername(phone);
+//		User user = userService.queryOne(record);
+//		String action = params.get("action");
+//		if (action.equals("注册") || action.equals("修改手机")) {
+//			if (user != null) {
+//				return ResponseResult.error("此号码已经注册");
+//			}
+//		} else if (action.equals("找回密码")) {
+//			if (user == null) {
+//				return ResponseResult.error("此号码未注册");
+//			}
+//		}
+//
+//		if (redisService.get(phone) != null) {
+//			return ResponseResult.error("请1分钟后再试");
+//		}
+//
+//		StringBuilder code = new StringBuilder();
+//		Random random = new Random();
+//		for (int i = 0; i < envConsts.SMS_CODE_LEN; i++) {
+//			code.append(String.valueOf(random.nextInt(10)));
+//		}
+//
+//		logger.info("验证码，手机号：{}，验证码：{}", phone, code);
+//
+//		ResponseResult responseResult;
+//		try {
+//			responseResult = ResponseResult.success("已发送验证码", record.getId());
+//			// responseResult = SMSUtil.send(phone, String.valueOf(code));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return ResponseResult.error("短信发送失败，请重试");
+//		}
+//
+////        // 存储在redis中，过期时间为60s
+////        redisService.setSmSCode(Constant.REDIS_PRE_CODE + phone, String.valueOf(code));
+//
+//		return responseResult;
+//	}
+
+
+	//	/**
+//	 * 校验验证码
+//	 *
+//	 * @param params
+//	 * @return
+//	 */
+//	@RequestMapping(value = "check_code", method = RequestMethod.POST)
+//	public ResponseResult checkSMSCode(@RequestBody Map<String, String> params) {
+//
+//		String inputCode = params.get("inputCode");
+//		String username = params.get("username");
+//
+//		logger.info("传过来的验证码是: {}， 手机是：{}", inputCode, username);
+//
+//		//用户名是否存在
+//		if(!userService.isExist(username)){
+//			return ResponseResult.error("不存在该用户");
+//		}
+//
+//		String code = "1993";
+//		if (code == null) {
+//			return ResponseResult.error("验证码过期");
+//		} else if (!code.equals(inputCode)) {
+//			return ResponseResult.error("验证码错误");
+//		}
+//
+//		User record = new User();
+//		record.setUsername(username);
+//
+//		return ResponseResult.success("验证成功", userService.queryOne(record).getId());
+//	}
 
 }

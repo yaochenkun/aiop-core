@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tongren.mapper.AppAbilityMapper" >
+  <resultMap id="BaseResultMap" type="org.bupt.aiop.mis.pojo.po.AppAbility" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="app_id" property="appId" jdbcType="INTEGER" />
+    <result column="ability_id" property="abilityId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="invoke_limit" property="invokeLimit" jdbcType="INTEGER" />
+    <result column="qps_limit" property="qpsLimit" jdbcType="INTEGER" />
+  </resultMap>
+</mapper>

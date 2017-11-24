@@ -47,4 +47,8 @@ public class EnvConsts {
 
 	@Value("${sms.code.len}")
 	public Integer SMS_CODE_LEN;
+
+	//头像
+	@Value("${default.avatar}")
+	public String DEFAULT_AVATAR;
 }
