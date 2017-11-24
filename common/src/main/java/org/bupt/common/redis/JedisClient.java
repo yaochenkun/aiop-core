@@ -1,7 +1,5 @@
-package org.bupt.common.util;
+package org.bupt.common.redis;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -10,7 +8,6 @@ import redis.clients.jedis.JedisPool;
  */
 public class JedisClient {
 
-    @Autowired(required = false) // 保证common的通用性，使用它的那个spirng容器如果有就注入，没有就忽略了
     private JedisPool jedisPool;
 
     public String get(String key) {
@@ -74,5 +71,13 @@ public class JedisClient {
         Long result = jedis.hdel(hkey, key);
         jedis.close();
         return result;
+    }
+
+    public JedisPool getJedisPool() {
+        return jedisPool;
+    }
+
+    public void setJedisPool(JedisPool jedisPool) {
+        this.jedisPool = jedisPool;
     }
 }

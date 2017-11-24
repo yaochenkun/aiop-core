@@ -9,7 +9,6 @@ import org.bupt.common.constant.ErrorConsts;
 import org.bupt.common.constant.OauthConsts;
 import org.bupt.common.util.MD5Util;
 import org.bupt.common.util.Validator;
-import org.bupt.aiop.mis.service.RedisService;
 import org.bupt.aiop.mis.service.UserService;
 import org.bupt.common.util.token.Identity;
 import org.bupt.common.util.token.TokenUtil;
@@ -18,11 +17,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.relation.Role;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 
 /**
@@ -36,9 +33,6 @@ public class OauthController {
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private RedisService redisService;
 
 	@Autowired
 	private EnvConsts envConsts;

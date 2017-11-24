@@ -11,7 +11,6 @@ import org.bupt.common.util.Validator;
 import org.bupt.common.util.token.Identity;
 import org.bupt.aiop.mis.constant.EnvConsts;
 import org.bupt.aiop.mis.pojo.po.User;
-import org.bupt.aiop.mis.service.RedisService;
 import org.bupt.aiop.mis.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,9 +36,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private RedisService redisService;
 
     @Autowired
     private EnvConsts envConsts;

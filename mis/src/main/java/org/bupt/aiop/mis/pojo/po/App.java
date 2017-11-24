@@ -21,6 +21,11 @@ public class App {
      */
     private String type;
 
+    /**
+     * 应用平台
+     */
+    private String platform;
+
     @Column(name = "client_id")
     private String clientId;
 
@@ -86,6 +91,24 @@ public class App {
      */
     public void setType(String type) {
         this.type = type;
+    }
+
+    /**
+     * 获取应用平台
+     *
+     * @return platform - 应用平台
+     */
+    public String getPlatform() {
+        return platform;
+    }
+
+    /**
+     * 设置应用平台
+     *
+     * @param platform 应用平台
+     */
+    public void setPlatform(String platform) {
+        this.platform = platform;
     }
 
     /**

@@ -3,7 +3,6 @@ package org.bupt.aiop.platform.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
 import org.apache.thrift.protocol.TProtocol;
-import org.bupt.aiop.platform.annotation.RequiredPermission;
 import org.bupt.aiop.platform.constant.ResponseConsts;
 import org.bupt.aiop.rpcapi.dubbo.NlpAlgDubboService;
 import org.bupt.aiop.rpcapi.thrift.NlpAlgThriftService;
@@ -11,7 +10,6 @@ import org.bupt.common.bean.ErrorResult;
 import org.bupt.common.thrift.ThriftConnectionService;
 import org.bupt.common.util.Validator;
 import org.bupt.aiop.platform.constant.EnvConsts;
-import org.bupt.aiop.platform.service.RedisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +29,13 @@ public class NlpController {
 
 
 	@Autowired
-	private RedisService redisService;
-
-	@Autowired
 	private EnvConsts envConsts;
 
 	@Autowired
 	private ThriftConnectionService thriftNlpConnectionService;
 
 	@Reference
-	private static NlpAlgDubboService nlpAlgDubboService;
+	private NlpAlgDubboService nlpAlgDubboService;
 
 	/**
 	 * 中文分词

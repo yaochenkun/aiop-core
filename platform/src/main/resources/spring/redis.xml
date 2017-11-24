@@ -27,11 +27,13 @@
     </bean>
 
     <!--jedis客户端单机版 -->
-    <bean id="redisClient" class="redis.clients.jedis.JedisPool">
+    <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
         <constructor-arg name="host" value="${redis.host}"/>
         <constructor-arg name="port" value="${redis.port}"/>
         <constructor-arg name="poolConfig" ref="jedisPoolConfig"/>
     </bean>
-    <bean id="jedisClient" class="org.bupt.common.util.JedisClient"/>
+    <bean id="jedisClient" class="org.bupt.common.redis.JedisClient">
+        <property name="jedisPool" value="jedisPool"/>
+    </bean>
 
 </beans>
