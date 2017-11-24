@@ -3,8 +3,13 @@ package org.bupt.aiop.aialg.service;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.mining.word2vec.Vector;
+import com.hankcs.hanlp.mining.word2vec.WordVectorModel;
+import org.bupt.aiop.aialg.Utils.ReflectUtils;
 import org.bupt.aiop.aialg.bean.Keyword;
+import org.bupt.aiop.aialg.bean.WordVector;
 import org.bupt.aiop.rpcapi.dubbo.NlpAlgDubboService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +18,11 @@ import java.util.Map;
 
 
 @Service
+@org.springframework.stereotype.Service
 public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
+
+    @Autowired
+    private WordVectorModel wordVectorModel;
 
 	/**
 	 * 提取text的关键词size个
@@ -42,4 +51,20 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
 
 		return JSON.toJSONString(result);
 	}
+
+	@Override
+	public String word_pos(String text) {
+		return null;
+	}
+
+    @Override
+    public String word_2_vec(String text) {
+        Vector vector = wordVectorModel.vector(text);
+        WordVector result = new WordVector();
+        result.setWord(text);
+        result.setElementArray(ReflectUtils.getObjectByFieldName(vector, "elementArray", float[].class));
+        return JSON.toJSONString(result);
+    }
+
+
 }
