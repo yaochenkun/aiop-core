@@ -30,10 +30,12 @@
     <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
         <constructor-arg name="host" value="${redis.host}"/>
         <constructor-arg name="port" value="${redis.port}"/>
+        <constructor-arg name="password" value="${redis.password}"/>
+        <constructor-arg name="timeout" value="${redis.timeout}"/>
         <constructor-arg name="poolConfig" ref="jedisPoolConfig"/>
     </bean>
     <bean id="jedisClient" class="org.bupt.common.redis.JedisClient">
-        <property name="jedisPool" value="jedisPool"/>
+        <property name="jedisPool" ref="jedisPool"/>
     </bean>
 
 </beans>

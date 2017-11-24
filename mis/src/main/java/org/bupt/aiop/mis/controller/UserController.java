@@ -5,6 +5,7 @@ import org.apache.commons.fileupload.util.Streams;
 import org.bupt.aiop.mis.annotation.RequiredRoles;
 import org.bupt.common.bean.PageResult;
 import org.bupt.common.bean.ResponseResult;
+import org.bupt.common.redis.JedisClient;
 import org.bupt.common.util.FileUtil;
 import org.bupt.common.util.MD5Util;
 import org.bupt.common.util.Validator;
@@ -40,6 +41,16 @@ public class UserController {
     @Autowired
     private EnvConsts envConsts;
 
+    @Autowired
+    private JedisClient jedisClient;
+
+    @RequestMapping(value = "test")
+    public ResponseResult test() {
+
+        jedisClient.set("ken", "test");
+
+        return ResponseResult.success();
+    }
 
     /**
      * 添加员工
