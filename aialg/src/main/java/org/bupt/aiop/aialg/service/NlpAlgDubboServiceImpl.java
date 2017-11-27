@@ -109,6 +109,7 @@ public class NlpAlgDubboServiceImpl extends AbstractNplAlgDubboService implement
             item.setPos(term.word);
             item.setByteOffset(offset);
             item.setByteLen(term.length());
+            item.setNature(term.nature);
             items.add(item);
             offset += term.length();
         }
