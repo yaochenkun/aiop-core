@@ -3,11 +3,13 @@ package org.bupt.aiop.aialg.service;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.classification.classifiers.NaiveBayesClassifier;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.mining.word2vec.Vector;
 import com.hankcs.hanlp.mining.word2vec.WordVectorModel;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.tokenizer.NLPTokenizer;
 import org.bupt.aiop.aialg.bean.*;
 import org.bupt.aiop.aialg.utils.ReflectUtils;
 import org.bupt.aiop.rpcapi.dubbo.NlpAlgDubboService;
@@ -25,6 +27,10 @@ public class NlpAlgDubboServiceImpl extends AbstractNplAlgDubboService implement
 
     @Autowired
     private WordVectorModel wordVectorModel;
+    @Autowired
+    private NaiveBayesClassifier motionClassifier;
+    @Autowired
+    private NaiveBayesClassifier categoryClassifier;
 
     /**
      * 提取给定文本的关键词
@@ -97,12 +103,14 @@ public class NlpAlgDubboServiceImpl extends AbstractNplAlgDubboService implement
         List<Term> segments = HanLP.segment(text);
         Map<String, Object> result = new HashMap<>();
         List<WordPos> items = new ArrayList<>();
+        int offset = 0;
         for (Term term : segments) {
             WordPos item = new WordPos();
             item.setPos(term.word);
-            item.setByteOffset(term.offset);
+            item.setByteOffset(offset);
             item.setByteLen(term.length());
             items.add(item);
+            offset += term.length();
         }
         result.put("text", text);
         result.put("items", items);
@@ -135,10 +143,11 @@ public class NlpAlgDubboServiceImpl extends AbstractNplAlgDubboService implement
         List<Pinyin> pinyins = HanLP.convertToPinyinList(text);
         Map<String, Object> result = new HashMap<>();
         List<LocalPinyin> items = new ArrayList<>();
-        for (Pinyin pinyin : pinyins) {
+        for (int i = 0; i < pinyins.size(); ++i) {
+            Pinyin pinyin = pinyins.get(i);
             LocalPinyin localPinyin = new LocalPinyin();
             localPinyin.setPinyin(pinyin.getPinyinWithoutTone());
-            localPinyin.setWord(pinyin.getFirstChar());
+            localPinyin.setWord(text.charAt(i));
             localPinyin.setTone(pinyin.getTone());
             localPinyin.setShenMu(pinyin.getShengmu().toString());
             localPinyin.setYunMu(pinyin.getYunmu().toString());
@@ -196,6 +205,40 @@ public class NlpAlgDubboServiceImpl extends AbstractNplAlgDubboService implement
         }
         result.put("text", text);
         result.put("items", items);
+        return JSON.toJSONString(result);
+    }
+
+    @Override
+    public String motion_classify(String text) {
+        Map<String, Double> pred_result = motionClassifier.predict(text);
+        Map<String, Object> result = new HashMap<>();
+        result.put("text", text);
+//        System.out.println(pred_result);
+        if (pred_result.get("正面") > pred_result.get("负面")) {
+            result.put("sentiment", 1);
+        } else {
+            result.put("sentiment", 2);
+        }
+        result.put("positive_prob", pred_result.get("正面"));
+        result.put("negative_prob", pred_result.get("负面"));
+        return JSON.toJSONString(result);
+    }
+
+    @Override
+    public String category_classify(String text) {
+        Map<String, Double> pred_result = categoryClassifier.predict(text);
+        Map<String, Object> result = new HashMap<>();
+        result.put("text", text);
+        double maxScore = Double.MIN_VALUE;
+        String category = null;
+        for (Map.Entry<String, Double> item : pred_result.entrySet()) {
+            result.put(item.getKey(), item.getValue());
+            if (item.getValue() > maxScore) {
+                category = item.getKey();
+                maxScore = item.getValue();
+            }
+        }
+        result.put("category", category);
         return JSON.toJSONString(result);
     }
 }

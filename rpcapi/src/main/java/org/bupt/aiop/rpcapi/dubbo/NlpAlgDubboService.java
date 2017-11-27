@@ -29,4 +29,8 @@ public interface NlpAlgDubboService {
     String document_sim(String doc1, String doc2);
 
     String nearest_words(String text, int size);
+
+    String motion_classify(String text);
+
+    String category_classify(String text);
 }

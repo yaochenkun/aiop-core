@@ -12,4 +12,6 @@
         <constructor-arg index="0" value="${model.word2vec}"/>
     </bean>
 
+    <bean class="org.bupt.aiop.aialg.AppConfig"/>
+
 </beans>
