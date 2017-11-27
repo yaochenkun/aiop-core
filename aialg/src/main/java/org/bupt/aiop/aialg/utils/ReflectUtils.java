@@ -1,4 +1,4 @@
-package org.bupt.aiop.aialg.Utils;
+package org.bupt.aiop.aialg.utils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
