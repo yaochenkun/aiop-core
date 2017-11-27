@@ -12,22 +12,11 @@
 
     <dependencies>
 
+        <!--公用包-->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <!--Spring-->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
+            <groupId>org.bupt.aiop</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0</version>
         </dependency>
 
         <!--rpc api依赖-->
@@ -62,14 +51,6 @@
             <artifactId>hanlp</artifactId>
             <version>portable-1.5.2</version>
         </dependency>
-
-        <!--JSON-->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
-        </dependency>
-
 
     </dependencies>
 

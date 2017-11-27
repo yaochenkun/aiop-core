@@ -1,6 +1,5 @@
 package org.bupt.aiop.aialg;
 
-import com.hankcs.hanlp.mining.word2vec.Train;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.lang.management.ManagementFactory;
@@ -17,7 +16,8 @@ public class ServicesLauncher {
 
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
 				new String[]{"classpath:spring/application-context.xml",
-						 	 "classpath:spring/dubbo-server.xml"});
+						 	 "classpath:spring/dubbo-server.xml",
+							 "classpath:spring/model-nlp.xml"});
 		context.start();
 
 		System.out.println("dubbo server has been successfully launched on PID = " + getProcessID());
@@ -35,9 +35,7 @@ public class ServicesLauncher {
 
 	public static final int getProcessID() {
 		RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
-		System.out.println(runtimeMXBean.getName());
-		return Integer.valueOf(runtimeMXBean.getName().split("@")[0])
-				.intValue();
+		return Integer.valueOf(runtimeMXBean.getName().split("@")[0]).intValue();
 	}
 
 }
