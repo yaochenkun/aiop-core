@@ -3,6 +3,7 @@ package org.bupt.aiop.aialg.service;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.classification.classifiers.NaiveBayesClassifier;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.mining.word2vec.Vector;
 import com.hankcs.hanlp.mining.word2vec.WordVectorModel;
@@ -24,10 +25,18 @@ import java.util.Map;
 public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
 
     @Autowired
-    private WordVectorModel wordVectorModel;
+    private CommonFormatter commonFormatter;
+
 
     @Autowired
-    private CommonFormatter commonFormatter;
+    private WordVectorModel wordVectorModel; //词向量
+
+    @Autowired
+    private NaiveBayesClassifier motionClassifierModel; //情感分类
+
+    @Autowired
+    private NaiveBayesClassifier categoryClassifierModel; //文本分类
+
 
     /**
      * 提取给定文本的关键词
@@ -99,12 +108,15 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
         List<Term> segments = HanLP.segment(text);
         Map<String, Object> result = new HashMap<>();
         List<WordPos> items = new ArrayList<>();
+        int offset = 0;
         for (Term term : segments) {
             WordPos item = new WordPos();
             item.setPos(term.word);
-            item.setByteOffset(term.offset);
+            item.setByteOffset(offset);
             item.setByteLen(term.length());
+            item.setNature(term.nature);
             items.add(item);
+            offset += term.length();
         }
         result.put("text", text);
         result.put("items", items);
@@ -122,7 +134,7 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
         Vector vector = wordVectorModel.vector(text);
         WordVector result = new WordVector();
         result.setWord(text);
-        result.setElementArray(ReflectUtil.getObjectByFieldName(vector, "elementArray", float[].class));
+        result.setVector(ReflectUtil.getObjectByFieldName(vector, "elementArray", float[].class));
         return JSON.toJSONString(result);
     }
 
@@ -137,10 +149,11 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
         List<Pinyin> pinyins = HanLP.convertToPinyinList(text);
         Map<String, Object> result = new HashMap<>();
         List<LocalPinyin> items = new ArrayList<>();
-        for (Pinyin pinyin : pinyins) {
+        for (int i = 0; i < pinyins.size(); ++i) {
+            Pinyin pinyin = pinyins.get(i);
             LocalPinyin localPinyin = new LocalPinyin();
             localPinyin.setPinyin(pinyin.getPinyinWithoutTone());
-            localPinyin.setWord(pinyin.getFirstChar());
+            localPinyin.setWord(text.charAt(i));
             localPinyin.setTone(pinyin.getTone());
             localPinyin.setShenMu(pinyin.getShengmu().toString());
             localPinyin.setYunMu(pinyin.getYunmu().toString());
@@ -198,6 +211,39 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
         }
         result.put("text", text);
         result.put("items", items);
+        return JSON.toJSONString(result);
+    }
+
+    @Override
+    public String motion_classify(String text) {
+        Map<String, Double> pred_result = motionClassifierModel.predict(text);
+        Map<String, Object> result = new HashMap<>();
+        result.put("text", text);
+        if (pred_result.get("正面") > pred_result.get("负面")) {
+            result.put("sentiment", 1);
+        } else {
+            result.put("sentiment", 2);
+        }
+        result.put("positive_prob", pred_result.get("正面"));
+        result.put("negative_prob", pred_result.get("负面"));
+        return JSON.toJSONString(result);
+    }
+
+    @Override
+    public String category_classify(String text) {
+        Map<String, Double> pred_result = categoryClassifierModel.predict(text);
+        Map<String, Object> result = new HashMap<>();
+        result.put("text", text);
+        double maxScore = Double.MIN_VALUE;
+        String category = null;
+        for (Map.Entry<String, Double> item : pred_result.entrySet()) {
+            result.put(item.getKey(), item.getValue());
+            if (item.getValue() > maxScore) {
+                category = item.getKey();
+                maxScore = item.getValue();
+            }
+        }
+        result.put("category", category);
         return JSON.toJSONString(result);
     }
 }

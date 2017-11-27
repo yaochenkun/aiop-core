@@ -1,9 +1,0 @@
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
-
-    <bean id="wordVectorModel" class="com.hankcs.hanlp.mining.word2vec.WordVectorModel">
-        <constructor-arg name="modelFileName" value="${model.nlp.word2vec}"/>
-    </bean>
-
-</beans>

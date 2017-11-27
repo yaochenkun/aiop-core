@@ -1,10 +1,21 @@
 package org.bupt.aiop.aialg.bean;
 
+import com.hankcs.hanlp.corpus.tag.Nature;
+
 public class WordPos {
 
     private String pos;
     private int byteOffset;
     private int byteLen;
+    private Nature nature;
+
+    public Nature getNature() {
+        return nature;
+    }
+
+    public void setNature(Nature nature) {
+        this.nature = nature;
+    }
 
     public String getPos() {
         return pos;

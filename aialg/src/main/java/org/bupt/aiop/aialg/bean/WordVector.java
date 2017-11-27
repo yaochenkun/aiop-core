@@ -3,14 +3,14 @@ package org.bupt.aiop.aialg.bean;
 public class WordVector {
 
     private String word;
-    private float[] elementArray;
+    private float[] vector;
 
-    public float[] getElementArray() {
-        return elementArray;
+    public float[] getVector() {
+        return vector;
     }
 
-    public void setElementArray(float[] elementArray) {
-        this.elementArray = elementArray;
+    public void setVector(float[] vector) {
+        this.vector = vector;
     }
 
     public String getWord() {

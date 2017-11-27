@@ -187,7 +187,7 @@ public class NlpController {
 			response = JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
 			return response;
 		}
-		if (Validator.checkNull(size)) {
+		if (Validator.checkNull(size) || size <= 0) {
 			size = NlpConsts.DEFAULT_SIZE;
 		}
 
@@ -224,7 +224,7 @@ public class NlpController {
 			response = JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
 			return response;
 		}
-		if (Validator.checkNull(size)) {
+		if (Validator.checkNull(size) || size <= 0) {
 			size = NlpConsts.DEFAULT_SIZE;
 		}
 
@@ -261,7 +261,7 @@ public class NlpController {
 			response = JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
 			return response;
 		}
-		if (Validator.checkNull(size)) {
+		if (Validator.checkNull(size) || size <= 0) {
 			size = NlpConsts.DEFAULT_SIZE;
 		}
 
@@ -468,7 +468,7 @@ public class NlpController {
 	}
 
 	/**
-	 * 最相似的前size个单词
+	 * 词库中与text最相似的前size个单词
 	 *
 	 * @param params
 	 * @return
@@ -495,7 +495,7 @@ public class NlpController {
 			response = JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
 			return response;
 		}
-		if (Validator.checkNull(size)) {
+		if (Validator.checkNull(size) || size <= 0) {
 			size = NlpConsts.DEFAULT_SIZE;
 		}
 
@@ -504,5 +504,68 @@ public class NlpController {
 		return response;
 	}
 
+
+	/**
+	 * 情感分类
+	 *
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "v1/motion_classify", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
+	public String motion_classify(@RequestBody Map<String, Object> params) {
+
+		String response = null;
+
+		// 获取初始输入
+		String text = null;
+		try {
+			text = (String) params.get("text");
+		} catch (Exception e) {
+			response = JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INVALID_PARAM, ResponseConsts.ERROR_MSG_INVALID_PARAM));
+			return response;
+		}
+
+
+		// 校验初始输入
+		if (Validator.checkEmpty(text)) {
+			response = JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
+			return response;
+		}
+
+		// 算法处理
+		response = nlpAlgDubboService.motion_classify(text);
+		return response;
+	}
+
+	/**
+	 * 文本分类
+	 *
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "v1/category_classify", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
+	public String category_classify(@RequestBody Map<String, Object> params) {
+
+		String response = null;
+
+		// 获取初始输入
+		String text = null;
+		try {
+			text = (String) params.get("text");
+		} catch (Exception e) {
+			response = JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INVALID_PARAM, ResponseConsts.ERROR_MSG_INVALID_PARAM));
+			return response;
+		}
+
+		// 校验初始输入
+		if (Validator.checkEmpty(text)) {
+			response = JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
+			return response;
+		}
+
+		// 算法处理
+		response = nlpAlgDubboService.category_classify(text);
+		return response;
+	}
 
 }
