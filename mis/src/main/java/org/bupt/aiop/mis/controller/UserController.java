@@ -5,6 +5,7 @@ import org.apache.commons.fileupload.util.Streams;
 import org.bupt.aiop.mis.annotation.RequiredRoles;
 import org.bupt.common.bean.PageResult;
 import org.bupt.common.bean.ResponseResult;
+import org.bupt.common.constant.OauthConsts;
 import org.bupt.common.redis.JedisClient;
 import org.bupt.common.util.FileUtil;
 import org.bupt.common.util.MD5Util;
@@ -75,14 +76,14 @@ public class UserController {
             user.setRole(role);
         }
 
-        if (this.userService.isExist(username)) {
+        if (userService.isExist(username)) {
             return ResponseResult.error("该用户名已被注册");
         }
 
         try {
             user.setPassword(MD5Util.generate(envConsts.DEFAULT_PASSWORD));
             user.setAvatarFile("avatar_default.png"); // 默认头像
-            this.userService.save(user);
+            userService.save(user);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             return ResponseResult.error("添加失败，md5生成错误");
@@ -107,7 +108,7 @@ public class UserController {
         String role = (String) params.get("role");
 
         // 未修改的user
-        User user = this.userService.queryById(userId);
+        User user = userService.queryById(userId);
 
         if (!Validator.checkEmpty(name)) {
 //            user.setName(name);
@@ -118,7 +119,7 @@ public class UserController {
             user.setRole(role);
         }
 
-        this.userService.update(user);
+        userService.update(user);
 
         return ResponseResult.success("修改成功");
     }
@@ -133,7 +134,7 @@ public class UserController {
     @RequestMapping(value = "{userId}", method = RequestMethod.GET)
     public ResponseResult queryById(@PathVariable("userId") Integer userId) {
 
-        User user = this.userService.queryById(userId);
+        User user = userService.queryById(userId);
         if (user == null) {
             return ResponseResult.error("用户不存在");
         }
@@ -153,13 +154,13 @@ public class UserController {
     @RequiredRoles(roles = {"系统管理员"})
     public ResponseResult deleteById(@PathVariable("userId") Integer userId) {
 
-        User user = this.userService.queryById(userId);
+        User user = userService.queryById(userId);
         if (user == null) {
             return ResponseResult.error("用户不存在");
         }
 
-        // this.userService.deleteById(userId);
-        this.userService.delete(user);
+        // userService.deleteById(userId);
+        userService.delete(user);
 
 //        logger.info("删除用户：{}", user.getName());
 
@@ -181,13 +182,13 @@ public class UserController {
         String name = (String) params.get("name");
 
         // 未修改的user
-        User user = this.userService.queryById(userId);
+        User user = userService.queryById(userId);
 
         if (!Validator.checkEmpty(name)) {
 //            user.setName(name);
         }
 
-        this.userService.update(user);
+        userService.update(user);
         return ResponseResult.success("修改成功");
     }
 
@@ -210,9 +211,9 @@ public class UserController {
         String username = (String) params.get("username");
         String name = (String) params.get("name");
 
-        Identity identity = (Identity) session.getAttribute("identity");
+        Identity identity = (Identity) session.getAttribute(OauthConsts.KEY_IDENTITY);
 
-        List<User> userList = this.userService.queryUserList(pageNow, pageSize, role, username, name, identity);
+        List<User> userList = userService.queryUserList(pageNow, pageSize, role, username, name, identity);
         PageResult pageResult = new PageResult(new PageInfo<>(userList));
 
         return ResponseResult.success("查询成功", pageResult);
@@ -232,7 +233,7 @@ public class UserController {
         String oldPassword = (String) params.get("oldPassword");
         String newPassword = (String) params.get("newPassword");
 
-        User user = this.userService.queryById(userId);
+        User user = userService.queryById(userId);
 
         // 找回密码的时候没有oldPassword
         if (!Validator.checkEmpty(oldPassword)) {
@@ -258,7 +259,7 @@ public class UserController {
         }
 
         user.setPassword(newPasswordMD5);
-        this.userService.update(user);
+        userService.update(user);
 
         return ResponseResult.success("密码修改成功");
     }
@@ -274,7 +275,7 @@ public class UserController {
     @RequestMapping(value = "avatar", method = RequestMethod.POST)
     public ResponseResult uploadAvatar(@RequestParam("file") MultipartFile file, Integer id) {
 
-        User user = this.userService.queryById(id);
+        User user = userService.queryById(id);
         if (user == null) {
             return ResponseResult.error("上传失败，用户不存在");
         }
@@ -293,7 +294,7 @@ public class UserController {
             }
 
             user.setAvatarFile(fileName);
-            this.userService.update(user);
+            userService.update(user);
         } else {
             return ResponseResult.error("头像上传失败");
         }

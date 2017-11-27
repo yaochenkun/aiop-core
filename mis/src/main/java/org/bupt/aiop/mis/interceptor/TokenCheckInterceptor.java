@@ -32,26 +32,26 @@ public class TokenCheckInterceptor implements HandlerInterceptor {
 			Exception {
 
         logger.info("进入TokenCheckInterceptor");
-        return true;
-//        // 验证token的有效性
-//        try {
-//
-//            String accessToken = request.getHeader(OauthConsts.KEY_TOKEN);
-//            Identity identity = TokenUtil.parseToken(accessToken, envConsts.TOKEN_API_KEY_SECRET);
-//
-//            //把identity存入session中(其中包含用户名、角色、过期时间戳等)
-//            request.getSession().setAttribute("identity", identity);
-//
-//            logger.info("应用={}: token通过认证", identity.getClientId());
-//            return true;
-//
-//        } catch (Exception e) {
-//            logger.info("token无效, 原因为: {}", e.getMessage());
-//            logger.info("正转向认证失败控制器");
-//            response.sendRedirect("/api/error/oauth/" + ErrorConsts.OAUTH_CODE_TOKEN_INVALID);
-//
-//            return false;
-//        }
+
+        // 验证token的有效性
+        try {
+
+            String accessToken = request.getHeader(OauthConsts.KEY_TOKEN);
+            Identity identity = TokenUtil.parseToken(accessToken, envConsts.TOKEN_API_KEY_SECRET);
+
+            //把identity存入session中(其中包含用户名、角色、过期时间戳等)
+            request.getSession().setAttribute("identity", identity);
+
+            logger.info("应用={}: token通过认证", identity.getClientId());
+            return true;
+
+        } catch (Exception e) {
+            logger.info("token无效, 原因为: {}", e.getMessage());
+            logger.info("正转向认证失败控制器");
+            response.sendRedirect("/api/error/oauth/" + ErrorConsts.OAUTH_CODE_TOKEN_INVALID);
+
+            return false;
+        }
     }
 
     @Override

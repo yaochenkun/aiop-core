@@ -5,6 +5,7 @@ package org.bupt.common.constant;
  */
 public class OauthConsts {
 
+	public static final String KEY_IDENTITY = "identity";
 
 	//键常量
 	public static final String KEY_GRANT_TYPE = "grant_type";

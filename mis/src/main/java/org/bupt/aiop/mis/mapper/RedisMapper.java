@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class RedisMapper {
 
-	@Autowired(required = false)
+	@Autowired
 	private JedisClient jedisClient;
 
 	@Autowired

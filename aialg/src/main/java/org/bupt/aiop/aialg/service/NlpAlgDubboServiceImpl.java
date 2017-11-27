@@ -57,7 +57,7 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
 		return null;
 	}
 
-    @Override
+	@Override
     public String word_2_vec(String text) {
         Vector vector = wordVectorModel.vector(text);
         WordVector result = new WordVector();

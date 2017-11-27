@@ -2,7 +2,9 @@ package org.bupt.aiop.mis.controller;
 
 import org.bupt.aiop.mis.constant.EnvConsts;
 import org.bupt.aiop.mis.constant.RoleConsts;
+import org.bupt.aiop.mis.pojo.po.App;
 import org.bupt.aiop.mis.pojo.po.User;
+import org.bupt.aiop.mis.service.AppService;
 import org.bupt.common.bean.ErrorResult;
 import org.bupt.common.bean.ResponseResult;
 import org.bupt.common.constant.ErrorConsts;
@@ -33,6 +35,9 @@ public class OauthController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private AppService appService;
 
 	@Autowired
 	private EnvConsts envConsts;
@@ -67,23 +72,30 @@ public class OauthController {
 		//判断下发类型: client_credentials / refresh_token
 		if (OauthConsts.CLIENT_CREDENTIALS.equals(grantType)) {
 
-			//进入数据库验证clientId / clientSecret
+			//进入数据库验证是否存在对应clientId的应用
+			App app = new App();
+			app.setClientId(clientId);
+			app = appService.queryOne(app);
+			if (app == null) {
+				return new ErrorResult(ErrorConsts.OAUTH_CODE_INVALID_CLIENT, ErrorConsts.OAUTH_MSG_INVALID_CLIENT_ID);
+			}
 
-			//若验证通过，读取数据库中该用户的权限信息
+			//验证clientId与clientSecret是否匹配
+			if (!clientSecret.equals(app.getClientSecret())) {
+				return new ErrorResult(ErrorConsts.OAUTH_CODE_INVALID_CLIENT, ErrorConsts.OAUTH_MSG_INVALID_CLIENT_SECRET);
+			}
 
 			//生成access_token等相关回复参数
 			try {
 
-				//test
-				String id = "1"; //应用的id
-				String scope = "text_keywords,word_pos,word_seg"; //能力权限(注意如果一个权限也没有是none)
+				String scope = app.getAbilityScope(); //能力权限(注意如果一个权限也没有应是none)
 
 				// 封装生成access_token需要的身份信息
 				Identity identity = new Identity();
-				identity.setId(id);
-				identity.setIssuer(envConsts.TOKEN_ISSUER);
+				identity.setId(Integer.toString(app.getId()));
+				identity.setIssuer(envConsts.ACCESS_TOKEN_ISSUER);
 				identity.setClientId(clientId);
-				identity.setPermission(scope);
+				identity.setPermission(app.getAbilityScope());
 				identity.setDuration(envConsts.ACCESS_TOKEN_DURATION);
 				String accessToken = TokenUtil.createToken(identity, envConsts.ACCESS_TOKEN_API_KEY_SECRET);
 
@@ -205,7 +217,7 @@ public class OauthController {
 		identity.setIssuer(envConsts.TOKEN_ISSUER);
 		identity.setClientId(user.getUsername());
 		identity.setPermission(user.getRole());
-		identity.setDuration(envConsts.TOKEN_DURATION);
+		identity.setDuration(envConsts.ACCESS_TOKEN_DURATION); //Todo
 		String token = TokenUtil.createToken(identity, envConsts.TOKEN_API_KEY_SECRET);
 		identity.setToken(token);
 

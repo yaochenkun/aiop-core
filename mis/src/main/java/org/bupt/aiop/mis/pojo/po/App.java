@@ -11,6 +11,9 @@ public class App {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "developer_id")
+    private Integer developerId;
+
     /**
      * 应用名称
      */
@@ -55,6 +58,20 @@ public class App {
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    /**
+     * @return developer_id
+     */
+    public Integer getDeveloperId() {
+        return developerId;
+    }
+
+    /**
+     * @param developerId
+     */
+    public void setDeveloperId(Integer developerId) {
+        this.developerId = developerId;
     }
 
     /**

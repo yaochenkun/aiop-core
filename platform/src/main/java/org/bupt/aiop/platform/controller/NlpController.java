@@ -19,7 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 /**
- * UserController
+ * NlpController
  */
 @RestController
 @RequestMapping("restapi/nlp")

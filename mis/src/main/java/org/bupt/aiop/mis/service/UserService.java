@@ -30,8 +30,6 @@ public class UserService extends BaseService<User> {
     @Autowired
     private EnvConsts envConsts;
 
-    @Autowired(required = false)
-    private JedisClient jedisClient;
 
     /**
      * 检查用户名是否重复

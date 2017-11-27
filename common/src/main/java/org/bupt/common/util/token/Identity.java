@@ -7,9 +7,9 @@ package org.bupt.common.util.token;
 public class Identity {
 
 	private String token;
-	private String id; // 对应id
+	private String id; // 对应user_id
 	private String issuer;
-	private String clientId; //client_id/username
+	private String clientId; //可以是Oauth2.0中的client_id，也可以是一般的username
 	private String permission; // 可以是角色，也可以是权限
 	private Long duration; // 有效时长，单位毫秒
 

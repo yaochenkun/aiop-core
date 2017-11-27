@@ -25,8 +25,8 @@ public class ErrorConsts {
 	//错误描述
 	public static final String OAUTH_MSG_SYSTEM_ERROR = "system error";
 	public static final String OAUTH_MSG_INVALID_GRANT_TYPE = "invalid grant type";
-	public static final String OAUTH_MSG_INVALID_CLIENT_ID = "invalid client";
-	public static final String OAUTH_MSG_INVALID_CLIENT_SECRET = "invalid client";
+	public static final String OAUTH_MSG_INVALID_CLIENT_ID = "invalid client id";
+	public static final String OAUTH_MSG_INVALID_CLIENT_SECRET = "invalid client secret";
 	public static final String OAUTH_MSG_ACCESS_TOKEN_INVALID = "access token invalid or no longer valid";
 	public static final String OAUTH_MSG_TOKEN_INVALID = "token invalid or no longer valid";
 	public static final String OAUTH_MSG_PERMISSION_DENIED = "No permission to access data";
