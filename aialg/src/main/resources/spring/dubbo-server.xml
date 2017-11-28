@@ -5,7 +5,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
     <dubbo:application name="aialg"/>
-    <dubbo:registry address="${zookeeper.host}" />
+    <dubbo:registry address="${zookeeper.host}" timeout="5000"/>
     <dubbo:protocol name="dubbo" port="${dubbo.port}"/>
     <dubbo:annotation package="org.bupt.aiop.aialg.service" />
 

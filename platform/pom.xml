@@ -13,12 +13,14 @@
     <packaging>war</packaging>
 
     <dependencies>
+
         <!--RPC API包-->
         <dependency>
             <groupId>org.bupt.aiop</groupId>
             <artifactId>rpcapi</artifactId>
             <version>1.0</version>
         </dependency>
+
         <!--common工具包-->
         <dependency>
             <groupId>org.bupt.aiop</groupId>
