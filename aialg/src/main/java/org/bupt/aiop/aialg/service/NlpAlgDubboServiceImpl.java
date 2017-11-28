@@ -100,12 +100,12 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
      */
     @Override
     public String word_pos(String text, Boolean japName, Boolean placeName, Boolean orgName) {
-        Segment segment = HanLP.newSegment();
-        segment.enableJapaneseNameRecognize(japName);
-        segment.enablePlaceRecognize(placeName);
-        segment.enableOrganizationRecognize(orgName);
+        Segment segment = HanLP.newSegment()
+                .enableJapaneseNameRecognize(japName)
+                .enablePlaceRecognize(placeName)
+                .enableOrganizationRecognize(orgName);
 
-        List<Term> segments = HanLP.segment(text);
+        List<Term> segments = segment.seg(text);
         Map<String, Object> result = new HashMap<>();
         List<WordPos> items = new ArrayList<>();
         int offset = 0;
