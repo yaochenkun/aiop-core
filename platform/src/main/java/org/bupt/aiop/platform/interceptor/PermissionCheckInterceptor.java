@@ -56,7 +56,7 @@ public class PermissionCheckInterceptor extends HandlerInterceptorAdapter {
             String userPermissionStr = oauthService.getAppPermission(appId);
             if (userPermissionStr == null) {
                 logger.info("权限拒绝");
-                response.sendRedirect("/api/error/oauth/" + ErrorConsts.OAUTH_CODE_PERMISSION_DENIED);
+                response.sendRedirect("/api/oauth/error/" + ErrorConsts.OAUTH_CODE_PERMISSION_DENIED);
             }
 
             String[] userPermissions = oauthService.getAppPermission(appId).split(",");
@@ -75,7 +75,7 @@ public class PermissionCheckInterceptor extends HandlerInterceptorAdapter {
         }
 
         logger.info("权限拒绝");
-        response.sendRedirect("/api/error/oauth/" + ErrorConsts.OAUTH_CODE_PERMISSION_DENIED);
+        response.sendRedirect("/api/oauth/error/" + ErrorConsts.OAUTH_CODE_PERMISSION_DENIED);
         return false;
     }
 }

@@ -215,7 +215,7 @@ public class OauthController {
 		identity.setId(user.getId());
 		identity.setIssuer(envConsts.TOKEN_ISSUER);
 		identity.setClientId(user.getUsername());
-		identity.setDuration(envConsts.ACCESS_TOKEN_DURATION); //Todo
+		identity.setDuration(envConsts.ACCESS_TOKEN_DURATION); //TODO: 后期修改为Token的
 		String token = TokenUtil.createToken(identity, envConsts.TOKEN_API_KEY_SECRET);
 		identity.setToken(token);
 
@@ -223,6 +223,22 @@ public class OauthController {
 		return ResponseResult.success("登录成功", identity);
 	}
 
+
+	/**
+	 * oauth错误
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = "error/{code}")
+	public ErrorResult oauthError(@PathVariable("code") Integer code) {
+
+		logger.info("进入oauth错误返回控制器");
+		switch (code) {
+			case ErrorConsts.OAUTH_CODE_TOKEN_INVALID: return new ErrorResult(code, ErrorConsts.OAUTH_MSG_TOKEN_INVALID);
+			case ErrorConsts.OAUTH_CODE_ROLE_DENIED: return new ErrorResult(code, ErrorConsts.OAUTH_MSG_ROLE_DENIED);
+			default: return new ErrorResult(ErrorConsts.OAUTH_CODE_UNDEFINED_ERROR, ErrorConsts.OAUTH_MSG_UNDEFINED_ERROR);
+		}
+	}
 
 //	/**
 //	 * 发送短信验证码

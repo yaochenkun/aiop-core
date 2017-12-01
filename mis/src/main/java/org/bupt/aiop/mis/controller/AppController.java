@@ -1,5 +1,6 @@
 package org.bupt.aiop.mis.controller;
 
+import org.bupt.aiop.mis.annotation.RequiredRoles;
 import org.bupt.aiop.mis.pojo.po.App;
 import org.bupt.aiop.mis.service.AppService;
 import org.bupt.common.bean.ResponseResult;
@@ -42,7 +43,7 @@ public class AppController {
 		String name = (String) params.get("name");
 		String type = (String) params.get("type");
 		String platform = (String) params.get("platform");
-		String abilityScope = (String) params.get("abilityScope"); //todo: 将前端获取到的不同权限组装成,分隔的字符串
+		String abilityScope = (String) params.get("abilityScope"); //TODO: 将前端获取到的不同权限组装成,分隔的字符串
 		String description = (String) params.get("description");
 
 		if (Validator.checkEmpty(name) || Validator.checkEmpty(type) || Validator.checkEmpty(platform)
@@ -63,6 +64,8 @@ public class AppController {
 		app.setUpdateTime(new Date());
 
 		appService.saveApp(app);
+
+		logger.info("应用={}, 添加成功", app.getName());
 		return ResponseResult.success("添加成功");
 	}
 }

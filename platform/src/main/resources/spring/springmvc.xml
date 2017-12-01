@@ -19,13 +19,13 @@
         <!--token认证拦截器-->
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
-            <mvc:exclude-mapping path="/api/error/**"/>
+            <mvc:exclude-mapping path="/api/oauth/**"/>
             <bean class="org.bupt.aiop.platform.interceptor.AccessTokenCheckInterceptor"/>
         </mvc:interceptor>
 
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
-            <mvc:exclude-mapping path="/api/error/**"/>
+            <mvc:exclude-mapping path="/api/oauth/**"/>
             <bean class="org.bupt.aiop.platform.interceptor.PermissionCheckInterceptor"/>
         </mvc:interceptor>
 

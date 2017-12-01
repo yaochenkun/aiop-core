@@ -61,7 +61,7 @@ public class RoleCheckInterceptor extends HandlerInterceptorAdapter {
             String userRole = oauthService.getUserRole(userId);
             if (userRole == null) {
                 logger.info("权限拒绝");
-                response.sendRedirect("/api/error/oauth/" + ErrorConsts.OAUTH_CODE_ROLE_DENIED);
+                response.sendRedirect("/api/oauth/error/" + ErrorConsts.OAUTH_CODE_ROLE_DENIED);
             }
 
             logger.info("用户的角色是 {}", userRole);
@@ -76,7 +76,7 @@ public class RoleCheckInterceptor extends HandlerInterceptorAdapter {
         }
 
         logger.info("权限拒绝");
-        response.sendRedirect("/api/error/oauth/" + ErrorConsts.OAUTH_CODE_ROLE_DENIED);
+        response.sendRedirect("/api/oauth/error/" + ErrorConsts.OAUTH_CODE_ROLE_DENIED);
         return false;
     }
 }

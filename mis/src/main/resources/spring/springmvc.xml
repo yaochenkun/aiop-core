@@ -18,14 +18,12 @@
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/api/oauth/**"/>
-            <mvc:exclude-mapping path="/api/error/**"/>
             <bean class="org.bupt.aiop.mis.interceptor.TokenCheckInterceptor"/>
         </mvc:interceptor>
 
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/api/oauth/**"/>
-            <mvc:exclude-mapping path="/api/error/**"/>
             <bean class="org.bupt.aiop.mis.interceptor.RoleCheckInterceptor"/>
         </mvc:interceptor>
 

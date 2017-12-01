@@ -48,7 +48,7 @@ public class TokenCheckInterceptor implements HandlerInterceptor {
         } catch (Exception e) {
             logger.info("token无效, 原因为: {}", e.getMessage());
             logger.info("正转向认证失败控制器");
-            response.sendRedirect("/api/error/oauth/" + ErrorConsts.OAUTH_CODE_TOKEN_INVALID);
+            response.sendRedirect("/api/oauth/error/" + ErrorConsts.OAUTH_CODE_TOKEN_INVALID);
 
             return false;
         }

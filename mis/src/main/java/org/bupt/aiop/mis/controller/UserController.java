@@ -77,6 +77,7 @@ public class UserController {
             return ResponseResult.error("添加失败，md5生成错误");
         }
 
+        logger.info("用户={}, 添加成功", user.getUsername());
         return ResponseResult.success("添加成功");
     }
 
@@ -109,6 +110,7 @@ public class UserController {
 
         userService.update(user);
 
+        logger.info("用户={}, 修改成功", user.getUsername());
         return ResponseResult.success("修改成功");
     }
 
@@ -127,6 +129,7 @@ public class UserController {
             return ResponseResult.error("用户不存在");
         }
 
+        logger.info("用户={}, 查询成功", user.getUsername());
         return ResponseResult.success("查询成功", user);
     }
 
@@ -150,8 +153,7 @@ public class UserController {
         // userService.deleteById(userId);
         userService.delete(user);
 
-//        logger.info("删除用户：{}", user.getName());
-
+        logger.info("用户={}, 删除成功", user.getUsername());
         return ResponseResult.success("删除成功");
     }
 
