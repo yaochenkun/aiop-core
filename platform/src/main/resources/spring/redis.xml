@@ -34,7 +34,7 @@
         <constructor-arg name="timeout" value="${redis.timeout}"/>
         <constructor-arg name="poolConfig" ref="jedisPoolConfig"/>
     </bean>
-    <bean id="jedisClient" class="org.bupt.common.redis.JedisClient">
+    <bean id="redisMapper" class="org.bupt.common.redis.RedisMapper">
         <property name="jedisPool" ref="jedisPool"/>
     </bean>
 

@@ -6,7 +6,7 @@ import redis.clients.jedis.JedisPool;
 /**
  * Created by zlren on 2017/6/11.
  */
-public class JedisClient {
+public class RedisMapper {
 
     private JedisPool jedisPool;
 

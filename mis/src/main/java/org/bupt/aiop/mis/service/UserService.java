@@ -2,13 +2,9 @@ package org.bupt.aiop.mis.service;
 
 import com.github.pagehelper.PageHelper;
 import org.bupt.aiop.mis.constant.EnvConsts;
-import org.bupt.common.bean.ResponseResult;
 import org.bupt.common.constant.ResponseConsts;
-import org.bupt.common.redis.JedisClient;
-import org.bupt.common.util.MD5Util;
 import org.bupt.common.util.Validator;
 import org.bupt.common.util.token.Identity;
-import org.bupt.common.util.token.TokenUtil;
 import org.bupt.aiop.mis.pojo.po.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
