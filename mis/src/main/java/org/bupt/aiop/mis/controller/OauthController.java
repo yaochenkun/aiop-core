@@ -92,10 +92,9 @@ public class OauthController {
 
 				// 封装生成access_token需要的身份信息
 				Identity identity = new Identity();
-				identity.setId(Integer.toString(app.getId()));
+				identity.setId(app.getId());
 				identity.setIssuer(envConsts.ACCESS_TOKEN_ISSUER);
 				identity.setClientId(clientId);
-				identity.setPermission(app.getAbilityScope());
 				identity.setDuration(envConsts.ACCESS_TOKEN_DURATION);
 				String accessToken = TokenUtil.createToken(identity, envConsts.ACCESS_TOKEN_API_KEY_SECRET);
 
@@ -213,10 +212,9 @@ public class OauthController {
 
 		// 生成token
 		Identity identity = new Identity();
-		identity.setId(user.getId().toString());
+		identity.setId(user.getId());
 		identity.setIssuer(envConsts.TOKEN_ISSUER);
 		identity.setClientId(user.getUsername());
-		identity.setPermission(user.getRole());
 		identity.setDuration(envConsts.ACCESS_TOKEN_DURATION); //Todo
 		String token = TokenUtil.createToken(identity, envConsts.TOKEN_API_KEY_SECRET);
 		identity.setToken(token);

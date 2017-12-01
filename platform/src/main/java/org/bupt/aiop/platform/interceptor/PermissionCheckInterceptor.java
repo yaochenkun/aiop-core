@@ -1,11 +1,13 @@
 package org.bupt.aiop.platform.interceptor;
 
 import org.bupt.aiop.platform.annotation.RequiredPermission;
+import org.bupt.aiop.platform.service.OauthService;
 import org.bupt.common.constant.ErrorConsts;
 import org.bupt.common.constant.OauthConsts;
 import org.bupt.common.util.token.Identity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -23,7 +25,8 @@ public class PermissionCheckInterceptor extends HandlerInterceptorAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(PermissionCheckInterceptor.class);
 
-
+    @Autowired
+    private OauthService oauthService;
 
     // 在调用方法之前执行拦截
     @Override
@@ -38,27 +41,29 @@ public class PermissionCheckInterceptor extends HandlerInterceptorAdapter {
         // 获取出方法上的Access注解
         RequiredPermission permissionCheck = method.getAnnotation(RequiredPermission.class);
         if (permissionCheck == null) {
-            // 如果注解为null, 说明不需要拦截, 直接放过
+            logger.info("该方法无需任何权限，放行");
             return true;
         }
 
         String permission = permissionCheck.permission();
         if (!"".equals(permission)) {
 
-            logger.info("该方法对应能力要求的权限是{}", permission);
+            logger.info("该方法对应能力要求的权限={}", permission);
 
+            // 获取appId对应的权限
+            Identity identity = ((Identity) request.getSession().getAttribute(OauthConsts.KEY_IDENTITY));
+            Integer appId = identity.getId();
+            String userPermissionStr = oauthService.getAppPermission(appId);
+            if (userPermissionStr == null) {
+                logger.info("权限拒绝");
+                response.sendRedirect("/api/error/oauth/" + ErrorConsts.OAUTH_CODE_PERMISSION_DENIED);
+            }
 
-            // 这里我为了方便是直接参数传入权限, 在实际操作中应该是从参数中获取用户Id
-            // 到数据库权限表中查询用户拥有的权限集合, 与set集合中的权限进行对比完成权限校验
-
-            String[] userPermisssions = ((Identity) request.getSession().getAttribute(OauthConsts.KEY_IDENTITY)).getPermission().split(",");
-
-
-
+            String[] userPermissions = oauthService.getAppPermission(appId).split(",");
             Set<String> userPermissionSet = new HashSet<>();
-            userPermissionSet.addAll(Arrays.asList(userPermisssions));
+            userPermissionSet.addAll(Arrays.asList(userPermissions));
 
-            logger.info("用户的能力权限是 {}", userPermissionSet.toString());
+            logger.info("应用的能力权限={}", userPermissionSet.toString());
 
             if (!userPermissionSet.isEmpty()) {
                 if (userPermissionSet.contains(permission)) {
@@ -70,7 +75,6 @@ public class PermissionCheckInterceptor extends HandlerInterceptorAdapter {
         }
 
         logger.info("权限拒绝");
-        // 拦截之后应该返回公共结果, 这里没做处理
         response.sendRedirect("/api/error/oauth/" + ErrorConsts.OAUTH_CODE_PERMISSION_DENIED);
         return false;
     }

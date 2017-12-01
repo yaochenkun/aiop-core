@@ -42,7 +42,7 @@ public class AppController {
 		String name = (String) params.get("name");
 		String type = (String) params.get("type");
 		String platform = (String) params.get("platform");
-		String abilityScope = (String) params.get("abilityScope");
+		String abilityScope = (String) params.get("abilityScope"); //todo: 将前端获取到的不同权限组装成,分隔的字符串
 		String description = (String) params.get("description");
 
 		if (Validator.checkEmpty(name) || Validator.checkEmpty(type) || Validator.checkEmpty(platform)
@@ -51,7 +51,7 @@ public class AppController {
 		}
 
 		App app = new App();
-		app.setDeveloperId(Integer.parseInt(identity.getId()));
+		app.setDeveloperId(identity.getId());
 		app.setName(name);
 		app.setType(type);
 		app.setPlatform(platform);
@@ -62,7 +62,7 @@ public class AppController {
 		app.setCreateTime(new Date());
 		app.setUpdateTime(new Date());
 
-		appService.save(app);
+		appService.saveApp(app);
 		return ResponseResult.success("添加成功");
 	}
 }

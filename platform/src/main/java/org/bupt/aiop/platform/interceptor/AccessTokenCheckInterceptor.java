@@ -42,7 +42,7 @@ public class AccessTokenCheckInterceptor implements HandlerInterceptor {
             //把identity存入session中(其中包含用户名、角色、过期时间戳等)
             request.getSession().setAttribute(OauthConsts.KEY_IDENTITY, identity);
 
-            logger.info("client_id={}: access_token通过认证, identity.permission={}", identity.getClientId(), identity.getPermission());
+            logger.info("app_id={}, client_id={}, access_token通过认证", identity.getId(), identity.getClientId());
             return true;
 
         } catch (Exception e) {

@@ -3,6 +3,7 @@ package org.bupt.aiop.platform.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
 import org.apache.thrift.protocol.TProtocol;
+import org.bupt.aiop.platform.annotation.RequiredPermission;
 import org.bupt.aiop.platform.constant.NlpConsts;
 import org.bupt.aiop.platform.constant.ResponseConsts;
 import org.bupt.aiop.rpcapi.dubbo.NlpAlgDubboService;
@@ -45,6 +46,7 @@ public class NlpController {
 	 * @return
 	 */
 	@RequestMapping(value = "v1/word_seg", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
+	@RequiredPermission(permission = "word_seg")
 	public String word_seg(@RequestBody Map<String, Object> params) throws UnsupportedEncodingException {
 
 
@@ -89,6 +91,7 @@ public class NlpController {
 	 * @return
 	 */
 	@RequestMapping(value = "v1/word_pos", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
+	@RequiredPermission(permission = "word_pos")
 	public String word_pos_v1(@RequestBody Map<String, Object> params) {
 
 		String response = null;
