@@ -21,4 +21,5 @@
         <property name="connectionFactory"   ref="connectionFactory" />
         <property name="enableTransactionSupport" value="true"/>
     </bean>
+
 </beans>

@@ -36,15 +36,4 @@ public class OauthService extends BaseService<User> {
 		return (String) redisMapper.opsForHash().get(RedisConsts.AIOP_APP_PERMISSION, appId.toString());
 	}
 
-
-	/**
-	 * 保存验证码到redis，过期时间为1分钟
-	 *
-	 * @param key
-	 * @param value
-	 */
-	public void saveSmSCode(String key, String value) {
-		redisMapper.opsForValue().set(key, value, envConsts.SMS_CODE_EXPIRE, TimeUnit.SECONDS);
-	}
-
 }

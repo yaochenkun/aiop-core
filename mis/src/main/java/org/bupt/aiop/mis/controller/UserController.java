@@ -142,7 +142,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "{userId}", method = RequestMethod.DELETE)
-    @RequiredRoles(roles = {"系统管理员"})
+    @RequiredRoles(value = {"系统管理员"})
     public ResponseResult deleteById(@PathVariable("userId") Integer userId) {
 
         User user = userService.queryById(userId);

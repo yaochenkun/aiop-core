@@ -46,9 +46,8 @@ public class NlpController {
 	 * @return
 	 */
 	@RequestMapping(value = "v1/word_seg", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
-	@RequiredPermission(permission = "word_seg")
-	public String word_seg(@RequestBody Map<String, Object> params) throws UnsupportedEncodingException {
-
+	@RequiredPermission(value = "word_seg")
+	public String word_seg(@RequestBody Map<String, Object> params) {
 
 		String response = null;
 
@@ -91,7 +90,7 @@ public class NlpController {
 	 * @return
 	 */
 	@RequestMapping(value = "v1/word_pos", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
-	@RequiredPermission(permission = "word_pos")
+	@RequiredPermission(value = "word_pos")
 	public String word_pos_v1(@RequestBody Map<String, Object> params) {
 
 		String response = null;

@@ -46,7 +46,7 @@ public class RoleCheckInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
-        String[] roles = roleCheck.roles();
+        String[] roles = roleCheck.value();
         if (roles.length > 0) {
 
             // 如果权限配置不为空, 则取出配置值
