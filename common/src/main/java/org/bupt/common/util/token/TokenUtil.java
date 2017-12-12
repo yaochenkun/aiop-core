@@ -47,7 +47,6 @@ public class TokenUtil {
         }
 
         //Builds the JWT and serializes it to a compact, URL-safe string
-        logger.info("token生成成功");
         return builder.compact();
     }
 
@@ -66,7 +65,6 @@ public class TokenUtil {
         identity.setClientId(clientId);
         identity.setDuration(claims.getExpiration().getTime());
 
-        logger.info("已登录的用户，有效token");
         return identity;
     }
 }

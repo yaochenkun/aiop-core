@@ -33,7 +33,7 @@ public class RoleCheckInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        logger.info("进入RoleCheckInterceptor");
+        logger.debug("进入RoleCheckInterceptor");
 
         // 将handler强转为HandlerMethod, 前面已经证实这个handler就是HandlerMethod
         HandlerMethod handlerMethod = (HandlerMethod) handler;
@@ -42,7 +42,7 @@ public class RoleCheckInterceptor extends HandlerInterceptorAdapter {
         // 获取出方法上的Access注解
         RequiredRoles roleCheck = method.getAnnotation(RequiredRoles.class);
         if (roleCheck == null) {
-            logger.info("该方法无需任何权限，放行");
+            logger.debug("该方法无需任何权限，放行");
             return true;
         }
 
@@ -60,22 +60,22 @@ public class RoleCheckInterceptor extends HandlerInterceptorAdapter {
             Integer userId = identity.getId();
             String userRole = oauthService.getUserRole(userId);
             if (userRole == null) {
-                logger.info("权限拒绝");
+                logger.debug("权限拒绝");
                 response.sendRedirect("/api/oauth/error/" + ErrorConsts.OAUTH_CODE_ROLE_DENIED);
             }
 
-            logger.info("用户的角色是 {}", userRole);
+            logger.debug("用户的角色是 {}", userRole);
             if (!Validator.checkEmpty(userRole)) {
                 if (roleSet.contains(userRole)) {
 
                     // 校验通过返回true, 否则拦截请求
-                    logger.info("权限校验通过");
+                    logger.debug("权限校验通过");
                     return true;
                 }
             }
         }
 
-        logger.info("权限拒绝");
+        logger.debug("权限拒绝");
         response.sendRedirect("/api/oauth/error/" + ErrorConsts.OAUTH_CODE_ROLE_DENIED);
         return false;
     }

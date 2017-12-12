@@ -37,19 +37,4 @@ public class CommonController {
 			default: return new ErrorResult(ErrorConsts.OAUTH_CODE_UNDEFINED_ERROR, ErrorConsts.OAUTH_MSG_UNDEFINED_ERROR);
 		}
 	}
-
-	/**
-	 * 返回缓存的能力调用结果
-	 * @return
-	 */
-	@RequestMapping(value = "cache/output", method = RequestMethod.GET, produces = "text/json;charset=UTF-8")
-	public String returnOutputCache(HttpSession session) {
-
-		logger.info("进入output缓存返回控制器");
-
-		String output = (String) session.getAttribute(RedisConsts.KEY_ABILITY_OUTPUT);
-
-		logger.info("返回缓存的能力调用结果={}", output);
-		return output;
-	}
 }

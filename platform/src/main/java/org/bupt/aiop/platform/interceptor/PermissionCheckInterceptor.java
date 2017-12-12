@@ -32,7 +32,7 @@ public class PermissionCheckInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        logger.info("进入PermissionCheckInterceptor");
+        logger.debug("进入PermissionCheckInterceptor");
 
         // 将handler强转为HandlerMethod, 前面已经证实这个handler就是HandlerMethod
         HandlerMethod handlerMethod = (HandlerMethod) handler;
@@ -41,21 +41,21 @@ public class PermissionCheckInterceptor extends HandlerInterceptorAdapter {
         // 获取出方法上的Access注解
         RequiredPermission permissionCheck = method.getAnnotation(RequiredPermission.class);
         if (permissionCheck == null) {
-            logger.info("该方法无需任何权限，放行");
+            logger.debug("该方法无需任何权限，放行");
             return true;
         }
 
         String permission = permissionCheck.value();
         if (!"".equals(permission)) {
 
-            logger.info("该方法对应能力要求的权限={}", permission);
+            logger.debug("该方法对应能力要求的权限={}", permission);
 
             // 获取appId对应的权限
             Identity identity = ((Identity) request.getSession().getAttribute(OauthConsts.KEY_IDENTITY));
             Integer appId = identity.getId();
             String userPermissionStr = oauthService.getAppPermission(appId);
             if (userPermissionStr == null) {
-                logger.info("权限拒绝");
+                logger.debug("权限拒绝");
                 response.sendRedirect("/api/common/error/oauth/" + ErrorConsts.OAUTH_CODE_PERMISSION_DENIED);
             }
 
@@ -63,18 +63,18 @@ public class PermissionCheckInterceptor extends HandlerInterceptorAdapter {
             Set<String> userPermissionSet = new HashSet<>();
             userPermissionSet.addAll(Arrays.asList(userPermissions));
 
-            logger.info("应用的能力权限={}", userPermissionSet.toString());
+            logger.debug("应用的能力权限={}", userPermissionSet.toString());
 
             if (!userPermissionSet.isEmpty()) {
                 if (userPermissionSet.contains(permission)) {
                     // 校验通过返回true, 否则拦截请求
-                    logger.info("权限校验通过");
+                    logger.debug("权限校验通过");
                     return true;
                 }
             }
         }
 
-        logger.info("权限拒绝");
+        logger.debug("权限拒绝");
         response.sendRedirect("/api/common/error/oauth/" + ErrorConsts.OAUTH_CODE_PERMISSION_DENIED);
         return false;
     }

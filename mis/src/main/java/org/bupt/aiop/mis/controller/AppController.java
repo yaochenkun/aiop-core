@@ -65,7 +65,7 @@ public class AppController {
 
 		appService.saveApp(app);
 
-		logger.info("应用={}, 添加成功", app.getName());
+		logger.debug("应用={}, 添加成功", app.getName());
 		return ResponseResult.success("添加成功");
 	}
 }

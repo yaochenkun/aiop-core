@@ -10,6 +10,7 @@ import org.bupt.aiop.rpcapi.dubbo.NlpAlgDubboService;
 import org.bupt.aiop.rpcapi.thrift.NlpAlgThriftService;
 import org.bupt.common.bean.ErrorResult;
 import org.bupt.common.thrift.ThriftConnectionService;
+import org.bupt.common.util.LogUtil;
 import org.bupt.common.util.Validator;
 import org.bupt.aiop.platform.constant.EnvConsts;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
@@ -91,7 +93,7 @@ public class NlpController {
 	 */
 	@RequestMapping(value = "v1/word_pos", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
 	@RequiredPermission(value = "word_pos")
-	public String word_pos_v1(@RequestBody Map<String, Object> params) {
+	public String word_pos_v1(@RequestBody Map<String, Object> params, HttpSession session) {
 
 		String response = null;
 

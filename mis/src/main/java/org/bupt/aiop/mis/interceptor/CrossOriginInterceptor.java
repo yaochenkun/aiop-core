@@ -25,7 +25,7 @@ public class CrossOriginInterceptor implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
 
-        logger.info("进入CrossOriginInterceptor");
+        logger.debug("进入CrossOriginInterceptor");
 
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         response.setHeader("Access-Control-Allow-Origin", "*");

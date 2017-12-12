@@ -10,6 +10,7 @@ import org.bupt.common.util.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpSession;
  * 能力执行结果缓存切面
  */
 @Aspect
+@Order(2)
 @Component
 public class OutputCacheAspect {
 
@@ -43,7 +45,7 @@ public class OutputCacheAspect {
 	@Around(value = "pointcut()")
 	public String around(ProceedingJoinPoint joinPoint) throws Throwable {
 
-		logger.info("进入, 能力执行结果缓存环绕方法");
+		logger.debug("进入, 能力执行结果缓存环绕方法");
 
 		// Before: 缓存试探
 		// 获取input JSON串
@@ -56,29 +58,29 @@ public class OutputCacheAspect {
 		// 缓存试探
 		if (!outputService.hasAbilityAndInput(key)) {
 
-			logger.info("缓存未命中, 放行");
+			logger.debug("缓存未命中, 放行");
 			String output = (String) joinPoint.proceed();
 
 			// TODO: 后期导向RocketMQ消费者端写入Redis
 			// After: 写入缓存
 			// 判断是否缓存过，若没有则缓存
 			if (outputService.hasAbilityAndInput(key)) {
-				logger.info("已缓存过该结果, 返回之");
+				logger.debug("已缓存过该结果, 返回之");
 				return output;
 			}
 
 			outputService.saveOutput(key, output);
-			logger.info("缓存成功, hash_table={}, key={}, value={}", RedisConsts.AIOP_ABILITY_INPUT_OUTPUT, key, output);
-			logger.info("退出, 能力执行结果缓存环绕方法");
+			logger.debug("缓存成功, hash_table={}, key={}, value={}", RedisConsts.AIOP_ABILITY_INPUT_OUTPUT, key, output);
+			logger.debug("退出, 能力执行结果缓存环绕方法");
 
 			return output;
 		}
 
 		//缓存命中, 获取缓存结果
-		logger.info("缓存命中");
+		logger.debug("缓存命中");
 		String output = outputService.getOutput(key);
 
-		logger.info("退出, 能力执行结果缓存环绕方法");
+		logger.debug("退出, 能力执行结果缓存环绕方法");
 		return output;
 	}
 }
