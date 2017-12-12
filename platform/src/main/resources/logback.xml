@@ -1,0 +1,28 @@
+<configuration scan="false">
+
+    <property resource="env.properties" />
+
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <!--<pattern>%-5level %d{yyyy-MM-dd HH:mm:ss} [%thread] %caller{1} : %msg %n</pattern>-->
+            <pattern>%-5level %d{yyyy-MM-dd HH:mm:ss} %replace(%caller{1}){'(\bCaller.+?(?=\())|\r|\n|\s*|\t', ''} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${logfile.path}</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <!--<pattern>%-5level %d{yyyy-MM-dd HH:mm:ss} [%thread] %caller{1} : %msg %n</pattern>-->
+            <pattern>%-5level %d{yyyy-MM-dd HH:mm:ss} %replace(%caller{1}){'(\bCaller.+?(?=\())|\r|\n|\s*|\t', ''} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 日志输出级别 -->
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>
