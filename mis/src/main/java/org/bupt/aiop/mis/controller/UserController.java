@@ -6,7 +6,6 @@ import org.bupt.aiop.mis.annotation.RequiredRoles;
 import org.bupt.common.bean.PageResult;
 import org.bupt.common.bean.ResponseResult;
 import org.bupt.common.constant.OauthConsts;
-import org.bupt.common.redis.JedisClient;
 import org.bupt.common.util.FileUtil;
 import org.bupt.common.util.MD5Util;
 import org.bupt.common.util.Validator;
@@ -41,17 +40,6 @@ public class UserController {
 
     @Autowired
     private EnvConsts envConsts;
-
-    @Autowired
-    private JedisClient jedisClient;
-
-    @RequestMapping(value = "test")
-    public ResponseResult test() {
-
-        jedisClient.set("ken", "test");
-
-        return ResponseResult.success();
-    }
 
     /**
      * 添加员工
@@ -89,6 +77,7 @@ public class UserController {
             return ResponseResult.error("添加失败，md5生成错误");
         }
 
+        logger.debug("用户={}, 添加成功", user.getUsername());
         return ResponseResult.success("添加成功");
     }
 
@@ -121,6 +110,7 @@ public class UserController {
 
         userService.update(user);
 
+        logger.debug("用户={}, 修改成功", user.getUsername());
         return ResponseResult.success("修改成功");
     }
 
@@ -139,6 +129,7 @@ public class UserController {
             return ResponseResult.error("用户不存在");
         }
 
+        logger.debug("用户={}, 查询成功", user.getUsername());
         return ResponseResult.success("查询成功", user);
     }
 
@@ -151,7 +142,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "{userId}", method = RequestMethod.DELETE)
-    @RequiredRoles(roles = {"系统管理员"})
+    @RequiredRoles(value = {"系统管理员"})
     public ResponseResult deleteById(@PathVariable("userId") Integer userId) {
 
         User user = userService.queryById(userId);
@@ -162,8 +153,7 @@ public class UserController {
         // userService.deleteById(userId);
         userService.delete(user);
 
-//        logger.info("删除用户：{}", user.getName());
-
+        logger.debug("用户={}, 删除成功", user.getUsername());
         return ResponseResult.success("删除成功");
     }
 

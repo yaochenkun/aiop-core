@@ -33,7 +33,7 @@ public class TokenUtil {
         //Let's set the JWT Claims
         JwtBuilder builder = Jwts.builder().setId(String.valueOf(identity.getId()))
                 .setIssuedAt(now)
-                .setSubject(identity.getId() + "/" + identity.getClientId() + "/" + identity.getPermission())
+                .setSubject(identity.getId() + "/" + identity.getClientId())
                 .setIssuer(identity.getIssuer())
                 .signWith(signatureAlgorithm, signingKey);
 
@@ -47,7 +47,6 @@ public class TokenUtil {
         }
 
         //Builds the JWT and serializes it to a compact, URL-safe string
-        logger.info("token生成成功");
         return builder.compact();
     }
 
@@ -59,16 +58,13 @@ public class TokenUtil {
         String[] subjectInfos = claims.getSubject().split("/");
         String id = subjectInfos[0];
         String clientId = subjectInfos[1];
-        String permission = subjectInfos[2];
 
         // 封装成pojo
         Identity identity = new Identity();
-        identity.setId(id);
+        identity.setId(Integer.parseInt(id));
         identity.setClientId(clientId);
-        identity.setPermission(permission);
         identity.setDuration(claims.getExpiration().getTime());
 
-        logger.info("已登录的用户，有效token");
         return identity;
     }
 }

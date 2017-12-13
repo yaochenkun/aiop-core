@@ -7,10 +7,9 @@ package org.bupt.common.util.token;
 public class Identity {
 
 	private String token;
-	private String id; // 对应user_id
+	private Integer id; // 对应user_id
 	private String issuer;
 	private String clientId; //可以是Oauth2.0中的client_id，也可以是一般的username
-	private String permission; // 可以是角色，也可以是权限
 	private Long duration; // 有效时长，单位毫秒
 
 
@@ -22,11 +21,11 @@ public class Identity {
 		this.token = token;
 	}
 
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -52,13 +51,5 @@ public class Identity {
 
 	public void setDuration(Long duration) {
 		this.duration = duration;
-	}
-
-	public String getPermission() {
-		return permission;
-	}
-
-	public void setPermission(String permission) {
-		this.permission = permission;
 	}
 }

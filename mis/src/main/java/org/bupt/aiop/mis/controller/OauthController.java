@@ -56,7 +56,7 @@ public class OauthController {
 		String grantType = params.get(OauthConsts.KEY_GRANT_TYPE);
 		String clientId = params.get(OauthConsts.KEY_CLIENT_ID);
 		String clientSecret = params.get(OauthConsts.KEY_CLIENT_SECRET);
-		logger.info("grantType = {}, clientId = {}, clientSecret = {}", grantType, clientId, clientSecret);
+		logger.debug("grantType = {}, clientId = {}, clientSecret = {}", grantType, clientId, clientSecret);
 
 		//数据格式校验
 		if (Validator.checkEmpty(grantType)) {
@@ -92,10 +92,9 @@ public class OauthController {
 
 				// 封装生成access_token需要的身份信息
 				Identity identity = new Identity();
-				identity.setId(Integer.toString(app.getId()));
+				identity.setId(app.getId());
 				identity.setIssuer(envConsts.ACCESS_TOKEN_ISSUER);
 				identity.setClientId(clientId);
-				identity.setPermission(app.getAbilityScope());
 				identity.setDuration(envConsts.ACCESS_TOKEN_DURATION);
 				String accessToken = TokenUtil.createToken(identity, envConsts.ACCESS_TOKEN_API_KEY_SECRET);
 
@@ -158,11 +157,11 @@ public class OauthController {
 			userService.save(user);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
-			logger.info("注册失败，原因={}", e.getMessage());
+			logger.debug("注册失败，原因={}", e.getMessage());
 			return ResponseResult.error("注册失败");
 		}
 
-		logger.info("用户={}，注册成功", username);
+		logger.debug("用户={}，注册成功", username);
 		return ResponseResult.success("注册成功");
 	}
 
@@ -180,7 +179,7 @@ public class OauthController {
 		String username = params.get("username");
 		String password = params.get("password");
 
-		logger.info("{} 用户请求登录", username);
+		logger.debug("{} 用户请求登录", username);
 
 		// 模拟网络延迟600ms
 		try {
@@ -213,18 +212,33 @@ public class OauthController {
 
 		// 生成token
 		Identity identity = new Identity();
-		identity.setId(user.getId().toString());
+		identity.setId(user.getId());
 		identity.setIssuer(envConsts.TOKEN_ISSUER);
 		identity.setClientId(user.getUsername());
-		identity.setPermission(user.getRole());
-		identity.setDuration(envConsts.ACCESS_TOKEN_DURATION); //Todo
+		identity.setDuration(envConsts.ACCESS_TOKEN_DURATION); //TODO: 后期修改为Token的
 		String token = TokenUtil.createToken(identity, envConsts.TOKEN_API_KEY_SECRET);
 		identity.setToken(token);
 
-		logger.info("用户={} 请求登录成功, 身份信息={}", identity);
+		logger.debug("用户={} 请求登录成功, 身份信息={}", identity);
 		return ResponseResult.success("登录成功", identity);
 	}
 
+
+	/**
+	 * oauth错误
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = "error/{code}")
+	public ErrorResult oauthError(@PathVariable("code") Integer code) {
+
+		logger.debug("进入oauth错误返回控制器");
+		switch (code) {
+			case ErrorConsts.OAUTH_CODE_TOKEN_INVALID: return new ErrorResult(code, ErrorConsts.OAUTH_MSG_TOKEN_INVALID);
+			case ErrorConsts.OAUTH_CODE_ROLE_DENIED: return new ErrorResult(code, ErrorConsts.OAUTH_MSG_ROLE_DENIED);
+			default: return new ErrorResult(ErrorConsts.OAUTH_CODE_UNDEFINED_ERROR, ErrorConsts.OAUTH_MSG_UNDEFINED_ERROR);
+		}
+	}
 
 //	/**
 //	 * 发送短信验证码

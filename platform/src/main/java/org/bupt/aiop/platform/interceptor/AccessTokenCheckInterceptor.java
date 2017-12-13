@@ -31,7 +31,7 @@ public class AccessTokenCheckInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
 			Exception {
 
-        logger.info("进入AccessTokenCheckInterceptor");
+        logger.debug("进入AccessTokenCheckInterceptor");
 
         // 验证token的有效性
         try {
@@ -42,13 +42,13 @@ public class AccessTokenCheckInterceptor implements HandlerInterceptor {
             //把identity存入session中(其中包含用户名、角色、过期时间戳等)
             request.getSession().setAttribute(OauthConsts.KEY_IDENTITY, identity);
 
-            logger.info("client_id={}: access_token通过认证, identity.permission={}", identity.getClientId(), identity.getPermission());
+            logger.debug("app_id={}, client_id={}, access_token通过认证", identity.getId(), identity.getClientId());
             return true;
 
         } catch (Exception e) {
-            logger.info("access_token无效, 原因为: {}", e.getMessage());
-            logger.info("正转向认证失败控制器");
-            response.sendRedirect("/api/error/oauth/" + ErrorConsts.OAUTH_CODE_ACCESS_TOKEN_INVALID);
+            logger.debug("access_token无效, 原因为: {}", e.getMessage());
+            logger.debug("正转向认证失败控制器");
+            response.sendRedirect("/api/common/error/oauth/" + ErrorConsts.OAUTH_CODE_ACCESS_TOKEN_INVALID);
 
             return false;
         }

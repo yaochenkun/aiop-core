@@ -4,10 +4,12 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
-        http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+        http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
 
 
     <!-- 定义注解驱动 -->
@@ -16,16 +18,15 @@
     <!--定义拦截器-->
     <mvc:interceptors>
 
-        <!--token认证拦截器-->
+        <!--access_token认证-->
         <mvc:interceptor>
-            <mvc:mapping path="/**"/>
-            <mvc:exclude-mapping path="/api/error/**"/>
+            <mvc:mapping path="/restapi/nlp/**"/>
             <bean class="org.bupt.aiop.platform.interceptor.AccessTokenCheckInterceptor"/>
         </mvc:interceptor>
 
+        <!--能力权限验证-->
         <mvc:interceptor>
-            <mvc:mapping path="/**"/>
-            <mvc:exclude-mapping path="/api/error/**"/>
+            <mvc:mapping path="/restapi/nlp/**"/>
             <bean class="org.bupt.aiop.platform.interceptor.PermissionCheckInterceptor"/>
         </mvc:interceptor>
 
@@ -44,4 +45,6 @@
         <property name="maxUploadSize" value="10485760"/>
     </bean>
 
+    <!-- 激活Controller的AOP -->
+    <aop:aspectj-autoproxy />
 </beans>

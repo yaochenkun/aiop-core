@@ -19,7 +19,7 @@ public class ErrorResult {
 		this.error_code = error_code;
 		this.error_msg = error_msg;
 
-		logger.info("ERROR: code={}, msg={}", error_code, error_msg);
+		logger.debug("ERROR: code={}, msg={}", error_code, error_msg);
 	}
 
 	public Integer getError_code() {
