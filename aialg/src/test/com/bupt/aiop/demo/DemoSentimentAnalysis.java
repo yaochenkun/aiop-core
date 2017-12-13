@@ -2,11 +2,14 @@ package com.bupt.aiop.demo;
 
 import com.hankcs.hanlp.classification.classifiers.IClassifier;
 import com.hankcs.hanlp.classification.classifiers.NaiveBayesClassifier;
+import com.hankcs.hanlp.classification.models.AbstractModel;
 import com.hankcs.hanlp.classification.models.NaiveBayesModel;
 import com.hankcs.hanlp.corpus.io.IOUtil;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.Map;
 
 public class DemoSentimentAnalysis {
@@ -22,12 +25,13 @@ public class DemoSentimentAnalysis {
     }
 
     public static void main(String[] args) throws IOException {
-        NaiveBayesModel model = (NaiveBayesModel) IOUtil.readObjectFrom("/home/windylee/Documents/motion.model");
-        IClassifier classifier = new NaiveBayesClassifier(model);
-//        classifier.train(CORPUS_FOLDER);
-//        AbstractModel model = classifier.getModel();
-//        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("/home/windylee/Documents/motion.model"));
-//        out.writeObject(model);
+//        NaiveBayesModel model = (NaiveBayesModel) IOUtil.readObjectFrom("/home/windylee/Documents/motion.model");
+//        IClassifier classifier = new NaiveBayesClassifier(model);
+        IClassifier classifier = new NaiveBayesClassifier();
+        classifier.train(CORPUS_FOLDER);
+        AbstractModel model = classifier.getModel();
+        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("/home/windylee/Documents/motion.model"));
+        out.writeObject(model);
 
         predict(classifier, "前台客房服务态度很好～早餐很丰富，房间很干净，再接再厉！");
         predict(classifier, "结果大失所望，灯光昏暗，空间极其狭小，床垫质量恶略，房间还伴着一股霉味");

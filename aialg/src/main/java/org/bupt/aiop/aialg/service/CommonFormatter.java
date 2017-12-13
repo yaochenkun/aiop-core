@@ -2,6 +2,7 @@ package org.bupt.aiop.aialg.service;
 
 import com.alibaba.fastjson.JSON;
 import org.bupt.aiop.aialg.bean.Keyword;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Map;
  * 通用格式器
  */
 @Component
+@Scope("prototype")
 public class CommonFormatter {
 
     /**
@@ -28,10 +30,12 @@ public class CommonFormatter {
         Map<String, Object> result = new HashMap<>();
         result.put("text", text);
         List<Keyword> beanList = new ArrayList<>();
+        int lastIndex = 0;
         for (String term : terms) {
             Keyword bean = new Keyword();
             bean.setItem(term);
-            bean.setIndex(text.indexOf(term));
+            lastIndex = text.indexOf(term, lastIndex);
+            bean.setIndex(lastIndex);
             beanList.add(bean);
         }
         result.put("items", beanList);
