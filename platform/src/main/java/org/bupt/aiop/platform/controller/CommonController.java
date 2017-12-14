@@ -30,7 +30,7 @@ public class CommonController {
 	@RequestMapping(value = "error/oauth/{code}")
 	public ErrorResult returnOauthError(@PathVariable Integer code) {
 
-		logger.info("进入oauth错误返回控制器");
+		logger.debug("进入oauth错误返回控制器");
 		switch (code) {
 			case ErrorConsts.OAUTH_CODE_ACCESS_TOKEN_INVALID: return new ErrorResult(code, ErrorConsts.OAUTH_MSG_ACCESS_TOKEN_INVALID);
 			case ErrorConsts.OAUTH_CODE_PERMISSION_DENIED: return new ErrorResult(code, ErrorConsts.OAUTH_MSG_PERMISSION_DENIED);

@@ -14,7 +14,7 @@ public interface NlpAlgDubboService {
 
     String word_pos(String text);
 
-    String word_pos(String text, Boolean japName, Boolean placeName, Boolean orgName);
+    String word_ner(String text);
 
     String word_2_vec(String text);
 

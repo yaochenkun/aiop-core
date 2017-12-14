@@ -1,9 +1,11 @@
 package org.bupt.aiop.platform.interceptor;
 
 import org.bupt.aiop.platform.annotation.RequiredPermission;
+import org.bupt.aiop.platform.constant.LogConsts;
 import org.bupt.aiop.platform.service.OauthService;
 import org.bupt.common.constant.ErrorConsts;
 import org.bupt.common.constant.OauthConsts;
+import org.bupt.common.util.LogUtil;
 import org.bupt.common.util.token.Identity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,10 @@ public class PermissionCheckInterceptor extends HandlerInterceptorAdapter {
 
         logger.debug("进入PermissionCheckInterceptor");
 
+        // 获取appId对应的权限
+        Identity identity = ((Identity) request.getSession().getAttribute(OauthConsts.KEY_IDENTITY));
+        Integer appId = identity.getId();
+
         // 将handler强转为HandlerMethod, 前面已经证实这个handler就是HandlerMethod
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         // 从方法处理器中获取出要调用的方法
@@ -46,17 +52,18 @@ public class PermissionCheckInterceptor extends HandlerInterceptorAdapter {
         }
 
         String permission = permissionCheck.value();
+        String userPermissionStr = "";
         if (!"".equals(permission)) {
 
             logger.debug("该方法对应能力要求的权限={}", permission);
 
-            // 获取appId对应的权限
-            Identity identity = ((Identity) request.getSession().getAttribute(OauthConsts.KEY_IDENTITY));
-            Integer appId = identity.getId();
-            String userPermissionStr = oauthService.getAppPermission(appId);
+            //获取appId对应权限
+            userPermissionStr = oauthService.getAppPermission(appId);
             if (userPermissionStr == null) {
                 logger.debug("权限拒绝");
+                logger.info(LogUtil.body(LogConsts.DOMAIN_OAUTH, "app_id", appId, LogConsts.VERB_AUTH, "permission", userPermissionStr, LogConsts.ERROR, ErrorConsts.OAUTH_MSG_PERMISSION_DENIED));
                 response.sendRedirect("/api/common/error/oauth/" + ErrorConsts.OAUTH_CODE_PERMISSION_DENIED);
+                return false;
             }
 
             String[] userPermissions = oauthService.getAppPermission(appId).split(",");
@@ -69,12 +76,14 @@ public class PermissionCheckInterceptor extends HandlerInterceptorAdapter {
                 if (userPermissionSet.contains(permission)) {
                     // 校验通过返回true, 否则拦截请求
                     logger.debug("权限校验通过");
+                    logger.info(LogUtil.body(LogConsts.DOMAIN_OAUTH, "app_id", appId, LogConsts.VERB_AUTH, "permission", userPermissionStr, LogConsts.SUCCESS));
                     return true;
                 }
             }
         }
 
         logger.debug("权限拒绝");
+        logger.info(LogUtil.body(LogConsts.DOMAIN_OAUTH, "app_id", appId, LogConsts.VERB_AUTH, "permission", userPermissionStr, LogConsts.ERROR, ErrorConsts.OAUTH_MSG_PERMISSION_DENIED));
         response.sendRedirect("/api/common/error/oauth/" + ErrorConsts.OAUTH_CODE_PERMISSION_DENIED);
         return false;
     }

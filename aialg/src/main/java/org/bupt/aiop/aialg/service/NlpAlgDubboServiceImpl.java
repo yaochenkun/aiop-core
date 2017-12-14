@@ -21,12 +21,10 @@ import java.util.Map;
 
 
 @Service
-@org.springframework.stereotype.Service
 public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
 
     @Autowired
     private CommonFormatter commonFormatter;
-
 
     @Autowired
     private WordVectorModel wordVectorModel; //词向量
@@ -86,24 +84,36 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
      */
     @Override
     public String word_pos(String text) {
-        return word_pos(text, false, false, false);
+
+        Segment segment = HanLP.newSegment().enableAllNamedEntityRecognize(false);
+
+        List<Term> segments = segment.seg(text);
+        Map<String, Object> result = new HashMap<>();
+        List<WordPos> items = new ArrayList<>();
+        int offset = 0;
+        for (Term term : segments) {
+            WordPos item = new WordPos();
+            item.setPos(term.word);
+            item.setByteOffset(offset);
+            item.setByteLen(term.length());
+            item.setNature(term.nature);
+            items.add(item);
+            offset += term.length();
+        }
+        result.put("text", text);
+        result.put("items", items);
+        return JSON.toJSONString(result);
     }
 
     /**
-     * 基础分词接口
+     * 命名实体识别
      *
-     * @param text      被分词的句子
-     * @param japName   是否开启日本人名识别
-     * @param placeName 是否开启地名识别
-     * @param orgName   是否开启机构名识别
+     * @param text 被分词的句子
      * @return
      */
     @Override
-    public String word_pos(String text, Boolean japName, Boolean placeName, Boolean orgName) {
-        Segment segment = HanLP.newSegment()
-                .enableJapaneseNameRecognize(japName)
-                .enablePlaceRecognize(placeName)
-                .enableOrganizationRecognize(orgName);
+    public String word_ner(String text) {
+        Segment segment = HanLP.newSegment().enableAllNamedEntityRecognize(true);
 
         List<Term> segments = segment.seg(text);
         Map<String, Object> result = new HashMap<>();

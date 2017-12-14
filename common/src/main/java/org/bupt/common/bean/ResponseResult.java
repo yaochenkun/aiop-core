@@ -42,15 +42,6 @@ public class ResponseResult {
         return new ResponseResult(ResponseConsts.SUCCESS, reason, content);
     }
 
-
-    /**
-     * @param reason
-     * @return
-     */
-    public static ResponseResult error(String reason) {
-        return new ResponseResult(ResponseConsts.ERROR, reason, null);
-    }
-
     /**
      *
      * @param reason
@@ -59,6 +50,15 @@ public class ResponseResult {
      */
     public static ResponseResult error(String reason, Object content) {
         return new ResponseResult(ResponseConsts.ERROR, reason, content);
+    }
+
+    /**
+     *
+     * @param content
+     * @return
+     */
+    public static ResponseResult error(Object content) {
+        return new ResponseResult(ResponseConsts.ERROR, ResponseConsts.ERROR, content);
     }
 
 

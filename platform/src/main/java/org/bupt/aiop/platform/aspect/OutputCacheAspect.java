@@ -4,9 +4,15 @@ import com.alibaba.fastjson.JSON;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.bupt.aiop.platform.constant.LogConsts;
 import org.bupt.aiop.platform.constant.RedisConsts;
+import org.bupt.aiop.platform.constant.ResponseConsts;
 import org.bupt.aiop.platform.service.OutputService;
+import org.bupt.common.bean.ResponseResult;
+import org.bupt.common.constant.OauthConsts;
+import org.bupt.common.util.LogUtil;
 import org.bupt.common.util.Validator;
+import org.bupt.common.util.token.Identity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +49,14 @@ public class OutputCacheAspect {
 	 * @param joinPoint
 	 */
 	@Around(value = "pointcut()")
-	public String around(ProceedingJoinPoint joinPoint) throws Throwable {
+	public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
 
 		logger.debug("进入, 能力执行结果缓存环绕方法");
+
+		HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+		Identity identity = (Identity) session.getAttribute(OauthConsts.KEY_IDENTITY);
+		Integer appId = identity.getId();
+
 
 		// Before: 缓存试探
 		// 获取input JSON串
@@ -59,7 +70,14 @@ public class OutputCacheAspect {
 		if (!outputService.hasAbilityAndInput(key)) {
 
 			logger.debug("缓存未命中, 放行");
-			String output = (String) joinPoint.proceed();
+			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_CACHE_HIT, "ability", ability, LogConsts.FAILED));
+			ResponseResult response = (ResponseResult) joinPoint.proceed();
+			String output = (String) response.getContent();
+
+			//发生错误
+			if (ResponseConsts.ERROR.equals(response.getCode())) {
+				return output;
+			}
 
 			// TODO: 后期导向RocketMQ消费者端写入Redis
 			// After: 写入缓存
@@ -70,17 +88,17 @@ public class OutputCacheAspect {
 			}
 
 			outputService.saveOutput(key, output);
-			logger.debug("缓存成功, hash_table={}, key={}, value={}", RedisConsts.AIOP_ABILITY_INPUT_OUTPUT, key, output);
+			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "hash_map", RedisConsts.AIOP_ABILITY_INPUT_OUTPUT, LogConsts.VERB_CACHE_SAVE, "key", key, LogConsts.SUCCESS));
+			logger.debug("缓存成功");
 			logger.debug("退出, 能力执行结果缓存环绕方法");
-
 			return output;
 		}
 
 		//缓存命中, 获取缓存结果
 		logger.debug("缓存命中");
-		String output = outputService.getOutput(key);
-
 		logger.debug("退出, 能力执行结果缓存环绕方法");
-		return output;
+		logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_CACHE_HIT, "ability", ability, LogConsts.SUCCESS));
+		logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
+		return outputService.getOutput(key);
 	}
 }
