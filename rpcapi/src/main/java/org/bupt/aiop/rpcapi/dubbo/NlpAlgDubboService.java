@@ -12,9 +12,15 @@ public interface NlpAlgDubboService {
 
     String text_phrases(String text, Integer size);
 
-    String word_pos(String text);
+    String word_pos(String text, Boolean japName, Boolean placeName, Boolean orgName);
 
-    String word_ner(String text);
+    String word_pos_normal(String text);
+
+    String word_pos_japanese(String text);
+
+    String word_pos_place(String text);
+
+    String word_pos_organization(String text);
 
     String word_2_vec(String text);
 

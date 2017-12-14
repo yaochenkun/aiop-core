@@ -40,7 +40,7 @@ public class NlpAlgDubboServiceTest {
     }
 
     @Test
-    public void testPhraseTest() {
+    public void textPhraseTest() {
         String text = "算法工程师\n" +
                 "算法（Algorithm）是一系列解决问题的清晰指令，也就是说，能够对一定规范的输入，在有限时间内获得所要求的输出。如果一个算法有缺陷，或不适合于某个问题，执行这个算法将不会解决这个问题。不同的算法可能用不同的时间、空间或效率来完成同样的任务。一个算法的优劣可以用空间复杂度与时间复杂度来衡量。算法工程师就是利用算法处理事物的人。\n" +
                 "\n" +

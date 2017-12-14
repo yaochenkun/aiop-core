@@ -77,15 +77,20 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     }
 
     /**
-     * 默认不开启日本人名，地名和机构名识别
+     * 基础词性标注
      *
-     * @param text 被分词的句子
+     * @param text      被分词的句子
+     * @param japName   是否开启日本人名识别
+     * @param placeName 是否开启地名识别
+     * @param orgName   是否开启机构名识别
      * @return
      */
     @Override
-    public String word_pos(String text) {
-
-        Segment segment = HanLP.newSegment().enableAllNamedEntityRecognize(false);
+    public String word_pos(String text, Boolean japName, Boolean placeName, Boolean orgName) {
+        Segment segment = HanLP.newSegment()
+                .enableJapaneseNameRecognize(japName)
+                .enablePlaceRecognize(placeName)
+                .enableOrganizationRecognize(orgName);
 
         List<Term> segments = segment.seg(text);
         Map<String, Object> result = new HashMap<>();
@@ -106,31 +111,43 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     }
 
     /**
-     * 命名实体识别
+     * 基础词性标注功能，不识别日本名，地名和机构名
      *
-     * @param text 被分词的句子
+     * @param text 目标文本
      * @return
      */
-    @Override
-    public String word_ner(String text) {
-        Segment segment = HanLP.newSegment().enableAllNamedEntityRecognize(true);
+    public String word_pos_normal(String text) {
+        return word_pos(text, false, false, false);
+    }
 
-        List<Term> segments = segment.seg(text);
-        Map<String, Object> result = new HashMap<>();
-        List<WordPos> items = new ArrayList<>();
-        int offset = 0;
-        for (Term term : segments) {
-            WordPos item = new WordPos();
-            item.setPos(term.word);
-            item.setByteOffset(offset);
-            item.setByteLen(term.length());
-            item.setNature(term.nature);
-            items.add(item);
-            offset += term.length();
-        }
-        result.put("text", text);
-        result.put("items", items);
-        return JSON.toJSONString(result);
+    /**
+     * 词性标注，识别日本人名
+     *
+     * @param text 目标文本
+     * @return
+     */
+    public String word_pos_japanese(String text) {
+        return word_pos(text, true, false, false);
+    }
+
+    /**
+     * 词性标注，识别地名
+     *
+     * @param text 目标文本
+     * @return
+     */
+    public String word_pos_place(String text) {
+        return word_pos(text, false, true, false);
+    }
+
+    /**
+     * 词性标注，识别机构名
+     *
+     * @param text 目标文本
+     * @return
+     */
+    public String word_pos_organization(String text) {
+        return word_pos(text, false, false, true);
     }
 
     /**
@@ -193,18 +210,22 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     @Override
     public String word_sim(String text1, String text2) {
         Map<String, Object> result = new HashMap<>();
-        result.put("text1", text1);
-        result.put("text2", text2);
+        Map<String, String> words = new HashMap<>();
+        words.put("word_1", text1);
+        words.put("word_2", text2);
         result.put("score", wordVectorModel.similarity(text1, text2));
+        result.put("words", words);
         return JSON.toJSONString(result);
     }
 
     @Override
     public String document_sim(String doc1, String doc2) {
         Map<String, Object> result = new HashMap<>();
-        result.put("doc1", doc1);
-        result.put("doc2", doc2);
+        Map<String, String> texts = new HashMap<>();
+        texts.put("text_1", doc1);
+        texts.put("text_2", doc2);
         result.put("score", wordVectorModel.similarity(doc1, doc2));
+        result.put("texts", texts);
         return JSON.toJSONString(result);
     }
 
@@ -228,14 +249,16 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     public String motion_classify(String text) {
         Map<String, Double> pred_result = motionClassifierModel.predict(text);
         Map<String, Object> result = new HashMap<>();
+        Sentiment sentiment = new Sentiment();
         result.put("text", text);
-        if (pred_result.get("正面") > pred_result.get("负面")) {
-            result.put("sentiment", 1);
+        if (pred_result.get("positive") > pred_result.get("negative")) {
+            sentiment.setSentiment(1);
         } else {
-            result.put("sentiment", 2);
+            sentiment.setSentiment(2);
         }
-        result.put("positive_prob", pred_result.get("正面"));
-        result.put("negative_prob", pred_result.get("负面"));
+        sentiment.setPositive_prob(pred_result.get("positive"));
+        sentiment.setNegative_prob(pred_result.get("negative"));
+        result.put("items", sentiment);
         return JSON.toJSONString(result);
     }
 
@@ -243,16 +266,18 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     public String category_classify(String text) {
         Map<String, Double> pred_result = categoryClassifierModel.predict(text);
         Map<String, Object> result = new HashMap<>();
+        Map<String, Double> items = new HashMap<>();
         result.put("text", text);
         double maxScore = Double.MIN_VALUE;
         String category = null;
         for (Map.Entry<String, Double> item : pred_result.entrySet()) {
-            result.put(item.getKey(), item.getValue());
+            items.put(item.getKey(), item.getValue());
             if (item.getValue() > maxScore) {
                 category = item.getKey();
                 maxScore = item.getValue();
             }
         }
+        result.put("items", items);
         result.put("category", category);
         return JSON.toJSONString(result);
     }
