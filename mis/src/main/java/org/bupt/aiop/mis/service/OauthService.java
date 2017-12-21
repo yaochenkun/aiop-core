@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,15 +35,42 @@ public class OauthService extends BaseService<App> {
 		return (String) redisMapper.opsForHash().get(RedisConsts.AIOP_USER_ROLE, userId.toString());
 	}
 
+	/**
+	 * 向运营商网关发送手机验证码 + 缓存该验证码
+	 * @param mobile 手机
+	 * @param captcha 验证码
+	 * @param type 验证码种类(手机登录、注册、找回密码)
+	 * @return
+	 */
+	public void sendCaptcha(String mobile, String captcha, String type) {
+
+		// todo: 发送验证码给中国移动...
+		captcha = "1993";
+
+		// 缓存验证码
+		this.setCaptcha(mobile, captcha, type);
+	}
+
 
 	/**
-	 * 保存验证码到redis，过期时间为1分钟
-	 *
-	 * @param key
-	 * @param value
+	 * 写入手机验证码
+	 * @param mobile 手机
+	 * @param type 验证码种类(手机登录、注册、找回密码)
+	 * @return
 	 */
-	public void saveSmSCode(String key, String value) {
-		redisMapper.opsForValue().set(key, value, envConsts.SMS_CODE_EXPIRE, TimeUnit.SECONDS);
+	public void setCaptcha(String mobile, String captcha, String type) {
+		redisMapper.opsForValue().set(type + ":" + mobile, captcha, envConsts.SMS_CODE_EXPIRE, TimeUnit.SECONDS);
+	}
+
+
+	/**
+	 * 读取手机验证码
+	 * @param mobile 手机
+	 * @param type 验证码种类(手机登录、注册、找回密码)
+	 * @return
+	 */
+	public String getCaptcha(String mobile, String type) {
+		return (String) redisMapper.opsForValue().get(type + ":" + mobile);
 	}
 
 }

@@ -12,6 +12,16 @@ public class User {
 
     private String username;
 
+    /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
+     * 手机
+     */
+    private String mobile;
+
     private String password;
 
     private String role;
@@ -45,6 +55,42 @@ public class User {
      */
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    /**
+     * 获取邮箱
+     *
+     * @return email - 邮箱
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * 设置邮箱
+     *
+     * @param email 邮箱
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * 获取手机
+     *
+     * @return mobile - 手机
+     */
+    public String getMobile() {
+        return mobile;
+    }
+
+    /**
+     * 设置手机
+     *
+     * @param mobile 手机
+     */
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     /**

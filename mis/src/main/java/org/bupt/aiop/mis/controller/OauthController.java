@@ -1,14 +1,17 @@
 package org.bupt.aiop.mis.controller;
 
 import org.bupt.aiop.mis.constant.EnvConsts;
+import org.bupt.aiop.mis.constant.RedisConsts;
 import org.bupt.aiop.mis.constant.RoleConsts;
 import org.bupt.aiop.mis.pojo.po.App;
 import org.bupt.aiop.mis.pojo.po.User;
 import org.bupt.aiop.mis.service.AppService;
+import org.bupt.aiop.mis.service.OauthService;
 import org.bupt.common.bean.ErrorResult;
 import org.bupt.common.bean.ResponseResult;
 import org.bupt.common.constant.ErrorConsts;
 import org.bupt.common.constant.OauthConsts;
+import org.bupt.common.util.CaptchaUtil;
 import org.bupt.common.util.MD5Util;
 import org.bupt.common.util.Validator;
 import org.bupt.aiop.mis.service.UserService;
@@ -35,6 +38,9 @@ public class OauthController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private OauthService oauthService;
 
 	@Autowired
 	private AppService appService;
@@ -128,31 +134,51 @@ public class OauthController {
 	 * @param params
 	 * @return
 	 */
-	@RequestMapping(value = "register/{roleType}", method = RequestMethod.POST)
-	public ResponseResult register(@RequestBody Map<String, String> params,
-								   @PathVariable String roleType) {
+	@RequestMapping(value = "register", method = RequestMethod.POST)
+	public ResponseResult register(@RequestBody Map<String, String> params) {
 		
 		String username = params.get("username");
+		String email = params.get("email");
 		String password = params.get("password");
-		String inputCode = params.get("inputCode");
+		String mobile = params.get("mobile");
+		String captcha = params.get("captcha");
 
-//        String code = redisService.get(Constant.REDIS_PRE_CODE + phone);
-		String code = "1993";
-		if (code == null) {
-			return ResponseResult.error("验证码过期");
-		} else if (!code.equals(inputCode)) {
+		User user = new User();
+		user.setUsername(username);
+		if (userService.queryOne(user) != null) {
+			return ResponseResult.error("该账户名已被注册");
+		}
+
+		user.setUsername(null);
+		user.setEmail(email);
+		if (userService.queryOne(user) != null) {
+			return ResponseResult.error("该邮箱已被注册");
+		}
+
+		user.setEmail(null);
+		user.setMobile(mobile);
+		if (userService.queryOne(user) != null) {
+			return ResponseResult.error("该手机号已被注册");
+		}
+
+		// 检验验证码时效性
+		String targetCaptcha = oauthService.getCaptcha(mobile, RedisConsts.AIOP_CAPTCHA_REGISTER);
+		if (targetCaptcha == null) {
+			return ResponseResult.error("验证码已过期");
+		}
+
+		// 检验验证码是否匹配
+		if (!targetCaptcha.equals(captcha)) {
 			return ResponseResult.error("验证码错误");
 		}
 
-		if (userService.isExist(username)) {
-			return ResponseResult.error("用户名已经存在");
-		}
-
+		// 进行注册
 		try {
-			User user = new User();
 			user.setUsername(username);
+			user.setEmail(email);
+			user.setMobile(mobile);
 			user.setPassword(MD5Util.generate(password));
-			user.setRole(RoleConsts.TYPE_ADMIN.equals(roleType) ? RoleConsts.BUSINESS_ADMIN : RoleConsts.DEVELOPER);
+			user.setRole(RoleConsts.DEVELOPER);
 			user.setAvatarFile(envConsts.DEFAULT_AVATAR); // 默认头像
 			userService.save(user);
 		} catch (NoSuchAlgorithmException e) {
@@ -165,21 +191,49 @@ public class OauthController {
 		return ResponseResult.success("注册成功");
 	}
 
+	/**
+	 * 发送注册的验证码
+	 * @return
+	 */
+	@RequestMapping(value = "captcha/register", method = RequestMethod.POST)
+	public ResponseResult sendRegisterCaptcha(@RequestBody Map<String, String> params) {
+
+		// 得到手机号
+		String mobile = params.get("mobile");
+
+		logger.debug("{} 用户请求注册时发送验证码", mobile);
+
+		// 先检查是否有之前发送的未失效的验证码
+		if (oauthService.getCaptcha(mobile, RedisConsts.AIOP_CAPTCHA_REGISTER) != null) {
+			return ResponseResult.error("请勿重复发送验证码");
+		}
+
+		// 生成SMS_CODE_LEN位的验证码
+		String captcha = CaptchaUtil.generate(envConsts.SMS_CODE_LEN);
+
+		// 发送给mobile手机captcha验证码
+		// todo: 后期转为消息队列
+		oauthService.sendCaptcha(mobile, captcha, RedisConsts.AIOP_CAPTCHA_REGISTER);
+
+		logger.debug("已为用户手机 {} 发送验证码 {}", mobile, captcha);
+		return ResponseResult.success("已发送验证码");
+	}
+
 
 	/**
-	 * 登录
+	 * 账户登录
 	 *
 	 * @param params
 	 * @return
 	 */
-	@RequestMapping(value = "login", method = RequestMethod.POST)
-	public ResponseResult login(@RequestBody Map<String, String> params) {
+	@RequestMapping(value = "login/account", method = RequestMethod.POST)
+	public ResponseResult accountLogin(@RequestBody Map<String, String> params) {
 
 		// 得到用户名和密码
 		String username = params.get("username");
 		String password = params.get("password");
 
-		logger.debug("{} 用户请求登录", username);
+		logger.debug("{} 用户请求账户登录", username);
 
 		// 模拟网络延迟600ms
 		try {
@@ -193,7 +247,7 @@ public class OauthController {
 		record.setUsername(username);
 		User user = userService.queryOne(record);
 		if (user == null) {
-			return ResponseResult.error("登录失败：用户不存在");
+			return ResponseResult.error("用户不存在");
 		}
 
 		// 密码加密
@@ -215,7 +269,7 @@ public class OauthController {
 		identity.setId(user.getId());
 		identity.setIssuer(envConsts.TOKEN_ISSUER);
 		identity.setClientId(user.getUsername());
-		identity.setDuration(envConsts.ACCESS_TOKEN_DURATION); //TODO: 后期修改为Token的
+		identity.setDuration(envConsts.TOKEN_DURATION); //TODO: 后期修改为Token的
 		String token = TokenUtil.createToken(identity, envConsts.TOKEN_API_KEY_SECRET);
 		identity.setToken(token);
 
@@ -223,22 +277,88 @@ public class OauthController {
 		return ResponseResult.success("登录成功", identity);
 	}
 
-
 	/**
-	 * oauth错误
+	 * 手机登录
 	 *
+	 * @param params
 	 * @return
 	 */
-	@RequestMapping(value = "error/{code}")
-	public ErrorResult oauthError(@PathVariable("code") Integer code) {
+	@RequestMapping(value = "login/mobile", method = RequestMethod.POST)
+	public ResponseResult mobileLogin(@RequestBody Map<String, String> params) {
 
-		logger.debug("进入oauth错误返回控制器");
-		switch (code) {
-			case ErrorConsts.OAUTH_CODE_TOKEN_INVALID: return new ErrorResult(code, ErrorConsts.OAUTH_MSG_TOKEN_INVALID);
-			case ErrorConsts.OAUTH_CODE_ROLE_DENIED: return new ErrorResult(code, ErrorConsts.OAUTH_MSG_ROLE_DENIED);
-			default: return new ErrorResult(ErrorConsts.OAUTH_CODE_UNDEFINED_ERROR, ErrorConsts.OAUTH_MSG_UNDEFINED_ERROR);
+		// 得到手机号和验证码
+		String mobile = params.get("mobile");
+		String captcha = params.get("captcha");
+
+		logger.debug("{} 用户请求手机登录", mobile);
+
+		// 模拟网络延迟600ms
+		try {
+			Thread.sleep(600);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
+
+		// 查询用户是否存在
+		User record = new User();
+		record.setMobile(mobile);
+		User user = userService.queryOne(record);
+		if (user == null) {
+			return ResponseResult.error("手机不存在");
+		}
+
+		// 检验验证码时效性
+		String targetCaptcha = oauthService.getCaptcha(mobile, RedisConsts.AIOP_CAPTCHA_LOGIN);
+		if (targetCaptcha == null) {
+			return ResponseResult.error("验证码已过期");
+		}
+
+		// 检验验证码是否匹配
+		if (!targetCaptcha.equals(captcha)) {
+			return ResponseResult.error("验证码错误");
+		}
+
+		// 生成token
+		Identity identity = new Identity();
+		identity.setId(user.getId());
+		identity.setIssuer(envConsts.TOKEN_ISSUER);
+		identity.setClientId(user.getUsername());
+		identity.setDuration(envConsts.TOKEN_DURATION); //TODO: 后期修改为Token的
+		String token = TokenUtil.createToken(identity, envConsts.TOKEN_API_KEY_SECRET);
+		identity.setToken(token);
+
+		logger.debug("用户={} 请求手机登录成功, 身份信息={}", identity);
+		return ResponseResult.success("登录成功", identity);
 	}
+
+	/**
+	 * 发送手机登录的验证码
+	 * @return
+	 */
+	@RequestMapping(value = "captcha/login", method = RequestMethod.POST)
+	public ResponseResult sendMobileLoginCaptcha(@RequestBody Map<String, String> params) {
+
+		// 得到手机号
+		String mobile = params.get("mobile");
+
+		logger.debug("{} 用户请求手机登录时发送验证码", mobile);
+
+		// 先检查是否有之前发送的未失效的验证码
+		if (oauthService.getCaptcha(mobile, RedisConsts.AIOP_CAPTCHA_LOGIN) != null) {
+			return ResponseResult.error("请勿重复发送验证码");
+		}
+
+		// 生成SMS_CODE_LEN位的验证码
+		String captcha = CaptchaUtil.generate(envConsts.SMS_CODE_LEN);
+
+		// 发送给mobile手机captcha验证码
+		// todo: 后期转为消息队列
+		oauthService.sendCaptcha(mobile, captcha, RedisConsts.AIOP_CAPTCHA_LOGIN);
+
+		logger.debug("已为用户手机 {} 发送验证码 {}", mobile, captcha);
+		return ResponseResult.success("已发送验证码");
+	}
+
 
 //	/**
 //	 * 发送短信验证码
@@ -324,5 +444,21 @@ public class OauthController {
 //
 //		return ResponseResult.success("验证成功", userService.queryOne(record).getId());
 //	}
+
+	/**
+	 * oauth错误
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = "error/{code}")
+	public ErrorResult oauthError(@PathVariable("code") Integer code) {
+
+		logger.debug("进入oauth错误返回控制器");
+		switch (code) {
+			case ErrorConsts.OAUTH_CODE_TOKEN_INVALID: return new ErrorResult(code, ErrorConsts.OAUTH_MSG_TOKEN_INVALID);
+			case ErrorConsts.OAUTH_CODE_ROLE_DENIED: return new ErrorResult(code, ErrorConsts.OAUTH_MSG_ROLE_DENIED);
+			default: return new ErrorResult(ErrorConsts.OAUTH_CODE_UNDEFINED_ERROR, ErrorConsts.OAUTH_MSG_UNDEFINED_ERROR);
+		}
+	}
 
 }

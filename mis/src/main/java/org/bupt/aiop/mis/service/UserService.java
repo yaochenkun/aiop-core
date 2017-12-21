@@ -26,17 +26,17 @@ public class UserService extends BaseService<User> {
     private EnvConsts envConsts;
 
 
-    /**
-     * 检查用户名是否重复
-     *
-     * @param username
-     * @return true 重复（数据库中存在）
-     */
-    public boolean isExist(String username) {
-        User record = new User();
-        record.setUsername(username);
-        return super.queryOne(record) != null;
-    }
+//    /**
+//     * 检查用户名是否重复
+//     *
+//     * @param username
+//     * @return true 重复（数据库中存在）
+//     */
+//    public boolean isExist(String username) {
+//        User record = new User();
+//        record.setUsername(username);
+//        return super.queryOne(record) != null;
+//    }
 
 
     /**

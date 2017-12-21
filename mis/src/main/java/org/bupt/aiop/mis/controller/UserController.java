@@ -64,7 +64,7 @@ public class UserController {
             user.setRole(role);
         }
 
-        if (userService.isExist(username)) {
+        if (userService.queryOne(user) != null) {
             return ResponseResult.error("该用户名已被注册");
         }
 
@@ -128,6 +128,10 @@ public class UserController {
         if (user == null) {
             return ResponseResult.error("用户不存在");
         }
+
+        // 清除密码、添加头像文件的文件夹目录
+        user.setPassword(null);
+        user.setAvatarFile("/avatar/" + user.getAvatarFile());
 
         logger.debug("用户={}, 查询成功", user.getUsername());
         return ResponseResult.success("查询成功", user);

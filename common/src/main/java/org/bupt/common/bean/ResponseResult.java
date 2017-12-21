@@ -26,11 +26,11 @@ public class ResponseResult {
 
     /**
      *
-     * @param content
+     * @param reason
      * @return
      */
-    public static ResponseResult success(Object content) {
-        return new ResponseResult(ResponseConsts.SUCCESS, ResponseConsts.SUCCESS, content);
+    public static ResponseResult success(String reason) {
+        return new ResponseResult(ResponseConsts.SUCCESS, reason, null);
     }
 
     /**
@@ -54,11 +54,11 @@ public class ResponseResult {
 
     /**
      *
-     * @param content
+     * @param reason
      * @return
      */
-    public static ResponseResult error(Object content) {
-        return new ResponseResult(ResponseConsts.ERROR, ResponseConsts.ERROR, content);
+    public static ResponseResult error(String reason) {
+        return new ResponseResult(ResponseConsts.ERROR, reason, null);
     }
 
 
