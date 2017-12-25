@@ -1,23 +1,18 @@
 package org.bupt.aiop.platform.controller;
 
 
-import org.bupt.aiop.platform.annotation.RequiredPermission;
-import org.bupt.aiop.platform.constant.RedisConsts;
 import org.bupt.common.bean.ErrorResult;
 import org.bupt.common.constant.ErrorConsts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.Map;
 
 /**
  * Oauth2.0 Controller
  */
 @RestController
-@RequestMapping("api/common")
+@RequestMapping("restapi/common")
 public class CommonController {
 
 	private static final Logger logger = LoggerFactory.getLogger(CommonController.class);

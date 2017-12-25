@@ -135,7 +135,7 @@ public class OauthController {
 	 * @return
 	 */
 	@RequestMapping(value = "register", method = RequestMethod.POST)
-	public ResponseResult register(@RequestBody Map<String, String> params) {
+	public ResponseResult submitRegister(@RequestBody Map<String, String> params) {
 		
 		String username = params.get("username");
 		String email = params.get("email");
@@ -227,7 +227,7 @@ public class OauthController {
 	 * @return
 	 */
 	@RequestMapping(value = "login/account", method = RequestMethod.POST)
-	public ResponseResult accountLogin(@RequestBody Map<String, String> params) {
+	public ResponseResult verifyAccountLogin(@RequestBody Map<String, String> params) {
 
 		// 得到用户名和密码
 		String username = params.get("username");
@@ -284,7 +284,7 @@ public class OauthController {
 	 * @return
 	 */
 	@RequestMapping(value = "login/mobile", method = RequestMethod.POST)
-	public ResponseResult mobileLogin(@RequestBody Map<String, String> params) {
+	public ResponseResult verifyMobileLogin(@RequestBody Map<String, String> params) {
 
 		// 得到手机号和验证码
 		String mobile = params.get("mobile");
@@ -360,90 +360,115 @@ public class OauthController {
 	}
 
 
-//	/**
-//	 * 发送短信验证码
-//	 *
-//	 * @param params
-//	 * @return
-//	 */
-//	@RequestMapping(value = "send_sms", method = RequestMethod.POST)
-//	public ResponseResult sendSms(@RequestBody Map<String, String> params) {
-//
-//		String phone = params.get("username");
-//
-//		User record = new User();
-//		record.setUsername(phone);
-//		User user = userService.queryOne(record);
-//		String action = params.get("action");
-//		if (action.equals("注册") || action.equals("修改手机")) {
-//			if (user != null) {
-//				return ResponseResult.error("此号码已经注册");
-//			}
-//		} else if (action.equals("找回密码")) {
-//			if (user == null) {
-//				return ResponseResult.error("此号码未注册");
-//			}
-//		}
-//
-//		if (redisService.get(phone) != null) {
-//			return ResponseResult.error("请1分钟后再试");
-//		}
-//
-//		StringBuilder code = new StringBuilder();
-//		Random random = new Random();
-//		for (int i = 0; i < envConsts.SMS_CODE_LEN; i++) {
-//			code.append(String.valueOf(random.nextInt(10)));
-//		}
-//
-//		logger.info("验证码，手机号：{}，验证码：{}", phone, code);
-//
-//		ResponseResult responseResult;
-//		try {
-//			responseResult = ResponseResult.success("已发送验证码", record.getId());
-//			// responseResult = SMSUtil.send(phone, String.valueOf(code));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return ResponseResult.error("短信发送失败，请重试");
-//		}
-//
-////        // 存储在redis中，过期时间为60s
-////        redisService.setSmSCode(Constant.REDIS_PRE_CODE + phone, String.valueOf(code));
-//
-//		return responseResult;
-//	}
+
+	/**
+	 * 发送找回密码的验证码
+	 * @return
+	 */
+	@RequestMapping(value = "captcha/retrieve", method = RequestMethod.POST)
+	public ResponseResult sendRetrieveCaptcha(@RequestBody Map<String, String> params) {
+
+		// 得到手机号
+		String mobile = params.get("mobile");
+
+		logger.debug("{} 用户请求找回密码时发送验证码", mobile);
+
+		// 先检查是否有之前发送的未失效的验证码
+		if (oauthService.getCaptcha(mobile, RedisConsts.AIOP_CAPTCHA_RETRIEVE) != null) {
+			return ResponseResult.error("请勿重复发送验证码");
+		}
+
+		// 生成SMS_CODE_LEN位的验证码
+		String captcha = CaptchaUtil.generate(envConsts.SMS_CODE_LEN);
+
+		// 发送给mobile手机captcha验证码
+		// todo: 后期转为消息队列
+		oauthService.sendCaptcha(mobile, captcha, RedisConsts.AIOP_CAPTCHA_RETRIEVE);
+
+		logger.debug("已为用户手机 {} 发送验证码 {}", mobile, captcha);
+		return ResponseResult.success("已发送验证码");
+	}
 
 
-	//	/**
-//	 * 校验验证码
-//	 *
-//	 * @param params
-//	 * @return
-//	 */
-//	@RequestMapping(value = "check_code", method = RequestMethod.POST)
-//	public ResponseResult checkSMSCode(@RequestBody Map<String, String> params) {
-//
-//		String inputCode = params.get("inputCode");
-//		String username = params.get("username");
-//
-//		logger.info("传过来的验证码是: {}， 手机是：{}", inputCode, username);
-//
-//		//用户名是否存在
-//		if(!userService.isExist(username)){
-//			return ResponseResult.error("不存在该用户");
-//		}
-//
-//		String code = "1993";
-//		if (code == null) {
-//			return ResponseResult.error("验证码过期");
-//		} else if (!code.equals(inputCode)) {
-//			return ResponseResult.error("验证码错误");
-//		}
-//
-//		User record = new User();
-//		record.setUsername(username);
-//
-//		return ResponseResult.success("验证成功", userService.queryOne(record).getId());
-//	}
+	/**
+	 * 找回密码提交验证码进行认证
+	 *
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "retrieve/verify", method = RequestMethod.POST)
+	public ResponseResult verifyRetrieveCaptcha(@RequestBody Map<String, String> params) {
+
+		// 得到手机号和验证码
+		String mobile = params.get("mobile");
+		String captcha = params.get("captcha");
+
+		logger.debug("{} 用户请求检验找回密码的验证码", mobile);
+
+		// 模拟网络延迟600ms
+		try {
+			Thread.sleep(600);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// 查询用户是否存在
+		User record = new User();
+		record.setMobile(mobile);
+		User user = userService.queryOne(record);
+		if (user == null) {
+			return ResponseResult.error("手机不存在");
+		}
+
+		// 检验验证码时效性
+		String targetCaptcha = oauthService.getCaptcha(mobile, RedisConsts.AIOP_CAPTCHA_RETRIEVE);
+		if (targetCaptcha == null) {
+			return ResponseResult.error("验证码已过期");
+		}
+
+		// 检验验证码是否匹配
+		if (!targetCaptcha.equals(captcha)) {
+			return ResponseResult.error("验证码错误");
+		}
+
+		Map<String, Object> content = new HashMap<>();
+		content.put("userId", user.getId());
+
+		logger.debug("用户={} 请求检验找回密码的验证码", mobile);
+		return ResponseResult.success("验证成功", content);
+	}
+
+
+	/**
+	 * 修改密码
+	 *
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "password/{userId}", method = RequestMethod.PUT)
+	public ResponseResult changePassword(@RequestBody Map<String, Object> params, @PathVariable("userId") Integer
+			userId) {
+
+		String password = (String) params.get("password");
+
+		User user = userService.queryById(userId);
+		if (user == null) {
+			return ResponseResult.error("请先返回上一步认证手机");
+		}
+
+		String newPasswordMD5;
+		try {
+			newPasswordMD5 = MD5Util.generate(password);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return ResponseResult.error("md5加密失败");
+		}
+
+		user.setPassword(newPasswordMD5);
+		userService.update(user);
+
+		return ResponseResult.success("密码修改成功");
+	}
 
 	/**
 	 * oauth错误

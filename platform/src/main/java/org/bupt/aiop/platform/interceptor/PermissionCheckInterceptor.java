@@ -62,7 +62,7 @@ public class PermissionCheckInterceptor extends HandlerInterceptorAdapter {
             if (userPermissionStr == null) {
                 logger.debug("权限拒绝");
                 logger.info(LogUtil.body(LogConsts.DOMAIN_OAUTH, "app_id", appId, LogConsts.VERB_AUTH, "permission", userPermissionStr, LogConsts.ERROR, ErrorConsts.OAUTH_MSG_PERMISSION_DENIED));
-                response.sendRedirect("/api/common/error/oauth/" + ErrorConsts.OAUTH_CODE_PERMISSION_DENIED);
+                response.sendRedirect("/restapi/common/error/oauth/" + ErrorConsts.OAUTH_CODE_PERMISSION_DENIED);
                 return false;
             }
 
@@ -84,7 +84,7 @@ public class PermissionCheckInterceptor extends HandlerInterceptorAdapter {
 
         logger.debug("权限拒绝");
         logger.info(LogUtil.body(LogConsts.DOMAIN_OAUTH, "app_id", appId, LogConsts.VERB_AUTH, "permission", userPermissionStr, LogConsts.ERROR, ErrorConsts.OAUTH_MSG_PERMISSION_DENIED));
-        response.sendRedirect("/api/common/error/oauth/" + ErrorConsts.OAUTH_CODE_PERMISSION_DENIED);
+        response.sendRedirect("/restapi/common/error/oauth/" + ErrorConsts.OAUTH_CODE_PERMISSION_DENIED);
         return false;
     }
 }

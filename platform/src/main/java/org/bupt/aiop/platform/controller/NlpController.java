@@ -80,7 +80,7 @@ public class NlpController {
 		NlpAlgThriftService.Client nlpAlgSerivce = new NlpAlgThriftService.Client(protocol);
 		try {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return ResponseResult.success(nlpAlgSerivce.word_seg(text));
+			return ResponseResult.success(null, nlpAlgSerivce.word_seg(text));
 		} catch (Exception e) {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
 			return ResponseResult.error(JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
@@ -124,7 +124,7 @@ public class NlpController {
 		// 算法处理
 		try {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return ResponseResult.success(nlpAlgDubboService.word_pos_normal(text));
+			return ResponseResult.success(null, nlpAlgDubboService.word_pos_normal(text));
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
@@ -166,7 +166,7 @@ public class NlpController {
 		// 算法处理
 		try {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return ResponseResult.success(nlpAlgDubboService.word_pos_place(text));
+			return ResponseResult.success(null, nlpAlgDubboService.word_pos_place(text));
 		} catch (Exception e) {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
 			return ResponseResult.error(JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
@@ -207,7 +207,7 @@ public class NlpController {
 		// 算法处理
 		try {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return ResponseResult.success(nlpAlgDubboService.word_pos_organization(text));
+			return ResponseResult.success(null, nlpAlgDubboService.word_pos_organization(text));
 		} catch (Exception e) {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
 			return ResponseResult.error(JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
@@ -248,7 +248,7 @@ public class NlpController {
 		// 算法处理
 		try {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return ResponseResult.success(nlpAlgDubboService.word_pos_japanese(text));
+			return ResponseResult.success(null, nlpAlgDubboService.word_pos_japanese(text));
 		} catch (Exception e) {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
 			return ResponseResult.error(JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
@@ -291,7 +291,7 @@ public class NlpController {
 		NlpAlgThriftService.Client nlpAlgSerivce = new NlpAlgThriftService.Client(protocol);
 		try {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return ResponseResult.success(nlpAlgSerivce.word_pos(text));
+			return ResponseResult.success(null, nlpAlgSerivce.word_pos(text));
 		} catch (Exception e) {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
 			return ResponseResult.error(JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
@@ -338,7 +338,7 @@ public class NlpController {
 		// 算法处理
 		try {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return ResponseResult.success(nlpAlgDubboService.text_keywords(text, size));
+			return ResponseResult.success(null, nlpAlgDubboService.text_keywords(text, size));
 		} catch (Exception e) {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
 			return ResponseResult.error(JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
@@ -383,7 +383,7 @@ public class NlpController {
 		// 算法处理
 		try {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return ResponseResult.success(nlpAlgDubboService.text_summaries(text, size));
+			return ResponseResult.success(null, nlpAlgDubboService.text_summaries(text, size));
 		} catch (Exception e) {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
 			return ResponseResult.error(JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
@@ -429,7 +429,7 @@ public class NlpController {
 		// 算法处理
 		try {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return ResponseResult.success(nlpAlgDubboService.text_phrases(text, size));
+			return ResponseResult.success(null, nlpAlgDubboService.text_phrases(text, size));
 		} catch (Exception e) {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
 			return ResponseResult.error(JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
@@ -471,7 +471,7 @@ public class NlpController {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
 			String res = nlpAlgDubboService.word_2_vec(text);
 			logger.info(res);
-			return ResponseResult.success(res);
+			return ResponseResult.success(null, res);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
@@ -512,7 +512,7 @@ public class NlpController {
 		// 算法处理
 		try {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return ResponseResult.success(nlpAlgDubboService.word_2_pinyin(text));
+			return ResponseResult.success(null, nlpAlgDubboService.word_2_pinyin(text));
 		} catch (Exception e) {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
 			return ResponseResult.error(JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
@@ -552,7 +552,7 @@ public class NlpController {
 		// 算法处理
 		try {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return ResponseResult.success(nlpAlgDubboService.simplified_2_traditional(text));
+			return ResponseResult.success(null, nlpAlgDubboService.simplified_2_traditional(text));
 		} catch (Exception e) {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
 			return ResponseResult.error(JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
@@ -592,7 +592,7 @@ public class NlpController {
 		// 算法处理
 		try {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return ResponseResult.success(nlpAlgDubboService.traditional_2_simplified(text));
+			return ResponseResult.success(null, nlpAlgDubboService.traditional_2_simplified(text));
 		} catch (Exception e) {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
 			return ResponseResult.error(JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
@@ -634,7 +634,7 @@ public class NlpController {
 		// 算法处理
 		try {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return ResponseResult.success(nlpAlgDubboService.word_sim(text1, text2));
+			return ResponseResult.success(null, nlpAlgDubboService.word_sim(text1, text2));
 		} catch (Exception e) {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
 			return ResponseResult.error(JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
@@ -677,7 +677,7 @@ public class NlpController {
 		// 算法处理
 		try {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return ResponseResult.success(nlpAlgDubboService.document_sim(doc1, doc2));
+			return ResponseResult.success(null, nlpAlgDubboService.document_sim(doc1, doc2));
 		} catch (Exception e) {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
 			return ResponseResult.error(JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
@@ -722,7 +722,7 @@ public class NlpController {
 		// 算法处理
 		try {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return ResponseResult.success(nlpAlgDubboService.nearest_words(text, size));
+			return ResponseResult.success(null, nlpAlgDubboService.nearest_words(text, size));
 		} catch (Exception e) {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
 			return ResponseResult.error(JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
@@ -763,7 +763,7 @@ public class NlpController {
 		// 算法处理
 		try {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return ResponseResult.success(nlpAlgDubboService.motion_classify(text));
+			return ResponseResult.success(null, nlpAlgDubboService.motion_classify(text));
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
@@ -803,7 +803,7 @@ public class NlpController {
 		// 算法处理
 		try {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return ResponseResult.success(nlpAlgDubboService.category_classify(text));
+			return ResponseResult.success(null, nlpAlgDubboService.category_classify(text));
 		} catch (Exception e) {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
 			return ResponseResult.error(JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
