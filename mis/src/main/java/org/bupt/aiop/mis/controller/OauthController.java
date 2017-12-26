@@ -235,13 +235,6 @@ public class OauthController {
 
 		logger.debug("{} 用户请求账户登录", username);
 
-		// 模拟网络延迟600ms
-		try {
-			Thread.sleep(600);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
 		// 查询用户是否存在
 		User record = new User();
 		record.setUsername(username);
@@ -291,13 +284,6 @@ public class OauthController {
 		String captcha = params.get("captcha");
 
 		logger.debug("{} 用户请求手机登录", mobile);
-
-		// 模拟网络延迟600ms
-		try {
-			Thread.sleep(600);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 
 		// 查询用户是否存在
 		User record = new User();
@@ -404,13 +390,6 @@ public class OauthController {
 		String captcha = params.get("captcha");
 
 		logger.debug("{} 用户请求检验找回密码的验证码", mobile);
-
-		// 模拟网络延迟600ms
-		try {
-			Thread.sleep(600);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 
 		// 查询用户是否存在
 		User record = new User();
