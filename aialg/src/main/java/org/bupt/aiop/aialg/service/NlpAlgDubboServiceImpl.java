@@ -111,7 +111,7 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     }
 
     /**
-     * 基础词性标注功能，不识别日本名，地名和机构名
+     * 基础词性标注功能，不识别日本人名，地名和机构名
      *
      * @param text 目标文本
      * @return
@@ -222,10 +222,10 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     public String document_sim(String doc1, String doc2) {
         Map<String, Object> result = new HashMap<>();
         Map<String, String> texts = new HashMap<>();
-        texts.put("text_1", doc1);
-        texts.put("text_2", doc2);
+        texts.put("doc_1", doc1);
+        texts.put("doc_2", doc2);
         result.put("score", wordVectorModel.similarity(doc1, doc2));
-        result.put("texts", texts);
+        result.put("docs", texts);
         return JSON.toJSONString(result);
     }
 

@@ -30,9 +30,9 @@ public class ErrorConsts {
 	public static final String OAUTH_MSG_INVALID_CLIENT_SECRET = "invalid client secret";
 	public static final String OAUTH_MSG_ACCESS_TOKEN_INVALID = "access token invalid or no longer valid";
 	public static final String OAUTH_MSG_TOKEN_INVALID = "token invalid or no longer valid";
-	public static final String OAUTH_MSG_PERMISSION_DENIED = "No permission to access data";
-	public static final String OAUTH_MSG_ROLE_DENIED = "Invalid role to access data";
-	public static final String OAUTH_MSG_UNDEFINED_ERROR = "Undefined oauth error";
+	public static final String OAUTH_MSG_PERMISSION_DENIED = "no permission to access data";
+	public static final String OAUTH_MSG_ROLE_DENIED = "invalid role to access data";
+	public static final String OAUTH_MSG_UNDEFINED_ERROR = "undefined oauth error";
 
 
 	/**
