@@ -179,7 +179,7 @@ public class OauthController {
 			user.setMobile(mobile);
 			user.setPassword(MD5Util.generate(password));
 			user.setRole(RoleConsts.DEVELOPER);
-			user.setAvatarFile(envConsts.DEFAULT_AVATAR); // 默认头像
+			user.setAvatarFile(envConsts.DEFAULT_IMAGE); // 默认头像
 			userService.save(user);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();

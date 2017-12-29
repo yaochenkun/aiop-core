@@ -11,6 +11,26 @@ import java.util.Date;
 public class TimeUtil {
 
     /**
+     * 解析日期
+     *
+     * @param timeString
+     * @return
+     */
+    public static Date parseDate(String timeString) {
+
+        if (!Validator.checkEmpty(timeString)) {
+            try {
+                return new SimpleDateFormat("yyyy-MM-dd").parse(timeString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * 解析时间
      *
      * @param timeString
@@ -20,8 +40,7 @@ public class TimeUtil {
 
         if (!Validator.checkEmpty(timeString)) {
             try {
-//                timeString = timeString.replace("Z", " UTC");
-                return new SimpleDateFormat("yyyy-MM-dd").parse(timeString);
+                return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(timeString);
             } catch (ParseException e) {
                 e.printStackTrace();
                 return null;

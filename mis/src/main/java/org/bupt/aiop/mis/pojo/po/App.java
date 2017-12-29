@@ -40,11 +40,22 @@ public class App {
 
     private String description;
 
-    @Column(name = "create_time")
-    private Date createTime;
+    /**
+     * 状态（已上线、运行中、关闭、异常）
+     */
+    private String status;
 
-    @Column(name = "update_time")
-    private Date updateTime;
+    /**
+     * 应用图标
+     */
+    @Column(name = "logo_file")
+    private String logoFile;
+
+    @Column(name = "create_date")
+    private Date createDate;
+
+    @Column(name = "update_date")
+    private Date updateDate;
 
     /**
      * @return id
@@ -185,30 +196,66 @@ public class App {
     }
 
     /**
-     * @return create_time
+     * 获取状态（已上线、运行中、关闭、异常）
+     *
+     * @return status - 状态（已上线、运行中、关闭、异常）
      */
-    public Date getCreateTime() {
-        return createTime;
+    public String getStatus() {
+        return status;
     }
 
     /**
-     * @param createTime
+     * 设置状态（已上线、运行中、关闭、异常）
+     *
+     * @param status 状态（已上线、运行中、关闭、异常）
      */
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     /**
-     * @return update_time
+     * 获取应用图标
+     *
+     * @return logo_file - 应用图标
      */
-    public Date getUpdateTime() {
-        return updateTime;
+    public String getLogoFile() {
+        return logoFile;
     }
 
     /**
-     * @param updateTime
+     * 设置应用图标
+     *
+     * @param logoFile 应用图标
      */
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setLogoFile(String logoFile) {
+        this.logoFile = logoFile;
+    }
+
+    /**
+     * @return create_date
+     */
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    /**
+     * @param createDate
+     */
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    /**
+     * @return update_date
+     */
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    /**
+     * @param updateDate
+     */
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 }

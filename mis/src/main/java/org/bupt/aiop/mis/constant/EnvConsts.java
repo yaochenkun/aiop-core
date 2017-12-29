@@ -53,7 +53,7 @@ public class EnvConsts {
 	@Value("${sms.code.len}")
 	public Integer SMS_CODE_LEN;
 
-	//头像
-	@Value("${default.avatar}")
-	public String DEFAULT_AVATAR;
+	//默认图片名字（头像、LOGO、商标、图案）
+	@Value("${default.image}")
+	public String DEFAULT_IMAGE;
 }

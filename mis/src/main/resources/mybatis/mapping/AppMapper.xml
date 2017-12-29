@@ -14,7 +14,9 @@
     <result column="client_secret" property="clientSecret" jdbcType="VARCHAR" />
     <result column="ability_scope" property="abilityScope" jdbcType="VARCHAR" />
     <result column="description" property="description" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="logo_file" property="logoFile" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="DATE" />
+    <result column="update_date" property="updateDate" jdbcType="DATE" />
   </resultMap>
 </mapper>
