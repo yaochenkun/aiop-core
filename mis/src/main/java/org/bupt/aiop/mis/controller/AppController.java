@@ -198,7 +198,6 @@ public class AppController {
 		if (!file.isEmpty()) {
 
 			fileName = id + "." + FileUtil.getExtensionName(file.getOriginalFilename());
-
 			try {
 				Streams.copy(file.getInputStream(), new FileOutputStream(envConsts.FILE_PATH + "app_logo/" +
 						fileName), true);
