@@ -58,7 +58,7 @@ public class AppService extends BaseService<App> {
 		if (!Validator.checkEmpty(status)) criteria.andEqualTo("status", status);
 		if (!Validator.checkNull(updateDate)) criteria.andEqualTo("updateDate", updateDate);
 
-		PageHelper.startPage(pageNow, pageSize);
+  		PageHelper.startPage(pageNow, pageSize);
 		return this.getMapper().selectByExample(example);
 	}
 }

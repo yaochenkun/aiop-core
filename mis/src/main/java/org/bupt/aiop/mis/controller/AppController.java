@@ -1,12 +1,16 @@
 package org.bupt.aiop.mis.controller;
 
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.fileupload.util.Streams;
 import org.bupt.aiop.mis.constant.EnvConsts;
 import org.bupt.aiop.mis.pojo.po.App;
+import org.bupt.aiop.mis.pojo.po.User;
 import org.bupt.aiop.mis.service.AppService;
 import org.bupt.common.bean.PageResult;
 import org.bupt.common.bean.ResponseResult;
 import org.bupt.common.constant.OauthConsts;
+import org.bupt.common.constant.ResponseConsts;
+import org.bupt.common.util.FileUtil;
 import org.bupt.common.util.TimeUtil;
 import org.bupt.common.util.UUIDUtil;
 import org.bupt.common.util.Validator;
@@ -15,8 +19,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -133,6 +140,80 @@ public class AppController {
 
 		logger.debug("查询应用列表成功, {}, {}, {}", name, status, updateDate);
 		return ResponseResult.success("查询成功", pageResult);
+	}
+
+	/**
+	 * 删除应用
+	 * @param appId
+	 * @return
+	 */
+	@RequestMapping(value = "{appId}" , method = RequestMethod.DELETE)
+	public ResponseResult deleteApp(@PathVariable Integer appId) {
+
+		if (appService.deleteById(appId) == ResponseConsts.CRUD_ERROR) {
+			logger.debug("删除{}应用失败", appId);
+			return ResponseResult.error("删除失败");
+		}
+
+		logger.debug("删除{}应用成功", appId);
+		return ResponseResult.success("删除成功");
+	}
+
+	/**
+	 * 获取单个应用
+	 * @param appId
+	 * @return
+	 */
+	@RequestMapping(value = "{appId}" , method = RequestMethod.GET)
+	public ResponseResult getApp(@PathVariable Integer appId) {
+
+		App app = appService.queryById(appId);
+		if (app == null) {
+			logger.debug("获取{}应用失败", appId);
+			return ResponseResult.error("获取失败");
+		}
+
+		app.setLogoFile("/app_logo/" + app.getLogoFile());
+
+		logger.debug("获取{}应用成功", appId);
+		return ResponseResult.success("获取成功", app);
+	}
+
+	/**
+	 * 上传应用LOGO
+	 *
+	 * @param file
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "logo", method = RequestMethod.POST)
+	public ResponseResult uploadLogo(@RequestParam("file") MultipartFile file, Integer id) {
+
+		App app = appService.queryById(id);
+		if (app == null) {
+			return ResponseResult.error("不存在该应用");
+		}
+
+		String fileName;
+		if (!file.isEmpty()) {
+
+			fileName = id + "." + FileUtil.getExtensionName(file.getOriginalFilename());
+
+			try {
+				Streams.copy(file.getInputStream(), new FileOutputStream(envConsts.FILE_PATH + "app_logo/" +
+						fileName), true);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return ResponseResult.error("上传失败");
+			}
+
+			app.setLogoFile(fileName);
+			appService.update(app);
+		} else {
+			return ResponseResult.error("上传失败");
+		}
+
+		return ResponseResult.success("上传成功", "/logo/" + fileName);
 	}
 
 }
