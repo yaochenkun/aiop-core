@@ -169,13 +169,13 @@ public class AppController {
 
 		App app = appService.queryById(appId);
 		if (app == null) {
-			logger.debug("获取{}应用失败", appId);
+			logger.debug("获取应用{}失败", appId);
 			return ResponseResult.error("获取失败");
 		}
 
 		app.setLogoFile("/app_logo/" + app.getLogoFile());
 
-		logger.debug("获取{}应用成功", appId);
+		logger.debug("获取应用{}成功", appId);
 		return ResponseResult.success("获取成功", app);
 	}
 
@@ -207,12 +207,40 @@ public class AppController {
 			}
 
 			app.setLogoFile(fileName);
+			app.setUpdateDate(new Date());
 			appService.update(app);
 		} else {
 			return ResponseResult.error("上传失败");
 		}
 
 		return ResponseResult.success("上传成功", "/logo/" + fileName);
+	}
+
+	/**
+	 * 更新应用状态
+	 * @param appId
+	 * @return
+	 */
+	@RequestMapping(value = "{appId}/status" , method = RequestMethod.PUT)
+	public ResponseResult updateAppStatus(@PathVariable Integer appId, @RequestBody Map<String, Object> params) {
+
+		String status = (String) params.get("status");
+
+		App app = appService.queryById(appId);
+		if (app == null) {
+			logger.debug("应用{}更新失败，不存在该应用", appId);
+			return ResponseResult.error("更新失败，不存在该应用");
+		}
+
+		app.setStatus(status);
+		app.setUpdateDate(new Date());
+		if (appService.update(app) == ResponseConsts.CRUD_ERROR) {
+			logger.debug("应用{}更新失败", appId);
+			return ResponseResult.error("更新失败");
+		}
+
+		logger.debug("应用{}更新成功", appId);
+		return ResponseResult.success("更新成功");
 	}
 
 }
