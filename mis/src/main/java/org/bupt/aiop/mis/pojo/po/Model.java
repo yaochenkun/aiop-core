@@ -13,7 +13,7 @@ public class Model {
 
     private String name;
 
-    private String path;
+    private String file;
 
     private Float size;
 
@@ -52,17 +52,17 @@ public class Model {
     }
 
     /**
-     * @return path
+     * @return file
      */
-    public String getPath() {
-        return path;
+    public String getFile() {
+        return file;
     }
 
     /**
-     * @param path
+     * @param file
      */
-    public void setPath(String path) {
-        this.path = path;
+    public void setFile(String file) {
+        this.file = file;
     }
 
     /**

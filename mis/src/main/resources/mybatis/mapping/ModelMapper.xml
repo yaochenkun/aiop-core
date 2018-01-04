@@ -7,7 +7,7 @@
     -->
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="path" property="path" jdbcType="VARCHAR" />
+    <result column="file" property="file" jdbcType="VARCHAR" />
     <result column="size" property="size" jdbcType="REAL" />
     <result column="create_date" property="createDate" jdbcType="DATE" />
     <result column="update_date" property="updateDate" jdbcType="DATE" />

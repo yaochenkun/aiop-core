@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 
 /**
- * 应用服务类
+ * 能力服务类
  * Created by ken on 2017/11/1.
  */
 @Service

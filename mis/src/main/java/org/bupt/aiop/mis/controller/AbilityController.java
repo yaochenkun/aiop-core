@@ -91,13 +91,13 @@ public class AbilityController {
 		ability.setInvokeLimit(invokeLimit);
 		ability.setQpsLimit(qpsLimit);
 		ability.setCreateDate(new Date());
-		ability.setCreateDate(new Date());
+		ability.setUpdateDate(new Date());
 
 		// 如果type == 模型算法, modelId与ability的关系也要存入
 		abilityService.saveAbility(ability);
 
-		logger.debug("能力={}, 创建成功", ability.getZhName());
-		return ResponseResult.success("创建成功");
+		logger.debug("能力={}, 新增成功", ability.getZhName());
+		return ResponseResult.success("新增成功");
 	}
 
 //	/**
