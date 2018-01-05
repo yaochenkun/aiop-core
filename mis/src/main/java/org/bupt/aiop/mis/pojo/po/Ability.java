@@ -40,6 +40,8 @@ public class Ability {
     @Column(name = "doc_url")
     private String docUrl;
 
+    private String description;
+
     private String version;
 
     @Column(name = "create_date")
@@ -170,6 +172,20 @@ public class Ability {
      */
     public void setDocUrl(String docUrl) {
         this.docUrl = docUrl;
+    }
+
+    /**
+     * @return description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description
+     */
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**

@@ -112,6 +112,19 @@ public class ModelController {
 	}
 
 	/**
+	 * 查询所有模型列表
+	 * @return
+	 */
+	@RequestMapping(value = "list", method = RequestMethod.GET)
+	public ResponseResult listAllModel() {
+
+		List<Model> list = modelService.queryAll();
+
+		logger.debug("查询所有模型列表成功");
+		return ResponseResult.success("查询成功", list);
+	}
+
+	/**
 	 * 删除模型
 	 * @param modelId
 	 * @return
@@ -125,8 +138,10 @@ public class ModelController {
 			return ResponseResult.error("删除失败，该模型记录不存在");
 		}
 
-		modelService.deleteById(modelId);
-		modelService.deleteModelFile(model.getFile());
+		if (modelService.deleteModel(model) == ResponseConsts.CRUD_ERROR) {
+			logger.debug("删除{}模型失败", modelId);
+			return ResponseResult.error("删除失败");
+		}
 
 		logger.debug("删除{}模型成功", modelId);
 		return ResponseResult.success("删除成功");
@@ -167,6 +182,8 @@ public class ModelController {
 			return ResponseResult.error("更新失败，不存在该模型");
 		}
 
+		String oldFileName = model.getFile();
+
 		model.setName(name);
 		model.setFile(file);
 		model.setUpdateDate(new Date());
@@ -174,6 +191,16 @@ public class ModelController {
 			logger.debug("模型{}更新失败", modelId);
 			return ResponseResult.error("更新失败");
 		}
+
+		// 模型文件是否存在
+		File oldFile = new File(envConsts.FILE_PATH + "model/" + oldFileName);
+		if (!oldFile.exists() || !oldFile.isFile()) {
+			logger.debug("模型{}更新成功", modelId);
+			return ResponseResult.success("更新成功");
+		}
+
+		// 重命名模型文件
+		oldFile.renameTo(new File(envConsts.FILE_PATH + "model/" + file));
 
 		logger.debug("模型{}更新成功", modelId);
 		return ResponseResult.success("更新成功");

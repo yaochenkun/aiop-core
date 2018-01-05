@@ -13,6 +13,7 @@
     <result column="qps_limit" property="qpsLimit" jdbcType="INTEGER" />
     <result column="restapi_url" property="restapiUrl" jdbcType="VARCHAR" />
     <result column="doc_url" property="docUrl" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
     <result column="version" property="version" jdbcType="VARCHAR" />
     <result column="create_date" property="createDate" jdbcType="DATE" />
     <result column="update_date" property="updateDate" jdbcType="DATE" />

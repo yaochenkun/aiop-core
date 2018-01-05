@@ -38,6 +38,15 @@ public class ModelService extends BaseService<Model> {
 	@Autowired
 	private EnvConsts envConsts;
 
+	/**
+	 * 分页查询模型列表
+	 * @param pageNow
+	 * @param pageSize
+	 * @param name
+	 * @param file
+	 * @param updateDate
+	 * @return
+	 */
 	public List<Model> listModel(Integer pageNow, Integer pageSize, String name, String file, Date updateDate) {
 
 		Example example = new Example(Model.class);
@@ -53,20 +62,29 @@ public class ModelService extends BaseService<Model> {
 
 	/**
 	 * 删除模型文件
-	 * @param fileName
+	 * @param model
 	 * @return
 	 */
-	public Integer deleteModelFile(String fileName) {
+	public Integer deleteModel(Model model) {
 
-		//删除模型文件
-		String absolutePath = envConsts.FILE_PATH + "model/" + fileName;
+		// 删除记录
+		this.getMapper().deleteByPrimaryKey(model.getId());
+
+		// 删除模型文件
+		String absolutePath = envConsts.FILE_PATH + "model/" + model.getFile();
 		File file = new File(absolutePath);
 		if(!file.exists() || !file.isFile()) {
 			logger.debug("文件删除成功，因为文件不存在或不是文件");
 			return ResponseConsts.CRUD_SUCCESS;
 		}
 
-		file.delete();
+		try {
+			file.delete();
+		} catch (Exception e) {
+			logger.debug("文件删除失败");
+			return ResponseConsts.CRUD_ERROR;
+		}
+
 		logger.debug("文件删除成功");
 		return ResponseConsts.CRUD_SUCCESS;
 	}
