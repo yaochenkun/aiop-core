@@ -9,6 +9,7 @@
     <result column="zh_name" property="zhName" jdbcType="VARCHAR" />
     <result column="en_name" property="enName" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="model_id" property="modelId" jdbcType="INTEGER" />
     <result column="invoke_limit" property="invokeLimit" jdbcType="INTEGER" />
     <result column="qps_limit" property="qpsLimit" jdbcType="INTEGER" />
     <result column="restapi_url" property="restapiUrl" jdbcType="VARCHAR" />

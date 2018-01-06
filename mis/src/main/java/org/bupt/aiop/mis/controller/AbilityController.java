@@ -3,14 +3,15 @@ package org.bupt.aiop.mis.controller;
 import com.github.pagehelper.PageInfo;
 import org.bupt.aiop.mis.constant.EnvConsts;
 import org.bupt.aiop.mis.pojo.po.Ability;
+import org.bupt.aiop.mis.pojo.po.Model;
+import org.bupt.aiop.mis.pojo.vo.AbilityWithModel;
 import org.bupt.aiop.mis.service.AbilityService;
+import org.bupt.aiop.mis.service.ModelService;
 import org.bupt.common.bean.PageResult;
 import org.bupt.common.bean.ResponseResult;
-import org.bupt.common.constant.OauthConsts;
 import org.bupt.common.constant.ResponseConsts;
 import org.bupt.common.util.TimeUtil;
 import org.bupt.common.util.Validator;
-import org.bupt.common.util.token.Identity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class AbilityController {
 	private AbilityService abilityService;
 
 	@Autowired
+	private ModelService modelService;
+
+	@Autowired
 	private EnvConsts envConsts;
 
 	/**
@@ -47,11 +51,11 @@ public class AbilityController {
 
 		String zhName = (String) params.get("zhName");
 		String enName = (String) params.get("enName");
+		String description = (String) params.get("description");
 		String restapiUrl = (String) params.get("restapiUrl");
 		String docUrl = (String) params.get("docUrl");
 		String type = (String) params.get("type");
 		Integer modelId = (Integer) params.get("modelId");
-		String description = (String) params.get("description");
 		String version = (String) params.get("version");
 		Integer invokeLimit = (Integer) params.get("invokeLimit");
 		Integer qpsLimit = (Integer) params.get("qpsLimit");
@@ -91,6 +95,7 @@ public class AbilityController {
 		ability.setRestapiUrl(restapiUrl);
 		ability.setDocUrl(docUrl);
 		ability.setType(type);
+		ability.setModelId("基础算法".equals(type) ? null : modelId);
 		ability.setVersion(version);
 		ability.setDescription(description);
 		ability.setInvokeLimit(invokeLimit);
@@ -98,7 +103,7 @@ public class AbilityController {
 		ability.setCreateDate(new Date());
 		ability.setUpdateDate(new Date());
 
-		abilityService.saveAbility(ability, modelId);
+		abilityService.save(ability);
 
 		logger.debug("能力={}, 新增成功", ability.getZhName());
 		return ResponseResult.success("新增成功");
@@ -159,34 +164,61 @@ public class AbilityController {
 			return ResponseResult.error("获取失败");
 		}
 
+		// 查询ability对应的model, 方便前端显示
+		AbilityWithModel abilityWithModel = new AbilityWithModel(ability);
+		abilityWithModel.setModel(modelService.queryById(ability.getModelId()));
+
 		logger.debug("获取能力{}成功", abilityId);
-		return ResponseResult.success("获取成功", ability);
+		return ResponseResult.success("获取成功", abilityWithModel);
 	}
 
-//	/**
-//	 * 更新应用状态
-//	 * @param appId
-//	 * @return
-//	 */
-//	@RequestMapping(value = "{appId}/status" , method = RequestMethod.PUT)
-//	public ResponseResult updateAppStatus(@PathVariable Integer appId, @RequestBody Map<String, Object> params) {
-//
-//		String status = (String) params.get("status");
-//
-//		App app = appService.queryById(appId);
-//		if (app == null) {
-//			logger.debug("应用{}更新失败，不存在该应用", appId);
-//			return ResponseResult.error("更新失败，不存在该应用");
-//		}
-//
-//		app.setStatus(status);
-//		if (appService.update(app) == ResponseConsts.CRUD_ERROR) {
-//			logger.debug("应用{}更新失败", appId);
-//			return ResponseResult.error("更新失败");
-//		}
-//
-//		logger.debug("应用{}更新成功", appId);
-//		return ResponseResult.success("更新成功");
-//	}
+	/**
+	 * 更新能力状态
+	 * @param abilityId
+	 * @return
+	 */
+	@RequestMapping(value = "{abilityId}" , method = RequestMethod.PUT)
+	public ResponseResult updateAbility(@PathVariable Integer abilityId, @RequestBody Map<String, Object> params) {
+
+		String restapiUrl = (String) params.get("restapiUrl");
+		String docUrl = (String) params.get("docUrl");
+		String type = (String) params.get("type");
+		Integer modelId = (Integer) params.get("modelId");
+		String version = (String) params.get("version");
+		Integer invokeLimit = (Integer) params.get("invokeLimit");
+		Integer qpsLimit = (Integer) params.get("qpsLimit");
+
+		// 校验数据
+		if (Validator.checkEmpty(restapiUrl)
+				|| Validator.checkEmpty(docUrl)
+				|| Validator.checkEmpty(type)
+				|| Validator.checkNull(modelId)
+				|| Validator.checkEmpty(version)
+				|| Validator.checkNull(invokeLimit)
+				|| Validator.checkNull(qpsLimit)) {
+			return ResponseResult.error("更新失败，信息不完整");
+		}
+
+
+		Ability ability = abilityService.queryById(abilityId);
+		if (ability == null) {
+			logger.debug("能力{}更新失败，不存在该能力", ability);
+			return ResponseResult.error("更新失败，不存在该能力");
+		}
+
+		ability.setRestapiUrl(restapiUrl);
+		ability.setDocUrl(docUrl);
+		ability.setType(type);
+		ability.setModelId("基础算法".equals(type) ? null : modelId);
+		ability.setVersion(version);
+		ability.setInvokeLimit(invokeLimit);
+		ability.setQpsLimit(qpsLimit);
+		ability.setUpdateDate(new Date());
+
+		abilityService.update(ability);
+
+		logger.debug("能力{}更新成功", abilityId);
+		return ResponseResult.success("更新成功");
+	}
 
 }

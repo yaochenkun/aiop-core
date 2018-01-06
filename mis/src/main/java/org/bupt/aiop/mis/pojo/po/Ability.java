@@ -22,6 +22,9 @@ public class Ability {
      */
     private String type;
 
+    @Column(name = "model_id")
+    private Integer modelId;
+
     /**
      * 默认调用量限制
      */
@@ -108,6 +111,20 @@ public class Ability {
      */
     public void setType(String type) {
         this.type = type;
+    }
+
+    /**
+     * @return model_id
+     */
+    public Integer getModelId() {
+        return modelId;
+    }
+
+    /**
+     * @param modelId
+     */
+    public void setModelId(Integer modelId) {
+        this.modelId = modelId;
     }
 
     /**

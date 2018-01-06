@@ -2,10 +2,8 @@ package org.bupt.aiop.mis.service;
 
 import com.github.pagehelper.PageHelper;
 import org.bupt.aiop.mis.mapper.AbilityMapper;
-import org.bupt.aiop.mis.mapper.AbilityModelMapper;
+import org.bupt.aiop.mis.mapper.ModelMapper;
 import org.bupt.aiop.mis.pojo.po.Ability;
-import org.bupt.aiop.mis.pojo.po.AbilityModel;
-import org.bupt.common.constant.ResponseConsts;
 import org.bupt.common.util.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,31 +32,8 @@ public class AbilityService extends BaseService<Ability> {
 	private AbilityMapper abilityMapper;
 
 	@Autowired
-	private AbilityModelMapper abilityModelMapper;
+	private ModelMapper modelMapper;
 
-	/**
-	 * 添加能力
-	 * @param ability
-	 * @param modelId
-	 * @return
-	 */
-	public Integer saveAbility(Ability ability, Integer modelId) {
-
-		this.getMapper().insert(ability);
-
-		// 如果是模型算法要继续存储ability-model的关系
-		if ("基础算法".equals(ability.getType())) {
-			logger.debug("能力添加成功");
-			return ResponseConsts.CRUD_SUCCESS;
-		}
-
-		AbilityModel abilityModel = new AbilityModel();
-		abilityModel.setAbilityId(ability.getId());
-		abilityModel.setModelId(modelId); // 选择的模型id
-
-		logger.debug("能力添加成功");
-		return abilityModelMapper.insert(abilityModel);
-	}
 
 	/**
 	 * 查询能力分页列表
