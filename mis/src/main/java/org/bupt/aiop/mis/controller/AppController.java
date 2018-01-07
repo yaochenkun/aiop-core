@@ -5,6 +5,7 @@ import org.apache.commons.fileupload.util.Streams;
 import org.bupt.aiop.mis.constant.EnvConsts;
 import org.bupt.aiop.mis.pojo.po.Ability;
 import org.bupt.aiop.mis.pojo.po.App;
+import org.bupt.aiop.mis.pojo.po.AppAbility;
 import org.bupt.aiop.mis.pojo.vo.AbilityUnderApp;
 import org.bupt.aiop.mis.service.AbilityService;
 import org.bupt.aiop.mis.service.AppService;
@@ -259,6 +260,123 @@ public class AppController {
 
 		logger.debug("应用{}更新成功", appId);
 		return ResponseResult.success("更新成功");
+	}
+
+	/**
+	 * 申请能力
+	 * @param appId
+	 * @return
+	 */
+	@RequestMapping(value = "{appId}/ability/{abilityId}" , method = RequestMethod.POST)
+	public ResponseResult occupyAbility(@PathVariable Integer appId, @PathVariable Integer abilityId) {
+
+		App app = appService.queryById(appId);
+		if (app == null) {
+			logger.debug("为应用{}申请能力失败，不存在该应用", appId);
+			return ResponseResult.error("申请失败，不存在该应用");
+		}
+
+		Ability ability = abilityService.queryById(abilityId);
+		if (ability == null) {
+			logger.debug("为应用{}申请能力{}失败，不存在该能力", appId, abilityId);
+			return ResponseResult.error("申请失败，不存在该能力");
+		}
+
+		AppAbility appAbility = new AppAbility();
+		appAbility.setAppId(appId);
+		appAbility.setAbilityId(abilityId);
+		if (appService.getAbilityUnderApp(appAbility) != null) {
+			logger.debug("为应用{}申请能力{}失败，因为已存在记录", appId, abilityId);
+			return ResponseResult.error("申请失败，该能力已被申请过");
+		}
+
+		appAbility.setStatus("允许调用");
+		appAbility.setInvokeLimit(ability.getInvokeLimit());
+		appAbility.setQpsLimit(ability.getQpsLimit());
+		appService.saveAbilityUnderApp(appAbility);
+
+		logger.debug("为应用{}申请能力{}更新成功", appId, abilityId);
+		return ResponseResult.success("申请成功");
+	}
+
+	/**
+	 * 注销能力
+	 * @param appId
+	 * @return
+	 */
+	@RequestMapping(value = "{appId}/ability/{abilityId}" , method = RequestMethod.DELETE)
+	public ResponseResult cancelAbility(@PathVariable Integer appId, @PathVariable Integer abilityId) {
+
+		App app = appService.queryById(appId);
+		if (app == null) {
+			logger.debug("为应用{}注销能力失败，不存在该应用", appId);
+			return ResponseResult.error("申请失败，不存在该应用");
+		}
+
+		Ability ability = abilityService.queryById(abilityId);
+		if (ability == null) {
+			logger.debug("为应用{}注销能力{}失败，不存在该能力", appId, abilityId);
+			return ResponseResult.error("申请失败，不存在该能力");
+		}
+
+		AppAbility appAbility = new AppAbility();
+		appAbility.setAppId(appId);
+		appAbility.setAbilityId(abilityId);
+		appAbility = appService.getAbilityUnderApp(appAbility);
+		if (appAbility == null) {
+			logger.debug("为应用{}注销能力{}成功，因为本身就不存在该记录", appId, abilityId);
+			return ResponseResult.success("注销成功");
+		}
+
+		appService.deleteAbilityUnderAppById(appAbility.getId());
+
+		logger.debug("为应用{}注销能力{}更新成功", appId, abilityId);
+		return ResponseResult.success("注销成功");
+	}
+
+	/**
+	 * 提升能力配额
+	 * @param appId
+	 * @return
+	 */
+	@RequestMapping(value = "{appId}/ability/{abilityId}" , method = RequestMethod.PUT)
+	public ResponseResult updateAbilityLimit(@PathVariable Integer appId, @PathVariable Integer abilityId, @RequestBody Map<String, Object> params) {
+
+		Integer invokeLimit = (Integer) params.get("invokeLimit");
+		Integer qpsLimit = (Integer) params.get("qpsLimit");
+
+		// 校验数据
+		if (Validator.checkNull(invokeLimit) || Validator.checkNull(qpsLimit)) {
+			return ResponseResult.error("提升能力失败，信息不完整");
+		}
+
+		App app = appService.queryById(appId);
+		if (app == null) {
+			logger.debug("为应用{}提升能力配额失败，不存在该应用", appId);
+			return ResponseResult.error("提升配额失败，不存在该应用");
+		}
+
+		Ability ability = abilityService.queryById(abilityId);
+		if (ability == null) {
+			logger.debug("为应用{}提升能力{}配额失败，不存在该能力", appId, abilityId);
+			return ResponseResult.error("提升配额失败，不存在该能力");
+		}
+
+		AppAbility appAbility = new AppAbility();
+		appAbility.setAppId(appId);
+		appAbility.setAbilityId(abilityId);
+		appAbility = appService.getAbilityUnderApp(appAbility);
+		if (appAbility == null) {
+			logger.debug("为应用{}提升能力{}配额失败，因为不存在该记录", appId, abilityId);
+			return ResponseResult.error("提升配额失败，不存在该记录");
+		}
+
+		appAbility.setInvokeLimit(invokeLimit);
+		appAbility.setQpsLimit(qpsLimit);
+		appService.updateAbilityUnderApp(appAbility);
+
+		logger.debug("为应用{}提升能力{}配额成功", appId, abilityId);
+		return ResponseResult.success("提升配额成功");
 	}
 
 }

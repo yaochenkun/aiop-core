@@ -81,8 +81,22 @@ public class AppService extends BaseService<App> {
 	}
 
 	public List<AbilityUnderApp> listAbilityUnderApp(Integer appId) {
-
 		return abilityMapper.selectAbilityUnderApp(appId);
 	}
 
+	public AppAbility getAbilityUnderApp(AppAbility appAbility) {
+		return appAbilityMapper.selectOne(appAbility);
+	}
+
+	public Integer saveAbilityUnderApp(AppAbility appAbility) {
+		return appAbilityMapper.insert(appAbility);
+	}
+
+	public Integer deleteAbilityUnderAppById(Integer id) {
+		return appAbilityMapper.deleteByPrimaryKey(id);
+	}
+
+	public Integer updateAbilityUnderApp(AppAbility appAbility) {
+		return appAbilityMapper.updateByPrimaryKey(appAbility);
+	}
 }

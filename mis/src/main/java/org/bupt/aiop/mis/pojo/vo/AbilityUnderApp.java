@@ -7,6 +7,10 @@ import org.bupt.aiop.mis.pojo.po.Ability;
  */
 public class AbilityUnderApp extends Ability{
 
+	private Integer appAbilityId;
+
+	private Integer appId;
+
 	private Integer abilityId;
 
 	private String status;
@@ -14,6 +18,22 @@ public class AbilityUnderApp extends Ability{
 	private Integer actualInvokeLimit;
 
 	private Integer actualQpsLimit;
+
+	public Integer getAppAbilityId() {
+		return appAbilityId;
+	}
+
+	public void setAppAbilityId(Integer appAbilityId) {
+		this.appAbilityId = appAbilityId;
+	}
+
+	public Integer getAppId() {
+		return appId;
+	}
+
+	public void setAppId(Integer appId) {
+		this.appId = appId;
+	}
 
 	public Integer getAbilityId() {
 		return abilityId;

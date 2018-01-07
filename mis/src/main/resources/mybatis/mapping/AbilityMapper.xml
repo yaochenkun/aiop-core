@@ -38,6 +38,8 @@
     <result column="create_date" property="createDate" jdbcType="DATE" />
     <result column="update_date" property="updateDate" jdbcType="DATE" />
 
+    <result column="app_ability_id" property="appAbilityId" jdbcType="INTEGER" />
+    <result column="app_id" property="appId" jdbcType="INTEGER" />
     <result column="ability_id" property="abilityId" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="VARCHAR" />
     <result column="actual_invoke_limit" property="actualInvokeLimit" jdbcType="INTEGER" />
@@ -48,6 +50,8 @@
 
   <select id="selectAbilityUnderApp" resultMap="AbilityUnderApp" parameterType="java.lang.Integer">
     select ability.*,
+           tmp.id as app_ability_id,
+           tmp.app_id,
            tmp.ability_id,
            tmp.status,
            tmp.invoke_limit as actual_invoke_limit,
