@@ -134,6 +134,19 @@ public class AbilityController {
 	}
 
 	/**
+	 * 查询所有能力列表
+	 * @return
+	 */
+	@RequestMapping(value = "list", method = RequestMethod.GET)
+	public ResponseResult listAllModel() {
+
+		List<Ability> list = abilityService.queryAll();
+
+		logger.debug("查询所有能力列表成功");
+		return ResponseResult.success("查询成功", list);
+	}
+
+	/**
 	 * 删除应能力
 	 * @param abilityId
 	 * @return

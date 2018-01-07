@@ -19,4 +19,42 @@
     <result column="create_date" property="createDate" jdbcType="DATE" />
     <result column="update_date" property="updateDate" jdbcType="DATE" />
   </resultMap>
+
+  <resultMap id="AbilityUnderApp" type="org.bupt.aiop.mis.pojo.vo.AbilityUnderApp" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="zh_name" property="zhName" jdbcType="VARCHAR" />
+    <result column="en_name" property="enName" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="model_id" property="modelId" jdbcType="INTEGER" />
+    <result column="invoke_limit" property="invokeLimit" jdbcType="INTEGER" />
+    <result column="qps_limit" property="qpsLimit" jdbcType="INTEGER" />
+    <result column="restapi_url" property="restapiUrl" jdbcType="VARCHAR" />
+    <result column="doc_url" property="docUrl" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="DATE" />
+    <result column="update_date" property="updateDate" jdbcType="DATE" />
+
+    <result column="ability_id" property="abilityId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="actual_invoke_limit" property="actualInvokeLimit" jdbcType="INTEGER" />
+    <result column="actual_qps_limit" property="actualQpsLimit" jdbcType="INTEGER" />
+  </resultMap>
+
+
+
+  <select id="selectAbilityUnderApp" resultMap="AbilityUnderApp" parameterType="java.lang.Integer">
+    select ability.*,
+           tmp.ability_id,
+           tmp.status,
+           tmp.invoke_limit as actual_invoke_limit,
+           tmp.qps_limit as actual_qps_limit
+    from ability
+    left join (select app_ability.* from app_ability where app_ability.app_id = #{appId}) as tmp
+    on ability.id = tmp.ability_id
+  </select>
+
 </mapper>

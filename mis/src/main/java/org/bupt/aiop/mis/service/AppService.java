@@ -3,7 +3,11 @@ package org.bupt.aiop.mis.service;
 import com.github.pagehelper.PageHelper;
 import org.bupt.aiop.mis.constant.RedisConsts;
 import org.bupt.aiop.mis.mapper.AbilityMapper;
+import org.bupt.aiop.mis.mapper.AppAbilityMapper;
+import org.bupt.aiop.mis.pojo.po.Ability;
 import org.bupt.aiop.mis.pojo.po.App;
+import org.bupt.aiop.mis.pojo.po.AppAbility;
+import org.bupt.aiop.mis.pojo.vo.AbilityUnderApp;
 import org.bupt.common.constant.ResponseConsts;
 import org.bupt.common.util.Validator;
 import org.slf4j.Logger;
@@ -32,17 +36,31 @@ public class AppService extends BaseService<App> {
 	@Autowired
 	private AbilityMapper abilityMapper;
 
+	@Autowired
+	private AppAbilityMapper appAbilityMapper;
+
 	/**
 	 * 添加应用
 	 * @param app
 	 * @return
 	 */
-	public Integer saveApp(App app) {
+	public Integer saveApp(App app, List<Ability> selectedAbilityList) {
 
-		// 写入MySQL
 		getMapper().insert(app);
 
-		// 写入Redis
+		// 写入app-ability
+		Integer appId = app.getId();
+		for (Ability ability : selectedAbilityList) {
+			AppAbility appAbility = new AppAbility();
+			appAbility.setAppId(appId);
+			appAbility.setAbilityId(ability.getId());
+			appAbility.setStatus("允许调用");
+			appAbility.setInvokeLimit(ability.getInvokeLimit());
+			appAbility.setQpsLimit(ability.getQpsLimit());
+			appAbilityMapper.insert(appAbility);
+		}
+
+		// 将权限串写入Redis
 		redisMapper.opsForHash().put(RedisConsts.AIOP_APP_PERMISSION, app.getId().toString(), app.getAbilityScope());
 
 		return ResponseConsts.CRUD_SUCCESS;
@@ -61,4 +79,10 @@ public class AppService extends BaseService<App> {
   		PageHelper.startPage(pageNow, pageSize);
 		return this.getMapper().selectByExample(example);
 	}
+
+	public List<AbilityUnderApp> listAbilityUnderApp(Integer appId) {
+
+		return abilityMapper.selectAbilityUnderApp(appId);
+	}
+
 }

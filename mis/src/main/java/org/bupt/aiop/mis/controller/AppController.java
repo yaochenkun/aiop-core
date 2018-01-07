@@ -3,8 +3,10 @@ package org.bupt.aiop.mis.controller;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.fileupload.util.Streams;
 import org.bupt.aiop.mis.constant.EnvConsts;
+import org.bupt.aiop.mis.pojo.po.Ability;
 import org.bupt.aiop.mis.pojo.po.App;
-import org.bupt.aiop.mis.pojo.po.User;
+import org.bupt.aiop.mis.pojo.vo.AbilityUnderApp;
+import org.bupt.aiop.mis.service.AbilityService;
 import org.bupt.aiop.mis.service.AppService;
 import org.bupt.common.bean.PageResult;
 import org.bupt.common.bean.ResponseResult;
@@ -24,10 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 应用控制器
@@ -40,6 +39,9 @@ public class AppController {
 
 	@Autowired
 	private AppService appService;
+
+	@Autowired
+	private AbilityService abilityService;
 
 	@Autowired
 	private EnvConsts envConsts;
@@ -60,43 +62,38 @@ public class AppController {
 		String platform = (String) params.get("platform");
 		String description = (String) params.get("description");
 
-		// 获取开发者勾选的能力
-		List<String> abilityList = new ArrayList<>();
-		abilityList.add((Boolean) params.get("word_seg") == true ? "word_seg" : "");
-		abilityList.add((Boolean) params.get("word_pos") == true ? "word_pos" : "");
-		abilityList.add((Boolean) params.get("word_ner") == true ? "word_ner" : "");
-		abilityList.add((Boolean) params.get("dependency_parse") == true ? "dependency_parse" : "");
-		abilityList.add((Boolean) params.get("text_keywords") == true ? "text_keywords" : "");
-		abilityList.add((Boolean) params.get("text_summaries") == true ? "text_summaries" : "");
-		abilityList.add((Boolean) params.get("text_phrases") == true ? "text_phrases" : "");
-		abilityList.add((Boolean) params.get("word_2_pinyin") == true ? "word_2_pinyin" : "");
-		abilityList.add((Boolean) params.get("simplified_2_traditional") == true ? "simplified_2_traditional" : "");
-		abilityList.add((Boolean) params.get("traditional_2_simplified") == true ? "traditional_2_simplified" : "");
-		abilityList.add((Boolean) params.get("word_2_vec") == true ? "word_2_vec" : "");
-		abilityList.add((Boolean) params.get("word_sim") == true ? "word_sim" : "");
-		abilityList.add((Boolean) params.get("doc_sim") == true ? "doc_sim" : "");
-		abilityList.add((Boolean) params.get("nearest_words") == true ? "nearest_words" : "");
-		abilityList.add((Boolean) params.get("motion_classify") == true ? "motion_classify" : "");
-		abilityList.add((Boolean) params.get("category_classify") == true ? "category_classify" : "");
-
-		// 拼接权限字符串
-		StringBuilder sb = new StringBuilder();
-		for (String ability : abilityList) {
-			if (!"".equals(ability)) {
-				sb.append(",");
-				sb.append(ability);
-			}
-		}
-
-		String abilityScope = sb.toString();
-		abilityScope = "".equals(abilityScope) ? "none" : abilityScope.substring(1);
-
 		// 校验数据
 		if (Validator.checkEmpty(name) || Validator.checkEmpty(type) || Validator.checkEmpty(platform) || Validator.checkEmpty(description)) {
 			return ResponseResult.error("添加失败，信息不完整");
 		}
 
+		// 名称不可重复
 		App app = new App();
+		app.setName(name);
+		if (appService.queryOne(app) != null) {
+			return ResponseResult.error("添加失败，应用名称重复");
+		}
+
+		// 查询目前平台的所有能力
+		// 将用户勾选的能力拼接成以,分隔的字符串作为权限串
+		List<Ability> allAbilityList = abilityService.queryAll();
+		List<Ability> selectedAbilityList = new ArrayList<>();
+		StringBuilder sb = new StringBuilder();
+		for (Ability ability : allAbilityList) {
+			String enName = ability.getEnName();
+			Boolean isSelected = (Boolean) params.get(enName);
+			if (isSelected == true) {
+				selectedAbilityList.add(ability);
+				sb.append(","); // 拼接权限串
+				sb.append(enName);
+			}
+		}
+
+		// 获取权限串
+		String abilityScope = sb.toString();
+		abilityScope = "".equals(abilityScope) ? "none" : abilityScope.substring(1);
+
+		// 装配数据
 		app.setDeveloperId(identity.getId());
 		app.setName(name);
 		app.setType(type);
@@ -110,7 +107,7 @@ public class AppController {
 		app.setCreateDate(new Date());
 		app.setUpdateDate(new Date());
 
-		appService.saveApp(app);
+		appService.saveApp(app, selectedAbilityList);
 
 		logger.debug("应用={}, 创建成功", app.getName());
 		return ResponseResult.success("创建成功");
@@ -177,6 +174,27 @@ public class AppController {
 
 		logger.debug("获取应用{}成功", appId);
 		return ResponseResult.success("获取成功", app);
+	}
+
+	/**
+	 * 获取应用旗下的所有能力
+	 * 会列出平台的所有能力，只是会以abilityId是否为null标记该应用是否勾选了该能力
+	 * @param appId
+	 * @return
+	 */
+	@RequestMapping(value = "{appId}/ability" , method = RequestMethod.GET)
+	public ResponseResult listAbilityUnderApp(@PathVariable Integer appId) {
+
+		App app = appService.queryById(appId);
+		if (app == null) {
+			logger.debug("获取应用{}失败", appId);
+			return ResponseResult.error("获取失败");
+		}
+
+		List<AbilityUnderApp> abilityUnderAppList = appService.listAbilityUnderApp(appId);
+
+		logger.debug("获取应用{}旗下的能力列表成功", appId);
+		return ResponseResult.success("获取成功", abilityUnderAppList);
 	}
 
 	/**
