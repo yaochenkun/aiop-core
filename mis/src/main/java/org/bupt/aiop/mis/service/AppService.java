@@ -66,6 +66,18 @@ public class AppService extends BaseService<App> {
 		return ResponseConsts.CRUD_SUCCESS;
 	}
 
+	/**
+	 * 删除应用
+	 * @param id
+	 * @return
+	 */
+	public Integer deleteApp(Integer id) {
+		this.getMapper().deleteByPrimaryKey(id);
+		redisMapper.opsForHash().delete(RedisConsts.AIOP_APP_PERMISSION, id.toString()); // 删除该应用的权限缓存
+
+		return ResponseConsts.CRUD_SUCCESS;
+	}
+
 	public List<App> listApp(Integer pageNow, Integer pageSize, Integer developerId, String name, String status, Date updateDate) {
 
 		Example example = new Example(App.class);
@@ -88,12 +100,64 @@ public class AppService extends BaseService<App> {
 		return appAbilityMapper.selectOne(appAbility);
 	}
 
-	public Integer saveAbilityUnderApp(AppAbility appAbility) {
-		return appAbilityMapper.insert(appAbility);
+	public Integer saveAbilityUnderApp(AppAbility appAbility, String newAbilityPermission) {
+
+		Integer appId = appAbility.getAppId();
+
+		// 存储记录
+		appAbilityMapper.insert(appAbility);
+
+		// 更新能力权限串
+		App app = getMapper().selectByPrimaryKey(appId);
+		String abilityScope = app.getAbilityScope();
+		if ("none".equals(abilityScope)) {
+			abilityScope = newAbilityPermission;
+		} else {
+			abilityScope += "," + newAbilityPermission;
+		}
+		app.setAbilityScope(abilityScope);
+		getMapper().updateByPrimaryKey(app); // 更新
+
+		// 更新Redis中appId的能力权限串
+		redisMapper.opsForHash().put(RedisConsts.AIOP_APP_PERMISSION, appId.toString(), abilityScope);
+
+		return ResponseConsts.CRUD_SUCCESS;
 	}
 
-	public Integer deleteAbilityUnderAppById(Integer id) {
-		return appAbilityMapper.deleteByPrimaryKey(id);
+	public Integer deleteAbilityUnderApp(AppAbility appAbility, String deletingAbilityPermission) {
+
+		Integer appId = appAbility.getAppId();
+
+		// 删除记录
+		appAbilityMapper.deleteByPrimaryKey(appAbility.getId());
+
+		// 更新能力权限串
+		App app = getMapper().selectByPrimaryKey(appId);
+		String[] abilityPermissions = app.getAbilityScope().split(",");
+		StringBuilder sb = new StringBuilder();
+		for (String abilityPermission : abilityPermissions) {
+			if (!abilityPermission.equals(deletingAbilityPermission)) {
+				sb.append(",");
+				sb.append(abilityPermission);
+			}
+		}
+
+		String abilityScope = sb.toString();
+		if ("".equals(abilityScope)) {
+			abilityScope = "none";
+		} else {
+			abilityScope = abilityScope.substring(1);
+		}
+
+		app.setAbilityScope(abilityScope);
+		getMapper().updateByPrimaryKey(app); //更新
+
+		logger.info(abilityScope);
+
+		// 更新Redis中appId应用的能力权限串
+		redisMapper.opsForHash().put(RedisConsts.AIOP_APP_PERMISSION, appId.toString(), abilityScope);
+
+		return ResponseConsts.CRUD_SUCCESS;
 	}
 
 	public Integer updateAbilityUnderApp(AppAbility appAbility) {

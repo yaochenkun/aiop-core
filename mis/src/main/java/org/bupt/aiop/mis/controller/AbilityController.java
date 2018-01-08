@@ -147,14 +147,14 @@ public class AbilityController {
 	}
 
 	/**
-	 * 删除应能力
+	 * 删除能力
 	 * @param abilityId
 	 * @return
 	 */
 	@RequestMapping(value = "{abilityId}" , method = RequestMethod.DELETE)
 	public ResponseResult deleteAbility(@PathVariable Integer abilityId) {
 
-		if (abilityService.deleteById(abilityId) == ResponseConsts.CRUD_ERROR) {
+		if (abilityService.deleteAbility(abilityId) == ResponseConsts.CRUD_ERROR) {
 			logger.debug("删除{}能力失败", abilityId);
 			return ResponseResult.error("删除失败");
 		}

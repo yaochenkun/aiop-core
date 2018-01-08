@@ -148,7 +148,7 @@ public class AppController {
 	@RequestMapping(value = "{appId}" , method = RequestMethod.DELETE)
 	public ResponseResult deleteApp(@PathVariable Integer appId) {
 
-		if (appService.deleteById(appId) == ResponseConsts.CRUD_ERROR) {
+		if (appService.deleteApp(appId) == ResponseConsts.CRUD_ERROR) {
 			logger.debug("删除{}应用失败", appId);
 			return ResponseResult.error("删除失败");
 		}
@@ -293,7 +293,7 @@ public class AppController {
 		appAbility.setStatus("允许调用");
 		appAbility.setInvokeLimit(ability.getInvokeLimit());
 		appAbility.setQpsLimit(ability.getQpsLimit());
-		appService.saveAbilityUnderApp(appAbility);
+		appService.saveAbilityUnderApp(appAbility, ability.getEnName());
 
 		logger.debug("为应用{}申请能力{}更新成功", appId, abilityId);
 		return ResponseResult.success("申请成功");
@@ -328,7 +328,7 @@ public class AppController {
 			return ResponseResult.success("注销成功");
 		}
 
-		appService.deleteAbilityUnderAppById(appAbility.getId());
+		appService.deleteAbilityUnderApp(appAbility, ability.getEnName());
 
 		logger.debug("为应用{}注销能力{}更新成功", appId, abilityId);
 		return ResponseResult.success("注销成功");
