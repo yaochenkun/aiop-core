@@ -26,7 +26,6 @@ import java.util.Map;
 
 
 @Service
-@org.springframework.stereotype.Service
 public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
 
     @Autowired
