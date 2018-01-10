@@ -97,7 +97,7 @@ public class NlpController {
 	 * @return
 	 */
 	@RequestMapping(value = "v1/word_pos", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
-	@RequiredPermission(value = "word_pos_v1")
+	@RequiredPermission(value = "word_pos")
 	public Object word_pos_v1(@RequestBody Map<String, Object> params, HttpSession session) {
 
 		//日志参数
@@ -139,7 +139,7 @@ public class NlpController {
 	 * @return
 	 */
 	@RequestMapping(value = "v1/word_pos_place", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
-	@RequiredPermission(value = "word_pos_place")
+	@RequiredPermission(value = "word_pos")
 	public Object word_pos_place(@RequestBody Map<String, Object> params, HttpSession session) {
 
 		//日志参数
@@ -180,7 +180,7 @@ public class NlpController {
 	 * @return
 	 */
 	@RequestMapping(value = "v1/word_pos_organization", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
-	@RequiredPermission(value = "word_pos_organization")
+	@RequiredPermission(value = "word_pos")
 	public Object word_pos_organization(@RequestBody Map<String, Object> params, HttpSession session) {
 
 		//日志参数
@@ -221,7 +221,7 @@ public class NlpController {
 	 * @return
 	 */
 	@RequestMapping(value = "v1/word_pos_japanese", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
-	@RequiredPermission(value = "word_pos_japanese")
+	@RequiredPermission(value = "word_pos")
 	public Object word_pos_japanese(@RequestBody Map<String, Object> params, HttpSession session) {
 
 		//日志参数
@@ -262,7 +262,7 @@ public class NlpController {
 	 * @return
 	 */
 	@RequestMapping(value = "v2/word_pos", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
-	@RequiredPermission(value = "word_pos_v2")
+	@RequiredPermission(value = "word_pos")
 	public Object word_pos_v2(@RequestBody Map<String, Object> params, HttpSession session) {
 
 		//日志参数
