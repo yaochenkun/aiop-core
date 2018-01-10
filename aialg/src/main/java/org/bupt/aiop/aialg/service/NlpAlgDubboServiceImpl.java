@@ -1,5 +1,6 @@
 package org.bupt.aiop.aialg.service;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.classification.classifiers.NaiveBayesClassifier;
@@ -13,10 +14,10 @@ import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.suggest.Suggester;
 import org.bupt.aiop.aialg.bean.*;
+import org.bupt.aiop.aialg.util.CommonFormatter;
 import org.bupt.aiop.rpcapi.dubbo.NlpAlgDubboService;
 import org.bupt.common.util.ReflectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,10 +26,8 @@ import java.util.Map;
 
 
 @Service
+@org.springframework.stereotype.Service
 public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
-
-    @Autowired
-    private CommonFormatter commonFormatter;
 
     @Autowired
     private WordVectorModel wordVectorModel; //词向量
@@ -52,7 +51,7 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     @Override
     public String text_keywords(String text, Integer size) {
         List<String> keywordList = HanLP.extractKeyword(text, size);
-        return commonFormatter.extraction(text, keywordList);
+        return CommonFormatter.extraction(text, keywordList);
     }
 
     /**
@@ -65,7 +64,7 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     @Override
     public String text_summaries(String text, Integer size) {
         List<String> summaries = HanLP.extractSummary(text, size);
-        return commonFormatter.extraction(text, summaries);
+        return CommonFormatter.extraction(text, summaries);
     }
 
     /**
@@ -78,7 +77,7 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     @Override
     public String text_phrases(String text, Integer size) {
         List<String> phrases = HanLP.extractPhrase(text, size);
-        return commonFormatter.extraction(text, phrases);
+        return CommonFormatter.extraction(text, phrases);
     }
 
     /**

@@ -1,4 +1,4 @@
-package org.bupt.aiop.aialg.service;
+package org.bupt.aiop.aialg.util;
 
 import com.alibaba.fastjson.JSON;
 import org.bupt.aiop.aialg.bean.ExtractEntity;
@@ -13,8 +13,6 @@ import java.util.Map;
 /**
  * 通用格式器
  */
-@Component
-@Scope("prototype")
 public class CommonFormatter {
 
     /**
@@ -26,7 +24,7 @@ public class CommonFormatter {
      * @param terms
      * @return
      */
-    public String extraction(String text, List<String> terms) {
+    public static String extraction(String text, List<String> terms) {
         Map<String, Object> result = new HashMap<>();
         result.put("text", text);
         List<ExtractEntity> beanList = new ArrayList<>();
