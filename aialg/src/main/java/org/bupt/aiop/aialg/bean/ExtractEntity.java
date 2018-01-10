@@ -1,6 +1,7 @@
 package org.bupt.aiop.aialg.bean;
 
-public class Summary {
+public class ExtractEntity {
+
     private String item;
     private int index;
 
