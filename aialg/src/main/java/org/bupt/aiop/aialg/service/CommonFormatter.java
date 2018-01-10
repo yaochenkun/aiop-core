@@ -1,7 +1,7 @@
 package org.bupt.aiop.aialg.service;
 
 import com.alibaba.fastjson.JSON;
-import org.bupt.aiop.aialg.bean.Keyword;
+import org.bupt.aiop.aialg.bean.ExtractEntity;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -29,10 +29,10 @@ public class CommonFormatter {
     public String extraction(String text, List<String> terms) {
         Map<String, Object> result = new HashMap<>();
         result.put("text", text);
-        List<Keyword> beanList = new ArrayList<>();
+        List<ExtractEntity> beanList = new ArrayList<>();
         int lastIndex = 0;
         for (String term : terms) {
-            Keyword bean = new Keyword();
+            ExtractEntity bean = new ExtractEntity();
             bean.setItem(term);
             lastIndex = text.indexOf(term, lastIndex);
             bean.setIndex(lastIndex);

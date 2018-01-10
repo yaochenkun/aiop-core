@@ -1,18 +1,22 @@
 package org.bupt.aiop.aialg.service;
 
-import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.classification.classifiers.NaiveBayesClassifier;
+import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
+import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLWord;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
+import com.hankcs.hanlp.mining.word2vec.DocVectorModel;
 import com.hankcs.hanlp.mining.word2vec.Vector;
 import com.hankcs.hanlp.mining.word2vec.WordVectorModel;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.suggest.Suggester;
 import org.bupt.aiop.aialg.bean.*;
 import org.bupt.aiop.rpcapi.dubbo.NlpAlgDubboService;
 import org.bupt.common.util.ReflectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,11 +34,13 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     private WordVectorModel wordVectorModel; //词向量
 
     @Autowired
+    private DocVectorModel docVectorModel; //文本相似度
+
+    @Autowired
     private NaiveBayesClassifier motionClassifierModel; //情感分类
 
     @Autowired
     private NaiveBayesClassifier categoryClassifierModel; //文本分类
-
 
     /**
      * 提取给定文本的关键词
@@ -62,7 +68,6 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
         return commonFormatter.extraction(text, summaries);
     }
 
-
     /**
      * 获取句子短语
      *
@@ -74,6 +79,66 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     public String text_phrases(String text, Integer size) {
         List<String> phrases = HanLP.extractPhrase(text, size);
         return commonFormatter.extraction(text, phrases);
+    }
+
+    /**
+     * 基础词性标注功能，不识别日本人名，地名和机构名
+     *
+     * @param text 目标文本
+     * @return
+     */
+    public String word_pos_normal(String text) {
+        return word_pos(text, false, false, false);
+//        Segment segment = HanLP.newSegment()
+//                .enableNameRecognize(false)
+//                .enableTranslatedNameRecognize(false);
+//
+//        List<Term> segments = segment.seg(text);
+//        Map<String, Object> result = new HashMap<>();
+//        List<WordPos> items = new ArrayList<>();
+//        int offset = 0;
+//        for (Term term : segments) {
+//            WordPos item = new WordPos();
+//            item.setPos(term.word);
+//            item.setByteOffset(offset);
+//            item.setByteLen(term.length());
+//            item.setNature(term.nature);
+//            items.add(item);
+//            offset += term.length();
+//        }
+//        result.put("text", text);
+//        result.put("items", items);
+//        return JSON.toJSONString(result);
+    }
+
+    /**
+     * 词性标注，识别日本人名
+     *
+     * @param text 目标文本
+     * @return
+     */
+    public String word_pos_japanese(String text) {
+        return word_pos(text, true, false, false);
+    }
+
+    /**
+     * 词性标注，识别地名
+     *
+     * @param text 目标文本
+     * @return
+     */
+    public String word_pos_place(String text) {
+        return word_pos(text, false, true, false);
+    }
+
+    /**
+     * 词性标注，识别机构名
+     *
+     * @param text 目标文本
+     * @return
+     */
+    public String word_pos_organization(String text) {
+        return word_pos(text, false, false, true);
     }
 
     /**
@@ -111,57 +176,41 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     }
 
     /**
-     * 基础词性标注功能，不识别日本人名，地名和机构名
+     * 命名实体识别
      *
-     * @param text 目标文本
-     * @return
-     */
-    public String word_pos_normal(String text) {
-        return word_pos(text, false, false, false);
-    }
-
-    /**
-     * 词性标注，识别日本人名
-     *
-     * @param text 目标文本
-     * @return
-     */
-    public String word_pos_japanese(String text) {
-        return word_pos(text, true, false, false);
-    }
-
-    /**
-     * 词性标注，识别地名
-     *
-     * @param text 目标文本
-     * @return
-     */
-    public String word_pos_place(String text) {
-        return word_pos(text, false, true, false);
-    }
-
-    /**
-     * 词性标注，识别机构名
-     *
-     * @param text 目标文本
-     * @return
-     */
-    public String word_pos_organization(String text) {
-        return word_pos(text, false, false, true);
-    }
-
-    /**
-     * 词向量接口
-     *
-     * @param text
+     * @param text 须识别的字符串
      * @return
      */
     @Override
-    public String word_2_vec(String text) {
-        Vector vector = wordVectorModel.vector(text);
-        WordVector result = new WordVector();
-        result.setWord(text);
-        result.setVector(ReflectUtil.getObjectByFieldName(vector, "elementArray", float[].class));
+    public String word_ner(String text) {
+        Segment segment = HanLP.newSegment()
+                .enableJapaneseNameRecognize(true)
+                .enablePlaceRecognize(true)
+                .enableOrganizationRecognize(true);
+        List<Term> segments = segment.seg(text);
+        Map<String, Object> result = new HashMap<>();
+        Map<String, String> items = new HashMap<>();
+        for (Term term : segments) {
+            switch (term.nature.toString()) {
+                case "nr":
+                    items.put(term.word, "person_name");
+                    break;
+                case "nrj":
+                    items.put(term.word, "japanese_name");
+                    break;
+                case "ns":
+                    items.put(term.word, "place_name");
+                    break;
+                case "nt":
+                    items.put(term.word, "org_name");
+                    break;
+                case "nrf":
+                    items.put(term.word, "translate_name");
+                    break;
+            }
+        }
+        result.put("text", text);
+        result.put("items", items);
         return JSON.toJSONString(result);
     }
 
@@ -191,6 +240,12 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
         return JSON.toJSONString(result);
     }
 
+    /**
+     * 简体中文转换为繁体中文
+     *
+     * @param text 转换内容
+     * @return
+     */
     @Override
     public String simplified_2_traditional(String text) {
         Map<String, String> result = new HashMap<>();
@@ -199,6 +254,12 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
         return JSON.toJSONString(result);
     }
 
+    /**
+     * 繁体中文转换为简体中文
+     *
+     * @param text 转换内容
+     * @return
+     */
     @Override
     public String traditional_2_simplified(String text) {
         Map<String, String> result = new HashMap<>();
@@ -207,25 +268,61 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
         return JSON.toJSONString(result);
     }
 
+    /**
+     * 文本推荐
+     *
+     * @param sentences 原始内容集合
+     * @param text      目标文本
+     * @param size      相似文本数量
+     * @return
+     */
+    @Override
+    public String text_suggester(List<String> sentences, String text, Integer size) {
+        if (size > sentences.size()) size = sentences.size();
+        Suggester suggester = new Suggester();
+        for (String sentence : sentences) {
+            suggester.addSentence(sentence);
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("text", text);
+        result.put("suggester", suggester.suggest(text, size));
+        return JSON.toJSONString(result);
+    }
+
+    /**
+     * 词向量接口
+     *
+     * @param text
+     * @return
+     */
+    @Override
+    public String word_2_vec(String text) {
+        Vector vector = wordVectorModel.vector(text);
+        WordVector result = new WordVector();
+        result.setWord(text);
+        result.setVector(ReflectUtil.getObjectByFieldName(vector, "elementArray", float[].class));
+        return JSON.toJSONString(result);
+    }
+
     @Override
     public String word_sim(String text1, String text2) {
         Map<String, Object> result = new HashMap<>();
-        Map<String, String> words = new HashMap<>();
-        words.put("word_1", text1);
-        words.put("word_2", text2);
+        WordSimEntity simEntity = new WordSimEntity();
+        simEntity.setWord_1(text1);
+        simEntity.setWord_2(text2);
         result.put("score", wordVectorModel.similarity(text1, text2));
-        result.put("words", words);
+        result.put("words", simEntity);
         return JSON.toJSONString(result);
     }
 
     @Override
     public String document_sim(String doc1, String doc2) {
         Map<String, Object> result = new HashMap<>();
-        Map<String, String> texts = new HashMap<>();
-        texts.put("doc_1", doc1);
-        texts.put("doc_2", doc2);
-        result.put("score", wordVectorModel.similarity(doc1, doc2));
-        result.put("docs", texts);
+        DocSimEntity simEntity = new DocSimEntity();
+        simEntity.setDoc_1(doc1);
+        simEntity.setDoc_2(doc2);
+        result.put("score", docVectorModel.similarity(doc1, doc2));
+        result.put("docs", simEntity);
         return JSON.toJSONString(result);
     }
 
@@ -264,13 +361,13 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
 
     @Override
     public String category_classify(String text) {
-        Map<String, Double> pred_result = categoryClassifierModel.predict(text);
+        Map<String, Double> pre_result = categoryClassifierModel.predict(text);
         Map<String, Object> result = new HashMap<>();
         Map<String, Double> items = new HashMap<>();
         result.put("text", text);
         double maxScore = Double.MIN_VALUE;
         String category = null;
-        for (Map.Entry<String, Double> item : pred_result.entrySet()) {
+        for (Map.Entry<String, Double> item : pre_result.entrySet()) {
             items.put(item.getKey(), item.getValue());
             if (item.getValue() > maxScore) {
                 category = item.getKey();
@@ -279,6 +376,20 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
         }
         result.put("items", items);
         result.put("category", category);
+        return JSON.toJSONString(result);
+    }
+
+    @Override
+    public String dependency_parser(String text) {
+        CoNLLSentence sentence = HanLP.parseDependency(text);
+        Map<String, Object> result = new HashMap<>();
+        List<DependencyEntity> items = new ArrayList<>();
+        for (CoNLLWord word : sentence) {
+            DependencyEntity entity = new DependencyEntity(word.ID, word.LEMMA, word.POSTAG, word.HEAD.ID, word.DEPREL);
+            items.add(entity);
+        }
+        result.put("text", text);
+        result.put("items", items);
         return JSON.toJSONString(result);
     }
 }

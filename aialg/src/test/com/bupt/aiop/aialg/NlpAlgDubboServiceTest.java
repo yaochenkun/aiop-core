@@ -8,6 +8,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/spring/application-context.xml")
@@ -15,11 +16,6 @@ public class NlpAlgDubboServiceTest {
 
     @Autowired
     private NlpAlgDubboService nlpAlgDubboService;
-
-    @Test
-    public void word2VecTest() throws IOException {
-        System.out.println(nlpAlgDubboService.word_2_vec("北京"));
-    }
 
     @Test
     public void textKeywordTest() {
@@ -66,16 +62,39 @@ public class NlpAlgDubboServiceTest {
 
     @Test
     public void wordPosTest() {
-        String text1 = "中国科学院计算技术研究所的宗成庆教授正在教授自然语言处理课程";
-        System.out.println(nlpAlgDubboService.word_pos(text1));
 
         String[] texts = new String[]{
+                "中国科学院计算技术研究所的宗成庆教授正在教授自然语言处理课程",
                 "北川景子参演了林诣彬导演的《速度与激情3》",
                 "蓝翔给宁夏固原市彭阳县红河镇黑牛沟村捐赠了挖掘机",
-                "我经常在台川喜宴餐厅吃饭，"
+                "我经常在台川喜宴餐厅吃饭，",
+                "一桶冰水当头倒下，微软的比尔盖茨、Facebook的扎克伯格跟桑德博格、亚马逊的贝索斯、苹果的库克全都不惜湿身入镜，这些硅谷的科技人，飞蛾扑火似地牺牲演出，其实全为了慈善。",
+                "签约仪式前，秦光荣、李纪恒、仇和等一同会见了参加签约的企业家。",
+                "我在上海林原科技有限公司兼职工作",
+                "偶尔去地中海影城看电影。"
         };
         for (String text : texts) {
             String result = nlpAlgDubboService.word_pos(text, true, true, true);
+            System.out.println(result);
+            result = nlpAlgDubboService.word_pos_normal(text);
+            System.out.println(result);
+        }
+    }
+
+    @Test
+    public void wordNerTest(){
+        String[] texts = new String[]{
+                "中国科学院计算技术研究所的宗成庆教授正在教授自然语言处理课程",
+                "北川景子参演了林诣彬导演的《速度与激情3》",
+                "蓝翔给宁夏固原市彭阳县红河镇黑牛沟村捐赠了挖掘机",
+                "我经常在台川喜宴餐厅吃饭，",
+                "一桶冰水当头倒下，微软的比尔盖茨、Facebook的扎克伯格跟桑德博格、亚马逊的贝索斯、苹果的库克全都不惜湿身入镜，这些硅谷的科技人，飞蛾扑火似地牺牲演出，其实全为了慈善。",
+                "签约仪式前，秦光荣、李纪恒、仇和等一同会见了参加签约的企业家。",
+                "我在上海林原科技有限公司兼职工作",
+                "偶尔去地中海影城看电影。"
+        };
+        for (String text : texts) {
+            String result = nlpAlgDubboService.word_ner(text);
             System.out.println(result);
         }
     }
@@ -120,9 +139,40 @@ public class NlpAlgDubboServiceTest {
                 "如果真想用食物解压,建议可以食用燕麦",
                 "通用及其部分竞争对手目前正在考虑解决库存问题"
         };
-        for(String text: texts){
+        for (String text : texts) {
             System.out.println(nlpAlgDubboService.category_classify(text));
         }
+    }
+
+    @Test
+    public void word2VecTest() throws IOException {
+        System.out.println(nlpAlgDubboService.word_2_vec("北京"));
+    }
+
+    @Test
+    public void wordSimTest() {
+        System.out.println(nlpAlgDubboService.word_sim("美国", "中国"));
+        System.out.println(nlpAlgDubboService.word_sim("美丽", "漂亮"));
+        System.out.println(nlpAlgDubboService.word_sim("购买", "计算机"));
+    }
+
+    @Test
+    public void docSimTest() {
+        String[] documents = new String[]{
+                "山东苹果丰收",
+                "农民在江苏种水稻",
+                "奥运会女排夺冠",
+                "世界锦标赛胜出",
+                "中国足球失败",
+        };
+        System.out.println(nlpAlgDubboService.document_sim(documents[0], documents[1]));
+        System.out.println(nlpAlgDubboService.document_sim(documents[0], documents[2]));
+    }
+
+    @Test
+    public void dependencyParserTest(){
+        System.out.println(nlpAlgDubboService.dependency_parser("徐先生还具体帮助他确定了把画雄鹰、松鼠和麻雀作为主攻目标。"));
+        System.out.println(nlpAlgDubboService.dependency_parser("它熟悉一个民族的历史"));
     }
 
 }

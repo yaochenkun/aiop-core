@@ -1,5 +1,7 @@
 package org.bupt.aiop.rpcapi.dubbo;
 
+import java.util.List;
+
 /**
  * 自然语言处理算法服务
  * Created by ken on 2017/9/25.
@@ -12,8 +14,6 @@ public interface NlpAlgDubboService {
 
     String text_phrases(String text, Integer size);
 
-    String word_pos(String text, Boolean japName, Boolean placeName, Boolean orgName);
-
     String word_pos_normal(String text);
 
     String word_pos_japanese(String text);
@@ -22,6 +22,10 @@ public interface NlpAlgDubboService {
 
     String word_pos_organization(String text);
 
+    String word_pos(String text, Boolean japName, Boolean placeName, Boolean orgName);
+
+    String word_ner(String text);
+
     String word_2_vec(String text);
 
     String word_2_pinyin(String text);
@@ -29,6 +33,8 @@ public interface NlpAlgDubboService {
     String simplified_2_traditional(String text);
 
     String traditional_2_simplified(String text);
+
+    String text_suggester(List<String> sentences, String text, Integer size);
 
     String word_sim(String text1, String text2);
 
@@ -39,4 +45,6 @@ public interface NlpAlgDubboService {
     String motion_classify(String text);
 
     String category_classify(String text);
+
+    String dependency_parser(String text);
 }
