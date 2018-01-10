@@ -62,16 +62,39 @@ public class NlpAlgDubboServiceTest {
 
     @Test
     public void wordPosTest() {
-        String text1 = "中国科学院计算技术研究所的宗成庆教授正在教授自然语言处理课程";
-        System.out.println(nlpAlgDubboService.word_pos_normal(text1));
 
         String[] texts = new String[]{
+                "中国科学院计算技术研究所的宗成庆教授正在教授自然语言处理课程",
                 "北川景子参演了林诣彬导演的《速度与激情3》",
                 "蓝翔给宁夏固原市彭阳县红河镇黑牛沟村捐赠了挖掘机",
-                "我经常在台川喜宴餐厅吃饭，"
+                "我经常在台川喜宴餐厅吃饭，",
+                "一桶冰水当头倒下，微软的比尔盖茨、Facebook的扎克伯格跟桑德博格、亚马逊的贝索斯、苹果的库克全都不惜湿身入镜，这些硅谷的科技人，飞蛾扑火似地牺牲演出，其实全为了慈善。",
+                "签约仪式前，秦光荣、李纪恒、仇和等一同会见了参加签约的企业家。",
+                "我在上海林原科技有限公司兼职工作",
+                "偶尔去地中海影城看电影。"
         };
         for (String text : texts) {
             String result = nlpAlgDubboService.word_pos(text, true, true, true);
+            System.out.println(result);
+            result = nlpAlgDubboService.word_pos_normal(text);
+            System.out.println(result);
+        }
+    }
+
+    @Test
+    public void wordNerTest(){
+        String[] texts = new String[]{
+                "中国科学院计算技术研究所的宗成庆教授正在教授自然语言处理课程",
+                "北川景子参演了林诣彬导演的《速度与激情3》",
+                "蓝翔给宁夏固原市彭阳县红河镇黑牛沟村捐赠了挖掘机",
+                "我经常在台川喜宴餐厅吃饭，",
+                "一桶冰水当头倒下，微软的比尔盖茨、Facebook的扎克伯格跟桑德博格、亚马逊的贝索斯、苹果的库克全都不惜湿身入镜，这些硅谷的科技人，飞蛾扑火似地牺牲演出，其实全为了慈善。",
+                "签约仪式前，秦光荣、李纪恒、仇和等一同会见了参加签约的企业家。",
+                "我在上海林原科技有限公司兼职工作",
+                "偶尔去地中海影城看电影。"
+        };
+        for (String text : texts) {
+            String result = nlpAlgDubboService.word_ner(text);
             System.out.println(result);
         }
     }

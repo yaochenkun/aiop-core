@@ -89,6 +89,26 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
      */
     public String word_pos_normal(String text) {
         return word_pos(text, false, false, false);
+//        Segment segment = HanLP.newSegment()
+//                .enableNameRecognize(false)
+//                .enableTranslatedNameRecognize(false);
+//
+//        List<Term> segments = segment.seg(text);
+//        Map<String, Object> result = new HashMap<>();
+//        List<WordPos> items = new ArrayList<>();
+//        int offset = 0;
+//        for (Term term : segments) {
+//            WordPos item = new WordPos();
+//            item.setPos(term.word);
+//            item.setByteOffset(offset);
+//            item.setByteLen(term.length());
+//            item.setNature(term.nature);
+//            items.add(item);
+//            offset += term.length();
+//        }
+//        result.put("text", text);
+//        result.put("items", items);
+//        return JSON.toJSONString(result);
     }
 
     /**
@@ -156,6 +176,45 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     }
 
     /**
+     * 命名实体识别
+     *
+     * @param text 须识别的字符串
+     * @return
+     */
+    @Override
+    public String word_ner(String text) {
+        Segment segment = HanLP.newSegment()
+                .enableJapaneseNameRecognize(true)
+                .enablePlaceRecognize(true)
+                .enableOrganizationRecognize(true);
+        List<Term> segments = segment.seg(text);
+        Map<String, Object> result = new HashMap<>();
+        Map<String, String> items = new HashMap<>();
+        for (Term term : segments) {
+            switch (term.nature.toString()) {
+                case "nr":
+                    items.put(term.word, "person_name");
+                    break;
+                case "nrj":
+                    items.put(term.word, "japanese_name");
+                    break;
+                case "ns":
+                    items.put(term.word, "place_name");
+                    break;
+                case "nt":
+                    items.put(term.word, "org_name");
+                    break;
+                case "nrf":
+                    items.put(term.word, "translate_name");
+                    break;
+            }
+        }
+        result.put("text", text);
+        result.put("items", items);
+        return JSON.toJSONString(result);
+    }
+
+    /**
      * 汉字转换为拼音
      *
      * @param text
@@ -211,9 +270,10 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
 
     /**
      * 文本推荐
+     *
      * @param sentences 原始内容集合
-     * @param text 目标文本
-     * @param size 相似文本数量
+     * @param text      目标文本
+     * @param size      相似文本数量
      * @return
      */
     @Override
@@ -320,11 +380,11 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     }
 
     @Override
-    public String dependency_parser(String text){
+    public String dependency_parser(String text) {
         CoNLLSentence sentence = HanLP.parseDependency(text);
         Map<String, Object> result = new HashMap<>();
         List<DependencyEntity> items = new ArrayList<>();
-        for(CoNLLWord word:sentence){
+        for (CoNLLWord word : sentence) {
             DependencyEntity entity = new DependencyEntity(word.ID, word.LEMMA, word.POSTAG, word.HEAD.ID, word.DEPREL);
             items.add(entity);
         }
