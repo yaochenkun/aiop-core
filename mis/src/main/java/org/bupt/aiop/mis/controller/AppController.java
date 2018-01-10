@@ -6,6 +6,7 @@ import org.bupt.aiop.mis.constant.EnvConsts;
 import org.bupt.aiop.mis.pojo.po.Ability;
 import org.bupt.aiop.mis.pojo.po.App;
 import org.bupt.aiop.mis.pojo.po.AppAbility;
+import org.bupt.aiop.mis.pojo.po.Model;
 import org.bupt.aiop.mis.pojo.vo.AbilityUnderApp;
 import org.bupt.aiop.mis.service.AbilityService;
 import org.bupt.aiop.mis.service.AppService;
@@ -136,6 +137,11 @@ public class AppController {
 		List<App> list = appService.listApp(pageNow, pageSize, developerId, name, status, updateDate);
 		PageResult pageResult = new PageResult(new PageInfo<>(list));
 
+		// 加上图片目录前缀
+		for (App app : list) {
+			app.setLogoFile("/" + envConsts.FILE_APP_LOGO_DIC + "/" + app.getLogoFile());
+		}
+
 		logger.debug("查询应用列表成功, {}, {}, {}", name, status, updateDate);
 		return ResponseResult.success("查询成功", pageResult);
 	}
@@ -171,7 +177,7 @@ public class AppController {
 			return ResponseResult.error("获取失败");
 		}
 
-		app.setLogoFile("/app_logo/" + app.getLogoFile());
+		app.setLogoFile("/" + envConsts.FILE_APP_LOGO_DIC + "/" + app.getLogoFile());
 
 		logger.debug("获取应用{}成功", appId);
 		return ResponseResult.success("获取成功", app);

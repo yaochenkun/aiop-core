@@ -70,7 +70,7 @@ public class UserController {
 
         try {
             user.setPassword(MD5Util.generate(envConsts.DEFAULT_PASSWORD));
-            user.setAvatarFile("avatar_default.png"); // 默认头像
+            user.setAvatarFile(envConsts.DEFAULT_IMAGE); // 默认头像
             userService.save(user);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -131,7 +131,7 @@ public class UserController {
 
         // 清除密码、添加头像文件的文件夹目录
         user.setPassword(null);
-        user.setAvatarFile("/avatar/" + user.getAvatarFile());
+        user.setAvatarFile("/" + envConsts.FILE_AVATAR_DIC + "/" + user.getAvatarFile());
 
         logger.debug("用户={}, 查询成功", user.getUsername());
         return ResponseResult.success("查询成功", user);
@@ -280,7 +280,7 @@ public class UserController {
             fileName = id + "." + FileUtil.getExtensionName(file.getOriginalFilename());
 
             try {
-                Streams.copy(file.getInputStream(), new FileOutputStream(envConsts.FILE_PATH + "avatar/" +
+                Streams.copy(file.getInputStream(), new FileOutputStream(envConsts.FILE_PATH + envConsts.FILE_AVATAR_DIC + "/" +
                         fileName), true);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -293,6 +293,6 @@ public class UserController {
             return ResponseResult.error("头像上传失败");
         }
 
-        return ResponseResult.success("头像上传成功", "/avatar/" + fileName);
+        return ResponseResult.success("头像上传成功", "/" + envConsts.FILE_AVATAR_DIC + "/" + fileName);
     }
 }

@@ -193,14 +193,14 @@ public class ModelController {
 		}
 
 		// 模型文件是否存在
-		File oldFile = new File(envConsts.FILE_PATH + "model/" + oldFileName);
+		File oldFile = new File(envConsts.FILE_PATH + envConsts.FILE_MODEL_DIC + "/" + oldFileName);
 		if (!oldFile.exists() || !oldFile.isFile()) {
 			logger.debug("模型{}更新成功", modelId);
 			return ResponseResult.success("更新成功");
 		}
 
 		// 重命名模型文件
-		oldFile.renameTo(new File(envConsts.FILE_PATH + "model/" + file));
+		oldFile.renameTo(new File(envConsts.FILE_PATH + envConsts.FILE_MODEL_DIC + "/" + file));
 
 		logger.debug("模型{}更新成功", modelId);
 		return ResponseResult.success("更新成功");
@@ -232,7 +232,7 @@ public class ModelController {
 		}
 
 		// 获取模型文件名称
-		String absolutePath = envConsts.FILE_PATH + "model/" + modelFileName;
+		String absolutePath = envConsts.FILE_PATH + envConsts.FILE_MODEL_DIC + "/" + modelFileName;
 		try {
 			Streams.copy(file.getInputStream(), new FileOutputStream(absolutePath), true);
 		} catch (IOException e) {

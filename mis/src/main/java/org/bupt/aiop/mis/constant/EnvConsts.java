@@ -56,4 +56,15 @@ public class EnvConsts {
 	//默认图片名字（头像、LOGO、商标、图案）
 	@Value("${default.image}")
 	public String DEFAULT_IMAGE;
+
+	//文件目录
+	@Value("${file.avatarDic}")
+	public String FILE_AVATAR_DIC;
+
+	@Value("${file.appLogoDic}")
+	public String FILE_APP_LOGO_DIC;
+
+	@Value("${file.modelDic}")
+	public String FILE_MODEL_DIC;
+
 }
