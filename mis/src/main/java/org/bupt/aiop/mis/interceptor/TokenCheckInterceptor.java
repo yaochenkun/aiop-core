@@ -36,13 +36,13 @@ public class TokenCheckInterceptor implements HandlerInterceptor {
         // 验证token的有效性
         try {
 
-            String accessToken = request.getHeader(OauthConsts.KEY_TOKEN);
-            Identity identity = TokenUtil.parseToken(accessToken, envConsts.TOKEN_API_KEY_SECRET);
+            String token = request.getHeader(OauthConsts.KEY_TOKEN);
+            Identity identity = TokenUtil.parseToken(token, envConsts.TOKEN_API_KEY_SECRET);
 
             //把identity存入session中(其中包含用户名、角色、过期时间戳等)
             request.getSession().setAttribute("identity", identity);
 
-            logger.debug("应用={}: token通过认证", identity.getClientId());
+            logger.debug("用户={}: token通过认证", identity.getClientId());
             return true;
 
         } catch (Exception e) {

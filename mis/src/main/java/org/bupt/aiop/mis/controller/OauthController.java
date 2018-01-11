@@ -262,11 +262,11 @@ public class OauthController {
 		identity.setId(user.getId());
 		identity.setIssuer(envConsts.TOKEN_ISSUER);
 		identity.setClientId(user.getUsername());
-		identity.setDuration(envConsts.TOKEN_DURATION); //TODO: 后期修改为Token的
+		identity.setDuration(envConsts.TOKEN_DURATION);
 		String token = TokenUtil.createToken(identity, envConsts.TOKEN_API_KEY_SECRET);
 		identity.setToken(token);
 
-		logger.debug("用户={} 请求登录成功, 身份信息={}", identity);
+		logger.debug("用户={} 请求登录成功, 生成token={}", user.getId(), identity.getToken());
 		return ResponseResult.success("登录成功", identity);
 	}
 
@@ -309,11 +309,11 @@ public class OauthController {
 		identity.setId(user.getId());
 		identity.setIssuer(envConsts.TOKEN_ISSUER);
 		identity.setClientId(user.getUsername());
-		identity.setDuration(envConsts.TOKEN_DURATION); //TODO: 后期修改为Token的
+		identity.setDuration(envConsts.TOKEN_DURATION);
 		String token = TokenUtil.createToken(identity, envConsts.TOKEN_API_KEY_SECRET);
 		identity.setToken(token);
 
-		logger.debug("用户={} 请求手机登录成功, 身份信息={}", identity);
+		logger.debug("用户={} 请求手机登录成功, 生成token={}", user.getId(), identity.getToken());
 		return ResponseResult.success("登录成功", identity);
 	}
 

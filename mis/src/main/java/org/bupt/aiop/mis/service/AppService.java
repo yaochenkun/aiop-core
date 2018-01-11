@@ -83,7 +83,7 @@ public class AppService extends BaseService<App> {
 		Example example = new Example(App.class);
 		Example.Criteria criteria = example.createCriteria();
 
-		criteria.andEqualTo(developerId);
+		criteria.andEqualTo("developerId", developerId);
 		if (!Validator.checkEmpty(name)) criteria.andLike("name", "%" + name + "%");
 		if (!Validator.checkEmpty(status)) criteria.andEqualTo("status", status);
 		if (!Validator.checkNull(updateDate)) criteria.andEqualTo("updateDate", updateDate);

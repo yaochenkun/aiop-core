@@ -116,7 +116,7 @@ public class AppController {
 	}
 
 	/**
-	 * 查询应用列表
+	 * 查询应用列表(分页)
 	 *
 	 * @param params
 	 * @return
@@ -133,7 +133,7 @@ public class AppController {
 		String status = (String) params.get("status");
 		Date updateDate = TimeUtil.parseDate((String) params.get("updateDate"));
 		Integer developerId = identity.getId();
-
+logger.info("开发者ID={}", developerId);
 		List<App> list = appService.listApp(pageNow, pageSize, developerId, name, status, updateDate);
 		PageResult pageResult = new PageResult(new PageInfo<>(list));
 
@@ -145,6 +145,33 @@ public class AppController {
 		logger.debug("查询应用列表成功, {}, {}, {}", name, status, updateDate);
 		return ResponseResult.success("查询成功", pageResult);
 	}
+
+	/**
+	 * 查询应用列表（所有）
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = "list", method = RequestMethod.GET)
+	public ResponseResult listAllApp(HttpSession session) {
+
+		Identity identity = (Identity) session.getAttribute(OauthConsts.KEY_IDENTITY);
+
+		Integer developerId = identity.getId();
+
+		App record = new App();
+		record.setDeveloperId(developerId);
+		List<App> list = appService.queryListByWhere(record);
+
+
+		// 加上图片目录前缀
+		for (App app : list) {
+			app.setLogoFile("/" + envConsts.FILE_APP_LOGO_DIC + "/" + app.getLogoFile());
+		}
+
+		logger.debug("查询开发者{}的所有应用列表成功", developerId);
+		return ResponseResult.success("查询成功", list);
+	}
+
 
 	/**
 	 * 删除应用
