@@ -3,7 +3,7 @@ package org.bupt.aiop.platform.service;
 
 import org.bupt.aiop.platform.constant.EnvConsts;
 import org.bupt.aiop.platform.constant.RedisConsts;
-import org.bupt.aiop.platform.pojo.po.User;
+import org.bupt.aiop.platform.pojo.po.Ability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +11,10 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 /**
- * 能力输出结果缓存服务类
+ * 能力输出结果缓存+能力调用日志服务类
  */
 @Service
-public class OutputService extends BaseService<User> {
+public class OutputService extends BaseService<Ability> {
 
 	private static final Logger logger = LoggerFactory.getLogger(OutputService.class);
 
@@ -49,5 +49,7 @@ public class OutputService extends BaseService<User> {
 	public String getOutput(String abilityAndInput) {
 		return (String) redisMapper.opsForHash().get(RedisConsts.AIOP_ABILITY_INPUT_OUTPUT, abilityAndInput);
 	}
+
+
 
 }

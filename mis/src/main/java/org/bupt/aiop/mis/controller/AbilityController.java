@@ -138,7 +138,7 @@ public class AbilityController {
 	 * @return
 	 */
 	@RequestMapping(value = "list", method = RequestMethod.GET)
-	public ResponseResult listAllModel() {
+	public ResponseResult listAllAbility() {
 
 		List<Ability> list = abilityService.queryAll();
 

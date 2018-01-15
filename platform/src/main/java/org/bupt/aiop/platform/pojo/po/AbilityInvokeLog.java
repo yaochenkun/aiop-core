@@ -1,4 +1,4 @@
-package org.bupt.aiop.mis.pojo.po;
+package org.bupt.aiop.platform.pojo.po;
 
 import javax.persistence.*;
 import java.util.Date;

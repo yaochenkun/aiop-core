@@ -5,12 +5,19 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.bupt.aiop.platform.constant.LogConsts;
+import org.bupt.aiop.platform.constant.ResponseConsts;
+import org.bupt.aiop.platform.pojo.po.Ability;
+import org.bupt.aiop.platform.pojo.po.AbilityInvokeLog;
+import org.bupt.aiop.platform.service.AbilityInvokeLogService;
+import org.bupt.aiop.platform.service.AbilityService;
 import org.bupt.aiop.platform.service.OauthService;
+import org.bupt.common.bean.ResponseResult;
 import org.bupt.common.constant.OauthConsts;
 import org.bupt.common.util.LogUtil;
 import org.bupt.common.util.token.Identity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
@@ -18,6 +25,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 
 /**
  * 日志切面
@@ -28,6 +36,12 @@ import javax.servlet.http.HttpSession;
 public class LogAspect {
 
 	private Logger logger = LoggerFactory.getLogger(LogAspect.class);
+
+	@Autowired
+	private AbilityService abilityService;
+
+	@Autowired
+	private AbilityInvokeLogService abilityInvokeLogService;
 
 	/**
 	 * NlpController每个方法均作为切点
@@ -46,12 +60,31 @@ public class LogAspect {
 		HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
 		Identity identity = (Identity) session.getAttribute(OauthConsts.KEY_IDENTITY);
 		Integer appId = identity.getId();
-		String ability = joinPoint.getSignature().getName(); // 能力名称
+		String abilityName = joinPoint.getSignature().getName(); // 能力名称
 
-		logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_ENTER, "ability", ability));
-		String output = (String) joinPoint.proceed();
-		logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_EXIT, "ability", ability));
+		logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_ENTER, "ability", abilityName));
+		ResponseResult response = (ResponseResult) joinPoint.proceed();
 
-		return output;
+		// 根据ability名称获取abilityId
+		Ability ability = new Ability();
+		ability.setEnName(abilityName);
+		ability = abilityService.queryOne(ability);
+		if (ability == null) {
+			logger.debug("能力={}不存在", abilityName);
+			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_EXIT, "ability", abilityName));
+			return response.getContent();
+		}
+
+		// 写入能力调用日志数据库
+		AbilityInvokeLog abilityInvokeLog = new AbilityInvokeLog();
+		abilityInvokeLog.setAppId(appId);
+		abilityInvokeLog.setAbilityId(ability.getId());
+		abilityInvokeLog.setInvokeResult(ResponseConsts.ERROR.equals(response.getCode()) ? "调用失败" : "调用成功");
+		abilityInvokeLog.setInvokeResultReason(response.getReason());
+		abilityInvokeLog.setInvokeTime(new Date());
+		abilityInvokeLogService.save(abilityInvokeLog);
+
+		logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_EXIT, "ability", abilityName));
+		return response.getContent();
 	}
 }

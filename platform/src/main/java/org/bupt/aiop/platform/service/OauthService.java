@@ -3,7 +3,7 @@ package org.bupt.aiop.platform.service;
 
 import org.bupt.aiop.platform.constant.EnvConsts;
 import org.bupt.aiop.platform.constant.RedisConsts;
-import org.bupt.aiop.platform.pojo.po.User;
+import org.bupt.aiop.platform.pojo.po.Ability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * Created by ken on 2017/11/1.
  */
 @Service
-public class OauthService extends BaseService<User> {
+public class OauthService extends BaseService<Ability> {
 
 	private static final Logger logger = LoggerFactory.getLogger(OauthService.class);
 
