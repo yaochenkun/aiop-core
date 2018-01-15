@@ -3,8 +3,9 @@ package org.bupt.aiop.mis.controller;
 import com.github.pagehelper.PageInfo;
 import org.bupt.aiop.mis.constant.EnvConsts;
 import org.bupt.aiop.mis.pojo.po.Ability;
-import org.bupt.aiop.mis.pojo.po.Model;
+import org.bupt.aiop.mis.pojo.vo.AbilityInvokeLogStatistic;
 import org.bupt.aiop.mis.pojo.vo.AbilityWithModel;
+import org.bupt.aiop.mis.service.AbilityInvokeLogService;
 import org.bupt.aiop.mis.service.AbilityService;
 import org.bupt.aiop.mis.service.ModelService;
 import org.bupt.common.bean.PageResult;
@@ -33,6 +34,9 @@ public class AbilityController {
 
 	@Autowired
 	private AbilityService abilityService;
+
+	@Autowired
+	private AbilityInvokeLogService abilityInvokeLogService;
 
 	@Autowired
 	private ModelService modelService;
@@ -232,6 +236,31 @@ public class AbilityController {
 
 		logger.debug("能力{}更新成功", abilityId);
 		return ResponseResult.success("更新成功");
+	}
+
+	/**
+	 * 查询能力调用量的统计信息
+	 *
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "invoke_log/list", method = RequestMethod.POST)
+	public ResponseResult listAbilityInvokeLogStatistic(@RequestBody Map<String, Object> params) {
+
+		Integer pageNow = (Integer) params.get("pageNow");
+		Integer pageSize = (Integer) params.get("pageSize");
+
+		List<AbilityInvokeLogStatistic> list = abilityInvokeLogService.listAbilityInvokeLogStatistic(pageNow, pageSize, params);
+
+		// 添加行号
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).setId(i + 1);
+		}
+
+		PageResult pageResult = new PageResult(new PageInfo<>(list));
+
+		logger.debug("查询能力调用量的统计信息成功");
+		return ResponseResult.success("查询成功", pageResult);
 	}
 
 }

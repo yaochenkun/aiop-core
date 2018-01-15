@@ -12,4 +12,37 @@
     <result column="invoke_result_reason" property="invokeResultReason" jdbcType="VARCHAR" />
     <result column="invoke_time" property="invokeTime" jdbcType="TIMESTAMP" />
   </resultMap>
+
+  <resultMap id="AbilityInvokeLogStatistic" type="org.bupt.aiop.mis.pojo.vo.AbilityInvokeLogStatistic" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="invoke_count" property="invokeCount" jdbcType="INTEGER" />
+    <result column="invoke_date" property="invokeDate" jdbcType="DATE" />
+  </resultMap>
+
+  <select id="selectStatistic" resultMap="AbilityInvokeLogStatistic" parameterType="map">
+    select count(*) as invoke_count,
+           DATE_FORMAT(invoke_time, "%Y-%m-%d") as invoke_date
+    from ability_invoke_log
+    <where>
+
+      <if test="appId != null and appId != -1">
+        app_id = #{appId}
+      </if>
+
+      <if test="abilityId != null and abilityId != -1">
+        and ability_id = #{abilityId}
+      </if>
+
+      <if test="invokeResult == '调用成功' or invokeResult == '调用失败'">
+        and invoke_result = #{invokeResult}
+      </if>
+
+      <if test="invokeDateBegin != null and invokeDateEnd != null">
+        and invoke_time between DATE_FORMAT(#{invokeDateBegin}, "%Y-%m-%d") and DATE_ADD(DATE_FORMAT(#{invokeDateEnd}, "%Y-%m-%d"), INTERVAL 1 DAY)
+      </if>
+
+    </where>
+    group by DATE_FORMAT(invoke_time, "%Y-%m-%d")
+  </select>
+
 </mapper>
