@@ -23,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,7 +47,7 @@ public class NlpController {
 	private NlpAlgDubboService nlpAlgDubboService;
 
 	/**
-	 * 中文分词(deepnlp)
+	 * 中文分词
 	 *
 	 * @param params
 	 * @return
@@ -75,23 +77,33 @@ public class NlpController {
 		}
 
 
-		// 算法处理
-		TProtocol protocol = thriftNlpConnectionService.getConnection();
-		NlpAlgThriftService.Client nlpAlgSerivce = new NlpAlgThriftService.Client(protocol);
+		// 算法处理(deepnlp)
+//		TProtocol protocol = thriftNlpConnectionService.getConnection();
+//		NlpAlgThriftService.Client nlpAlgSerivce = new NlpAlgThriftService.Client(protocol);
+//		try {
+//			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
+//			return ResponseResult.success("", nlpAlgSerivce.word_seg(text));
+//		} catch (Exception e) {
+//			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
+//			return ResponseResult.error(ResponseConsts.ERROR_MSG_INTERNAL_ERROR, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
+//		} finally {
+//			thriftNlpConnectionService.returnConnection(protocol);
+//		}
+
+		// 算法处理(hanlp)
 		try {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return ResponseResult.success("", nlpAlgSerivce.word_seg(text));
+			return ResponseResult.success("", nlpAlgDubboService.word_seg(text));
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
 			return ResponseResult.error(ResponseConsts.ERROR_MSG_INTERNAL_ERROR, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
-		} finally {
-			thriftNlpConnectionService.returnConnection(protocol);
 		}
 	}
 
 
 	/**
-	 * 词性标注-默认(hanlp)
+	 * 词性标注-默认
 	 *
 	 * @param params
 	 * @return
@@ -133,13 +145,13 @@ public class NlpController {
 	}
 
 	/**
-	 * 词性标注-地名(hanlp)
+	 * 词性标注-地名
 	 *
 	 * @param params
 	 * @return
 	 */
 	@RequestMapping(value = "v1/word_pos_place", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
-	@RequiredPermission(value = "word_pos")
+	@RequiredPermission(value = "word_pos_place")
 	public Object word_pos_place(@RequestBody Map<String, Object> params, HttpSession session) {
 
 		//日志参数
@@ -174,13 +186,13 @@ public class NlpController {
 	}
 
 	/**
-	 * 词性标注-机构名(hanlp)
+	 * 词性标注-机构名
 	 *
 	 * @param params
 	 * @return
 	 */
 	@RequestMapping(value = "v1/word_pos_organization", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
-	@RequiredPermission(value = "word_pos")
+	@RequiredPermission(value = "word_pos_organization")
 	public Object word_pos_organization(@RequestBody Map<String, Object> params, HttpSession session) {
 
 		//日志参数
@@ -215,13 +227,13 @@ public class NlpController {
 	}
 
 	/**
-	 * 词性标注-日本人名(hanlp)
+	 * 词性标注-日本人名
 	 *
 	 * @param params
 	 * @return
 	 */
 	@RequestMapping(value = "v1/word_pos_japanese", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
-	@RequiredPermission(value = "word_pos")
+	@RequiredPermission(value = "word_pos_japanese")
 	public Object word_pos_japanese(@RequestBody Map<String, Object> params, HttpSession session) {
 
 		//日志参数
@@ -255,50 +267,87 @@ public class NlpController {
 		}
 	}
 
-//	/**
-//	 * 词性标注(deepnlp)
-//	 *
-//	 * @param params
-//	 * @return
-//	 */
-//	@RequestMapping(value = "v2/word_pos", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
-//	@RequiredPermission(value = "word_pos")
-//	public Object word_pos_v2(@RequestBody Map<String, Object> params, HttpSession session) {
-//
-//		//日志参数
-//		String ability = Thread.currentThread().getStackTrace()[1].getMethodName();
-//		Integer appId = ((Identity) session.getAttribute(OauthConsts.KEY_IDENTITY)).getId();
-//
-//		// 获取初始输入
-//		String text = null;
-//		try {
-//			text = (String) params.get("text");
-//		} catch (Exception e) {
-//			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INVALID_PARAM));
-//			return ResponseResult.error(ResponseConsts.ERROR_MSG_INVALID_PARAM, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INVALID_PARAM, ResponseConsts.ERROR_MSG_INVALID_PARAM)));
-//		}
-//
-//
-//		// 校验初始输入
-//		if (Validator.checkEmpty(text)) {
-//			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
-//			return ResponseResult.error(ResponseConsts.ERROR_MSG_EMPTY_PARAM, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM)));
-//		}
-//
-//
-//		// 算法处理
-//		TProtocol protocol = thriftNlpConnectionService.getConnection();
-//		NlpAlgThriftService.Client nlpAlgSerivce = new NlpAlgThriftService.Client(protocol);
-//		try {
-//			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-//			return ResponseResult.success("", nlpAlgSerivce.word_pos(text));
-//		} catch (Exception e) {
-//			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
-//			return ResponseResult.error(ResponseConsts.ERROR_MSG_INTERNAL_ERROR, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
-//		} finally {
-//			thriftNlpConnectionService.returnConnection(protocol);
-//		}
-//	}
+	/**
+	 * 命名实体识别
+	 *
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "v1/word_ner", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
+	@RequiredPermission(value = "word_ner")
+	public Object word_ner(@RequestBody Map<String, Object> params, HttpSession session) {
+
+		//日志参数
+		String ability = Thread.currentThread().getStackTrace()[1].getMethodName();
+		Integer appId = ((Identity) session.getAttribute(OauthConsts.KEY_IDENTITY)).getId();
+
+		// 获取初始输入
+		String text = null;
+		try {
+			text = (String) params.get("text");
+		} catch (Exception e) {
+			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INVALID_PARAM));
+			return ResponseResult.error(ResponseConsts.ERROR_MSG_INVALID_PARAM, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INVALID_PARAM, ResponseConsts.ERROR_MSG_INVALID_PARAM)));
+		}
+
+
+		// 校验初始输入
+		if (Validator.checkEmpty(text)) {
+			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
+			return ResponseResult.error(ResponseConsts.ERROR_MSG_EMPTY_PARAM, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM)));
+		}
+
+
+		// 算法处理
+		try {
+			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
+			return ResponseResult.success("", nlpAlgDubboService.word_ner(text));
+		} catch (Exception e) {
+			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
+			return ResponseResult.error(ResponseConsts.ERROR_MSG_INTERNAL_ERROR, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
+		}
+	}
+
+	/**
+	 * 依存句法分析
+	 *
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "v1/dependency_parse", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
+	@RequiredPermission(value = "dependency_parse")
+	public Object dependency_parse(@RequestBody Map<String, Object> params, HttpSession session) {
+
+		//日志参数
+		String ability = Thread.currentThread().getStackTrace()[1].getMethodName();
+		Integer appId = ((Identity) session.getAttribute(OauthConsts.KEY_IDENTITY)).getId();
+
+		// 获取初始输入
+		String text = null;
+		try {
+			text = (String) params.get("text");
+		} catch (Exception e) {
+			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INVALID_PARAM));
+			return ResponseResult.error(ResponseConsts.ERROR_MSG_INVALID_PARAM, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INVALID_PARAM, ResponseConsts.ERROR_MSG_INVALID_PARAM)));
+		}
+
+
+		// 校验初始输入
+		if (Validator.checkEmpty(text)) {
+			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
+			return ResponseResult.error(ResponseConsts.ERROR_MSG_EMPTY_PARAM, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM)));
+		}
+
+
+		// 算法处理
+		try {
+			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
+			return ResponseResult.success("", nlpAlgDubboService.dependency_parse(text));
+		} catch (Exception e) {
+			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
+			return ResponseResult.error(ResponseConsts.ERROR_MSG_INTERNAL_ERROR, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
+		}
+	}
 
 	/**
 	 * 关键词提取
@@ -811,4 +860,50 @@ public class NlpController {
 		}
 	}
 
+	/**
+	 * 文本推荐
+	 *
+	 * @param params
+	 * @return
+	 */
+	@RequestMapping(value = "v1/text_suggester", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
+	@RequiredPermission(value = "text_suggester")
+	public Object text_suggester(@RequestBody Map<String, Object> params, HttpSession session) {
+
+		//日志参数
+		String ability = Thread.currentThread().getStackTrace()[1].getMethodName();
+		Integer appId = ((Identity) session.getAttribute(OauthConsts.KEY_IDENTITY)).getId();
+
+		// 获取初始输入
+		List<String> sentences = null;
+		String text = null;
+		Integer size = null;
+		try {
+			sentences = (ArrayList<String>) params.get("sentences");
+			text = (String) params.get("text");
+			size = (Integer) params.get("size");
+		} catch (Exception e) {
+			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INVALID_PARAM));
+			return ResponseResult.error(ResponseConsts.ERROR_MSG_INVALID_PARAM, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INVALID_PARAM, ResponseConsts.ERROR_MSG_INVALID_PARAM)));
+		}
+
+
+		// 校验初始输入
+		if (Validator.checkEmpty(text) || Validator.checkNull(sentences)) {
+			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
+			return ResponseResult.error(ResponseConsts.ERROR_MSG_EMPTY_PARAM, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM)));
+		}
+		if (Validator.checkNull(size) || size <= 0) {
+			size = NlpConsts.DEFAULT_SIZE;
+		}
+
+		// 算法处理
+		try {
+			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
+			return ResponseResult.success("", nlpAlgDubboService.text_suggester(sentences, text, size));
+		} catch (Exception e) {
+			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
+			return ResponseResult.error(ResponseConsts.ERROR_MSG_INTERNAL_ERROR, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
+		}
+	}
 }

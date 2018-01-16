@@ -41,6 +41,34 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     private NaiveBayesClassifier categoryClassifierModel; //文本分类
 
     /**
+     * 中文分词
+     *
+     * @param text 被分词的句子
+     * @return
+     */
+    @Override
+    public String word_seg(String text) {
+        Segment segment = HanLP.newSegment();
+
+        List<Term> segments = segment.seg(text);
+        Map<String, Object> result = new HashMap<>();
+        List<WordSeg> items = new ArrayList<>();
+        int offset = 0;
+        for (Term term : segments) {
+            WordSeg item = new WordSeg();
+            item.setSeg(term.word);
+            item.setByteOffset(offset);
+            item.setByteLen(term.length());
+            items.add(item);
+            offset += term.length();
+        }
+        result.put("text", text);
+        result.put("items", items);
+        return JSON.toJSONString(result);
+    }
+
+
+    /**
      * 提取给定文本的关键词
      *
      * @param text 提取关键词的文本
@@ -181,30 +209,31 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
      */
     @Override
     public String word_ner(String text) {
+
+        // 建立实体名称映射表
+        Map<String, String> nerDict = new HashMap<>();
+        nerDict.put("nr", "person_name");
+        nerDict.put("nrj", "japanese_name");
+        nerDict.put("ns", "place_name");
+        nerDict.put("nt", "org_name");
+        nerDict.put("nrf", "translate_name");
+
         Segment segment = HanLP.newSegment()
                 .enableJapaneseNameRecognize(true)
                 .enablePlaceRecognize(true)
                 .enableOrganizationRecognize(true);
         List<Term> segments = segment.seg(text);
         Map<String, Object> result = new HashMap<>();
-        Map<String, String> items = new HashMap<>();
+        List<WordNer> items = new ArrayList<>();
         for (Term term : segments) {
-            switch (term.nature.toString()) {
-                case "nr":
-                    items.put(term.word, "person_name");
-                    break;
-                case "nrj":
-                    items.put(term.word, "japanese_name");
-                    break;
-                case "ns":
-                    items.put(term.word, "place_name");
-                    break;
-                case "nt":
-                    items.put(term.word, "org_name");
-                    break;
-                case "nrf":
-                    items.put(term.word, "translate_name");
-                    break;
+            String ner = nerDict.get(term.nature.toString());
+            if (ner != null) {
+                WordNer item = new WordNer();
+                item.setWord(term.word);
+                item.setByteOffset(text.indexOf(term.word));
+                item.setByteLen(term.length());
+                item.setNer(ner);
+                items.add(item);
             }
         }
         result.put("text", text);
@@ -378,7 +407,7 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     }
 
     @Override
-    public String dependency_parser(String text) {
+    public String dependency_parse(String text) {
         CoNLLSentence sentence = HanLP.parseDependency(text);
         Map<String, Object> result = new HashMap<>();
         List<DependencyEntity> items = new ArrayList<>();

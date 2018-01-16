@@ -8,6 +8,8 @@ import java.util.List;
  */
 public interface NlpAlgDubboService {
 
+    String word_seg(String text);
+
     String text_keywords(String text, Integer size);
 
     String text_summaries(String text, Integer size);
@@ -46,5 +48,5 @@ public interface NlpAlgDubboService {
 
     String category_classify(String text);
 
-    String dependency_parser(String text);
+    String dependency_parse(String text);
 }
