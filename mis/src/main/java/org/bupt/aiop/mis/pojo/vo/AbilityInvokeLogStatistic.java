@@ -7,26 +7,26 @@ import java.util.Date;
  */
 public class AbilityInvokeLogStatistic {
 
-	private Integer id;
+	private Integer invokeSuccessCount;
 
-	private Integer invokeCount;
+	private Integer invokeFailureCount;
 
 	private Date invokeDate;
 
-	public Integer getId() {
-		return id;
+	public Integer getInvokeSuccessCount() {
+		return invokeSuccessCount;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setInvokeSuccessCount(Integer invokeSuccessCount) {
+		this.invokeSuccessCount = invokeSuccessCount;
 	}
 
-	public Integer getInvokeCount() {
-		return invokeCount;
+	public Integer getInvokeFailureCount() {
+		return invokeFailureCount;
 	}
 
-	public void setInvokeCount(Integer invokeCount) {
-		this.invokeCount = invokeCount;
+	public void setInvokeFailureCount(Integer invokeFailureCount) {
+		this.invokeFailureCount = invokeFailureCount;
 	}
 
 	public Date getInvokeDate() {
@@ -36,4 +36,6 @@ public class AbilityInvokeLogStatistic {
 	public void setInvokeDate(Date invokeDate) {
 		this.invokeDate = invokeDate;
 	}
+
+
 }

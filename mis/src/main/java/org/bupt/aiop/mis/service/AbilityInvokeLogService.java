@@ -29,15 +29,10 @@ public class AbilityInvokeLogService extends BaseService<AbilityInvokeLog> {
 
 	/**
 	 * 查询能力调用量（分页）
-	 * @param pageNow
-	 * @param pageSize
 	 * @param filters
 	 * @return
 	 */
-	public List<AbilityInvokeLogStatistic> listAbilityInvokeLogStatistic(Integer pageNow,
-																		 Integer pageSize,
-																		 Map<String, Object> filters) {
-		PageHelper.startPage(pageNow, pageSize);
+	public List<AbilityInvokeLogStatistic> listAbilityInvokeLogStatistic(Map<String, Object> filters) {
 		return abilityInvokeLogMapper.selectStatistic(filters);
 	}
 }

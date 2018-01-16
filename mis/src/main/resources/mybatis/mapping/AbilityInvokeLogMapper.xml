@@ -14,35 +14,63 @@
   </resultMap>
 
   <resultMap id="AbilityInvokeLogStatistic" type="org.bupt.aiop.mis.pojo.vo.AbilityInvokeLogStatistic" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="invoke_count" property="invokeCount" jdbcType="INTEGER" />
+    <result column="invoke_success_count" property="invokeSuccessCount" jdbcType="INTEGER" />
+    <result column="invoke_failure_count" property="invokeFailureCount" jdbcType="INTEGER" />
     <result column="invoke_date" property="invokeDate" jdbcType="DATE" />
   </resultMap>
 
   <select id="selectStatistic" resultMap="AbilityInvokeLogStatistic" parameterType="map">
-    select count(*) as invoke_count,
-           DATE_FORMAT(invoke_time, "%Y-%m-%d") as invoke_date
+    select IFNULL(successOrFailureTmp.invoke_count, 0) as invoke_success_count,
+           totalTmp.invoke_count - IFNULL(successOrFailureTmp.invoke_count, 0) as invoke_failure_count,
+           totalTmp.invoke_date as invoke_date
+    from
+    (select count(*) as invoke_count,
+            DATE_FORMAT(invoke_time, "%Y-%m-%d") as invoke_date
     from ability_invoke_log
     <where>
-
-      <if test="appId != null and appId != -1">
-        app_id = #{appId}
-      </if>
-
+      <choose>
+        <when test="appId != null and appId != -1">
+          app_id = #{appId}
+        </when>
+        <otherwise>
+          app_id in (select app.id from app where app.developer_id = #{developerId})
+        </otherwise>
+      </choose>
       <if test="abilityId != null and abilityId != -1">
         and ability_id = #{abilityId}
       </if>
-
-      <if test="invokeResult == '调用成功' or invokeResult == '调用失败'">
-        and invoke_result = #{invokeResult}
-      </if>
-
       <if test="invokeDateBegin != null and invokeDateEnd != null">
         and invoke_time between DATE_FORMAT(#{invokeDateBegin}, "%Y-%m-%d") and DATE_ADD(DATE_FORMAT(#{invokeDateEnd}, "%Y-%m-%d"), INTERVAL 1 DAY)
       </if>
-
     </where>
-    group by DATE_FORMAT(invoke_time, "%Y-%m-%d")
+    group by DATE_FORMAT(invoke_time, "%Y-%m-%d")) as totalTmp
+
+    left join
+
+    (select count(*) as invoke_count,
+            DATE_FORMAT(invoke_time, "%Y-%m-%d") as invoke_date
+    from ability_invoke_log
+    <where>
+        invoke_result = "调用成功"
+      <choose>
+        <when test="appId != null and appId != -1">
+          and app_id = #{appId}
+        </when>
+        <otherwise>
+          and app_id in (select app.id from app where app.developer_id = #{developerId})
+        </otherwise>
+      </choose>
+      <if test="abilityId != null and abilityId != -1">
+        and ability_id = #{abilityId}
+      </if>
+      <if test="invokeDateBegin != null and invokeDateEnd != null">
+        and invoke_time between DATE_FORMAT(#{invokeDateBegin}, "%Y-%m-%d") and DATE_ADD(DATE_FORMAT(#{invokeDateEnd}, "%Y-%m-%d"), INTERVAL 1 DAY)
+      </if>
+    </where>
+    group by DATE_FORMAT(invoke_time, "%Y-%m-%d")) as successOrFailureTmp
+
+    on totalTmp.invoke_date = successOrFailureTmp.invoke_date
+    order by totalTmp.invoke_date
   </select>
 
 </mapper>

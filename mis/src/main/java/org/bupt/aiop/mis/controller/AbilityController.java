@@ -10,9 +10,11 @@ import org.bupt.aiop.mis.service.AbilityService;
 import org.bupt.aiop.mis.service.ModelService;
 import org.bupt.common.bean.PageResult;
 import org.bupt.common.bean.ResponseResult;
+import org.bupt.common.constant.OauthConsts;
 import org.bupt.common.constant.ResponseConsts;
 import org.bupt.common.util.TimeUtil;
 import org.bupt.common.util.Validator;
+import org.bupt.common.util.token.Identity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -245,22 +248,16 @@ public class AbilityController {
 	 * @return
 	 */
 	@RequestMapping(value = "invoke_log/list", method = RequestMethod.POST)
-	public ResponseResult listAbilityInvokeLogStatistic(@RequestBody Map<String, Object> params) {
+	public ResponseResult listAbilityInvokeLogStatistic(@RequestBody Map<String, Object> params, HttpSession session) {
 
-		Integer pageNow = (Integer) params.get("pageNow");
-		Integer pageSize = (Integer) params.get("pageSize");
+		// 获取开发者ID
+		Identity identity = (Identity) session.getAttribute(OauthConsts.KEY_IDENTITY);
 
-		List<AbilityInvokeLogStatistic> list = abilityInvokeLogService.listAbilityInvokeLogStatistic(pageNow, pageSize, params);
-
-		// 添加行号
-		for (int i = 0; i < list.size(); i++) {
-			list.get(i).setId(i + 1);
-		}
-
-		PageResult pageResult = new PageResult(new PageInfo<>(list));
+		params.put("developerId", identity.getId()); // 方便查找developerId旗下所有应用使用
+		List<AbilityInvokeLogStatistic> abilityInvokeLogStatisticList = abilityInvokeLogService.listAbilityInvokeLogStatistic(params);
 
 		logger.debug("查询能力调用量的统计信息成功");
-		return ResponseResult.success("查询成功", pageResult);
+		return ResponseResult.success("查询成功", abilityInvokeLogStatisticList);
 	}
 
 }
