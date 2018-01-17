@@ -3,8 +3,10 @@ package org.bupt.aiop.mis.controller;
 import com.github.pagehelper.PageInfo;
 import org.bupt.aiop.mis.constant.EnvConsts;
 import org.bupt.aiop.mis.pojo.po.Ability;
+import org.bupt.aiop.mis.pojo.vo.AbilityInvokeLogRanking;
 import org.bupt.aiop.mis.pojo.vo.AbilityInvokeLogStatistic;
 import org.bupt.aiop.mis.pojo.vo.AbilityWithModel;
+import org.bupt.aiop.mis.pojo.vo.MyAbility;
 import org.bupt.aiop.mis.service.AbilityInvokeLogService;
 import org.bupt.aiop.mis.service.AbilityService;
 import org.bupt.aiop.mis.service.ModelService;
@@ -258,6 +260,78 @@ public class AbilityController {
 
 		logger.debug("查询能力调用量的统计信息成功");
 		return ResponseResult.success("查询成功", abilityInvokeLogStatisticList);
+	}
+
+	/**
+	 * 查询能力调用总量
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = "invoke_log/count", method = RequestMethod.GET)
+	public ResponseResult countAbilityInvokeLogTotal(HttpSession session) {
+
+		// 获取开发者ID
+		Identity identity = (Identity) session.getAttribute(OauthConsts.KEY_IDENTITY);
+		Integer totalCount = abilityInvokeLogService.countAbilityInvokeLogTotal(identity.getId());
+
+		logger.debug("查询能力调用总量成功");
+		return ResponseResult.success("查询成功", totalCount);
+	}
+
+	/**
+	 * 查询能力调用量列表中的排名(index)
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = "invoke_log/ranking/index", method = RequestMethod.GET)
+	public ResponseResult indexAbilityInvokeLogRanking(HttpSession session) {
+
+		// 获取开发者ID
+		Identity identity = (Identity) session.getAttribute(OauthConsts.KEY_IDENTITY);
+		Integer developerId = identity.getId();
+
+		List<AbilityInvokeLogRanking> rankingList = abilityInvokeLogService.listAbilityInvokeLogRanking();
+		Integer ranking = 0;
+		for (AbilityInvokeLogRanking abilityInvokeLogRanking : rankingList) {
+			ranking++;
+			if (abilityInvokeLogRanking.getDeveloperId() == developerId) {
+				break;
+			}
+		}
+
+		logger.debug("查询能力调用总量排名成功");
+		return ResponseResult.success("查询成功", ranking);
+	}
+
+	/**
+	 * 查询能力调用量的统计信息(首页列表)
+	 * @return
+	 */
+	@RequestMapping(value = "invoke_log/list", method = RequestMethod.GET)
+	public ResponseResult listMyAbilities(HttpSession session) {
+
+		// 获取开发者ID
+		Identity identity = (Identity) session.getAttribute(OauthConsts.KEY_IDENTITY);
+
+		List<MyAbility> myAbilityList = abilityInvokeLogService.listMyAbilities(identity.getId(), "全部");
+		List<MyAbility> myAbilityInvokeFailureList = abilityInvokeLogService.listMyAbilities(identity.getId(), "调用失败");
+
+		for (int i = 0; i < myAbilityList.size(); i++) {
+			MyAbility myAbility = myAbilityList.get(i);
+			MyAbility myAbilityInvokeFailure = myAbilityInvokeFailureList.get(i);
+			myAbility.setInvokeFailureCount(myAbilityInvokeFailure.getInvokeTotalCount());
+			myAbility.setInvokeSuccessCount(myAbility.getInvokeTotalCount() - myAbilityInvokeFailure.getInvokeTotalCount());
+			if (myAbility.getInvokeTotalCount() != 0) {
+				myAbility.setInvokeFailureRate((float) (myAbility.getInvokeFailureCount() * 1.0 / myAbility.getInvokeTotalCount()));
+				myAbility.setInvokeSuccessRate((float) (myAbility.getInvokeSuccessCount() * 1.0 / myAbility.getInvokeTotalCount()));
+			} else {
+				myAbility.setInvokeFailureRate(0.0f);
+				myAbility.setInvokeSuccessRate(0.0f);
+			}
+		}
+
+		logger.debug("查询能力调用量的统计信息(首页列表)成功");
+		return ResponseResult.success("查询成功", myAbilityList);
 	}
 
 }

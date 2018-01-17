@@ -3,6 +3,7 @@ package org.bupt.aiop.mis.controller;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.fileupload.util.Streams;
 import org.bupt.aiop.mis.annotation.RequiredRoles;
+import org.bupt.aiop.mis.constant.RoleConsts;
 import org.bupt.common.bean.PageResult;
 import org.bupt.common.bean.ResponseResult;
 import org.bupt.common.constant.OauthConsts;
@@ -294,5 +295,19 @@ public class UserController {
         }
 
         return ResponseResult.success("头像上传成功", "/" + envConsts.FILE_AVATAR_DIC + "/" + fileName);
+    }
+
+    /**
+     * 查询用户总量
+     * @return
+     */
+    @RequestMapping(value = "developer/count", method = RequestMethod.GET)
+    public ResponseResult countDevelopers() {
+
+        // 查询条件（必须是开发者）
+        User record = new User();
+        record.setRole(RoleConsts.DEVELOPER);
+
+        return ResponseResult.success("查询成功", userService.queryListByWhere(record).size());
     }
 }
