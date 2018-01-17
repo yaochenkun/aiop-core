@@ -3,6 +3,7 @@ package org.bupt.aiop.mis.controller;
 import com.github.pagehelper.PageInfo;
 import org.bupt.aiop.mis.constant.EnvConsts;
 import org.bupt.aiop.mis.pojo.po.Ability;
+import org.bupt.aiop.mis.pojo.vo.AbilityInvokeLogRanking;
 import org.bupt.aiop.mis.pojo.vo.AbilityInvokeLogStatistic;
 import org.bupt.aiop.mis.pojo.vo.AbilityWithModel;
 import org.bupt.aiop.mis.service.AbilityInvokeLogService;
@@ -258,6 +259,47 @@ public class AbilityController {
 
 		logger.debug("查询能力调用量的统计信息成功");
 		return ResponseResult.success("查询成功", abilityInvokeLogStatisticList);
+	}
+
+	/**
+	 * 查询能力调用总量
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = "invoke_log/count", method = RequestMethod.GET)
+	public ResponseResult countAbilityInvokeLogTotal(HttpSession session) {
+
+		// 获取开发者ID
+		Identity identity = (Identity) session.getAttribute(OauthConsts.KEY_IDENTITY);
+		Integer totalCount = abilityInvokeLogService.countAbilityInvokeLogTotal(identity.getId());
+
+		logger.debug("查询能力调用总量成功");
+		return ResponseResult.success("查询成功", totalCount);
+	}
+
+	/**
+	 * 查询能力调用量列表中的排名(index)
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = "invoke_log/ranking/index", method = RequestMethod.GET)
+	public ResponseResult indexAbilityInvokeLogRanking(HttpSession session) {
+
+		// 获取开发者ID
+		Identity identity = (Identity) session.getAttribute(OauthConsts.KEY_IDENTITY);
+		Integer developerId = identity.getId();
+
+		List<AbilityInvokeLogRanking> rankingList = abilityInvokeLogService.listAbilityInvokeLogRanking();
+		Integer ranking = 0;
+		for (AbilityInvokeLogRanking abilityInvokeLogRanking : rankingList) {
+			ranking++;
+			if (abilityInvokeLogRanking.getDeveloperId() == developerId) {
+				break;
+			}
+		}
+
+		logger.debug("查询能力调用总量排名成功");
+		return ResponseResult.success("查询成功", ranking);
 	}
 
 }

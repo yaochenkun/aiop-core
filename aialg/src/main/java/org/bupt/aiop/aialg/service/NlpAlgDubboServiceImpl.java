@@ -331,6 +331,12 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
         return JSON.toJSONString(result);
     }
 
+    /**
+     * 短文本相似度计算
+     * @param text1
+     * @param text2
+     * @return
+     */
     @Override
     public String word_sim(String text1, String text2) {
         Map<String, Object> result = new HashMap<>();
@@ -342,6 +348,12 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
         return JSON.toJSONString(result);
     }
 
+    /**
+     * 文档相似度计算
+     * @param doc1
+     * @param doc2
+     * @return
+     */
     @Override
     public String document_sim(String doc1, String doc2) {
         Map<String, Object> result = new HashMap<>();
@@ -353,6 +365,12 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
         return JSON.toJSONString(result);
     }
 
+    /**
+     * 最相似文本
+     * @param text
+     * @param size
+     * @return
+     */
     @Override
     public String nearest_words(String text, Integer size) {
         List<Map.Entry<String, Float>> nearests = wordVectorModel.nearest(text, size);
@@ -369,6 +387,11 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
         return JSON.toJSONString(result);
     }
 
+    /**
+     * 情感分析（二分类）
+     * @param text
+     * @return
+     */
     @Override
     public String motion_classify(String text) {
         Map<String, Double> pred_result = motionClassifierModel.predict(text);
@@ -386,6 +409,11 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
         return JSON.toJSONString(result);
     }
 
+    /**
+     * 文本分类
+     * @param text
+     * @return
+     */
     @Override
     public String category_classify(String text) {
         Map<String, Double> pre_result = categoryClassifierModel.predict(text);
@@ -406,6 +434,11 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
         return JSON.toJSONString(result);
     }
 
+    /**
+     * 依存句法分析
+     * @param text
+     * @return
+     */
     @Override
     public String dependency_parse(String text) {
         CoNLLSentence sentence = HanLP.parseDependency(text);
