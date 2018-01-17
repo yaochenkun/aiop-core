@@ -125,7 +125,20 @@ public class NlpAlgDubboServiceTest {
                 "可利用文本分类实现情感分析，效果还行"
         };
         for (String text : texts) {
-            String result = nlpAlgDubboService.motion_classify(text);
+            String result = nlpAlgDubboService.motion_classify_2(text);
+            System.out.println(result);
+        }
+    }
+
+    @Test
+    public void motionClassifyTest2(){
+        String[] texts = new String[]{
+                "金天心情很好，咱们出去郊游吧",
+                "本来想出去玩，结果遇到这么烦心的事情，没了心情",
+                "生活一点意义都没有，还不如死了算了"
+        };
+        for(String text:texts){
+            String result = nlpAlgDubboService.motion_classify_5(text);
             System.out.println(result);
         }
     }
@@ -171,8 +184,8 @@ public class NlpAlgDubboServiceTest {
 
     @Test
     public void dependencyParserTest(){
-        System.out.println(nlpAlgDubboService.dependency_parser("徐先生还具体帮助他确定了把画雄鹰、松鼠和麻雀作为主攻目标。"));
-        System.out.println(nlpAlgDubboService.dependency_parser("它熟悉一个民族的历史"));
+        System.out.println(nlpAlgDubboService.dependency_parse("徐先生还具体帮助他确定了把画雄鹰、松鼠和麻雀作为主攻目标。"));
+        System.out.println(nlpAlgDubboService.dependency_parse("它熟悉一个民族的历史"));
     }
 
 }
