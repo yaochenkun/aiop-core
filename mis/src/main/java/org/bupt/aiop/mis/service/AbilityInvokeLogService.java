@@ -5,6 +5,7 @@ import org.bupt.aiop.mis.mapper.AbilityInvokeLogMapper;
 import org.bupt.aiop.mis.pojo.po.AbilityInvokeLog;
 import org.bupt.aiop.mis.pojo.vo.AbilityInvokeLogRanking;
 import org.bupt.aiop.mis.pojo.vo.AbilityInvokeLogStatistic;
+import org.bupt.aiop.mis.pojo.vo.MyAbility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,18 @@ public class AbilityInvokeLogService extends BaseService<AbilityInvokeLog> {
 	 */
 	public List<AbilityInvokeLogStatistic> listAbilityInvokeLogStatistic(Map<String, Object> filters) {
 		return abilityInvokeLogMapper.selectStatistic(filters);
+	}
+
+	/**
+	 * 查询能力调用量（首页列表）
+	 * @param developerId
+	 * @return
+	 */
+	public List<MyAbility> listMyAbilities(Integer developerId, String invokeResult) {
+		Map<String, Object> filters = new HashMap<>();
+		filters.put("developerId", developerId);
+		filters.put("invokeResult", invokeResult);
+		return abilityInvokeLogMapper.selectMyAbilities(filters);
 	}
 
 	/**

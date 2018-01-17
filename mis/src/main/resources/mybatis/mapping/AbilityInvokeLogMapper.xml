@@ -19,6 +19,16 @@
     <result column="invoke_date" property="invokeDate" jdbcType="DATE" />
   </resultMap>
 
+  <resultMap id="MyAbility" type="org.bupt.aiop.mis.pojo.vo.MyAbility" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="invoke_total_count" property="invokeTotalCount" jdbcType="INTEGER" />
+    <result column="invoke_success_count" property="invokeSuccessCount" jdbcType="INTEGER" />
+    <result column="invoke_success_rate" property="invokeSuccessRate" jdbcType="FLOAT" />
+    <result column="invoke_failure_count" property="invokeFailureCount" jdbcType="INTEGER" />
+    <result column="invoke_failure_rate" property="invokeFailureRate" jdbcType="FLOAT" />
+  </resultMap>
+
   <resultMap id="AbilityInvokeLogRanking" type="org.bupt.aiop.mis.pojo.vo.AbilityInvokeLogRanking" >
     <result column="developer_id" property="developerId" jdbcType="INTEGER" />
     <result column="invoke_total_count" property="invokeTotalCount" jdbcType="INTEGER" />
@@ -78,6 +88,19 @@
 
     on totalTmp.invoke_date = successOrFailureTmp.invoke_date
     order by totalTmp.invoke_date
+  </select>
+
+  <select id="selectMyAbilities" resultMap="MyAbility" parameterType="map">
+    select ability.id as id, ability.zh_name as name, IFNULL(tmp.invoke_total_count, 0) as invoke_total_count
+    from ability
+    left join
+    (select ability_id, count(*) as invoke_total_count from ability_invoke_log
+    where app_id in (select app.id from app where developer_id = #{developerId})
+    <if test="invokeResult != '全部'">
+      and invoke_result = #{invokeResult}
+    </if>
+    group by ability_invoke_log.ability_id) as tmp
+    on ability.id = tmp.ability_id
   </select>
 
   <select id="selectTotalCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
