@@ -22,8 +22,11 @@ public class AppConfig {
     @Value("${model.nlp.vec}")
     private String vecModelPath;
 
-    @Value("${model.nlp.motion}")
-    private String motionClassifierModelPath;
+    @Value("${model.nlp.motion2}")
+    private String motionClassifierModelPath2;
+
+    @Value("${model.nlp.motion5}")
+    private String motionClassifierModelPath5;
 
     @Value("${model.nlp.category}")
     private String categoryClassifierModelPath;
@@ -33,9 +36,15 @@ public class AppConfig {
         return new WordVectorModel(vecModelPath);
     }
 
-    @Bean(name = "motionClassifierModel")
-    public NaiveBayesClassifier getMotionClassifierModel(){
-        return new NaiveBayesClassifier((NaiveBayesModel) IOUtil.readObjectFrom(motionClassifierModelPath));
+    @Bean(name = "motionClassifierModel2")
+    public NaiveBayesClassifier getMotionClassifierModel2(){
+        return new NaiveBayesClassifier((NaiveBayesModel) IOUtil.readObjectFrom(motionClassifierModelPath2));
+    }
+
+    @Bean(name = "motionClassifierModel5")
+    public NaiveBayesClassifier getMotionClassifierModel5(){
+        System.out.println(motionClassifierModelPath5);
+        return new NaiveBayesClassifier((NaiveBayesModel)IOUtil.readObjectFrom(motionClassifierModelPath5));
     }
 
     @Bean(name = "categoryClassifierModel")

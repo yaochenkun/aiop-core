@@ -35,7 +35,10 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     private DocVectorModel docVectorModel; //文本相似度
 
     @Autowired
-    private NaiveBayesClassifier motionClassifierModel; //情感分类
+    private NaiveBayesClassifier motionClassifierModel2; //情感二分类
+
+    @Autowired
+    private NaiveBayesClassifier motionClassifierModel5; //情感五分类
 
     @Autowired
     private NaiveBayesClassifier categoryClassifierModel; //文本分类
@@ -393,8 +396,8 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
      * @return
      */
     @Override
-    public String motion_classify(String text) {
-        Map<String, Double> pred_result = motionClassifierModel.predict(text);
+    public String motion_classify_2(String text) {
+        Map<String, Double> pred_result = motionClassifierModel2.predict(text);
         Map<String, Object> result = new HashMap<>();
         Sentiment sentiment = new Sentiment();
         result.put("text", text);
@@ -414,6 +417,24 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
      * @param text
      * @return
      */
+    @Override
+    public String motion_classify_5(String text) {
+        Map<String, Double> pred_result = motionClassifierModel5.predict(text);
+        Map<String, Object> result = new HashMap<>();
+        String motionDesc = null;
+        double motionProb = -10;
+        for (Map.Entry<String, Double> entry : pred_result.entrySet()) {
+            if (entry.getValue() > motionProb) {
+                motionProb = entry.getValue();
+                motionDesc = entry.getKey();
+            }
+        }
+        result.put("sentiment", motionDesc);
+        result.put("sentiment_prob", motionProb);
+        result.put("items", pred_result);
+        return JSON.toJSONString(result);
+    }
+
     @Override
     public String category_classify(String text) {
         Map<String, Double> pre_result = categoryClassifierModel.predict(text);

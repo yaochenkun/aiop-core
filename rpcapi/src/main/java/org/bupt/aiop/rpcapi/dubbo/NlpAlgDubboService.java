@@ -44,7 +44,9 @@ public interface NlpAlgDubboService {
 
     String nearest_words(String text, Integer size);
 
-    String motion_classify(String text);
+    String motion_classify_2(String text);
+
+    String motion_classify_5(String text);
 
     String category_classify(String text);
 
