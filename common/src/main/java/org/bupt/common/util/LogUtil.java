@@ -8,7 +8,7 @@ package org.bupt.common.util;
 public class LogUtil {
 
 	/**
-	 * 日志格式: domain={domainValue}: subjectKey={subjectValue} verb objectKey={objectValue}
+	 * 日志格式: domain={domainValue} subjectKey={subjectValue} action={verb} objectKey={objectValue}
 	 * 示例: domain=NLP_REST: user_id=30 enter ability=word_segment
 	 * @param domainValue 业务领域名称
 	 * @param subjectKey 主语名称
@@ -28,11 +28,11 @@ public class LogUtil {
 		StringBuilder sb = new StringBuilder();
 		sb.append("domain=");
 		sb.append(domainValue);
-		sb.append(": ");
+		sb.append(" ");
 		sb.append(subjectKey);
 		sb.append("=");
 		sb.append(subjectValue);
-		sb.append(" ");
+		sb.append(" action=");
 		sb.append(verb);
 		sb.append(" ");
 		sb.append(objectKey);
@@ -44,7 +44,7 @@ public class LogUtil {
 
 
 	/**
-	 * 日志格式: domain={domainValue}: subjectKey={subjectValue} verb objectKey={objectValue}, result={resultValue}
+	 * 日志格式: domain={domainValue} subjectKey={subjectValue} action={verb} objectKey={objectValue}, result={resultValue}
 	 * 示例: domain=APP_MANAGE: user_id=30 SAVE/REMOVE/MODIFY/GET app_id=45, result=SUCCESS
 	 * @param domainValue 业务领域名称
 	 * @param subjectKey 主语名称
@@ -66,24 +66,24 @@ public class LogUtil {
 		StringBuilder sb = new StringBuilder();
 		sb.append("domain=");
 		sb.append(domainValue);
-		sb.append(": ");
+		sb.append(" ");
 		sb.append(subjectKey);
 		sb.append("=");
 		sb.append(subjectValue);
-		sb.append(" ");
+		sb.append(" action=");
 		sb.append(verb);
 		sb.append(" ");
 		sb.append(objectKey);
 		sb.append("=");
 		sb.append(objectValue);
-		sb.append(", result=");
+		sb.append(" result=");
 		sb.append(resultValue);
 
 		return sb.toString();
 	}
 
 	/**
-	 * 日志格式: domain={domainValue}: subjectKey={subjectValue} verb objectKey={objectValue}, result={resultValue}, reason={reasonValue}
+	 * 日志格式: domain={domainValue} subjectKey={subjectValue} action={verb} objectKey={objectValue}, result={resultValue}, reason={reasonValue}
 	 * 示例: domain=NLP_REST: app_id=23 INVOKE ability=word_segment, result=ERROR, reason=invalid input params
 	 * @param domainValue 业务领域名称
 	 * @param subjectKey 主语名称
@@ -107,19 +107,19 @@ public class LogUtil {
 		StringBuilder sb = new StringBuilder();
 		sb.append("domain=");
 		sb.append(domainValue);
-		sb.append(": ");
+		sb.append(" ");
 		sb.append(subjectKey);
 		sb.append("=");
 		sb.append(subjectValue);
-		sb.append(" ");
+		sb.append(" action=");
 		sb.append(verb);
 		sb.append(" ");
 		sb.append(objectKey);
 		sb.append("=");
 		sb.append(objectValue);
-		sb.append(", result=");
+		sb.append(" result=");
 		sb.append(resultValue);
-		sb.append(", reason=");
+		sb.append(" reason=");
 		sb.append(reasonValue);
 
 		return sb.toString();

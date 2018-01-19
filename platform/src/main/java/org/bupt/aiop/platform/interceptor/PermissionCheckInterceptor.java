@@ -61,7 +61,7 @@ public class PermissionCheckInterceptor extends HandlerInterceptorAdapter {
             userPermissionStr = oauthService.getAppPermission(appId);
             if (userPermissionStr == null) {
                 logger.debug("权限拒绝");
-                logger.info(LogUtil.body(LogConsts.DOMAIN_OAUTH, "app_id", appId, LogConsts.VERB_AUTH, "permission", userPermissionStr, LogConsts.ERROR, ErrorConsts.OAUTH_MSG_PERMISSION_DENIED));
+                logger.info(LogUtil.body(LogConsts.DOMAIN_OAUTH, "app_id", appId, LogConsts.VERB_AUTH, "permission", permission, LogConsts.ERROR, ErrorConsts.OAUTH_MSG_PERMISSION_DENIED));
                 response.sendRedirect("/restapi/common/error/oauth/" + ErrorConsts.OAUTH_CODE_PERMISSION_DENIED);
                 return false;
             }
@@ -76,14 +76,14 @@ public class PermissionCheckInterceptor extends HandlerInterceptorAdapter {
                 if (userPermissionSet.contains(permission)) {
                     // 校验通过返回true, 否则拦截请求
                     logger.debug("权限校验通过");
-                    logger.info(LogUtil.body(LogConsts.DOMAIN_OAUTH, "app_id", appId, LogConsts.VERB_AUTH, "permission", userPermissionStr, LogConsts.SUCCESS));
+                    logger.info(LogUtil.body(LogConsts.DOMAIN_OAUTH, "app_id", appId, LogConsts.VERB_AUTH, "permission", permission, LogConsts.SUCCESS));
                     return true;
                 }
             }
         }
 
         logger.debug("权限拒绝");
-        logger.info(LogUtil.body(LogConsts.DOMAIN_OAUTH, "app_id", appId, LogConsts.VERB_AUTH, "permission", userPermissionStr, LogConsts.ERROR, ErrorConsts.OAUTH_MSG_PERMISSION_DENIED));
+        logger.info(LogUtil.body(LogConsts.DOMAIN_OAUTH, "app_id", appId, LogConsts.VERB_AUTH, "permission", permission, LogConsts.ERROR, ErrorConsts.OAUTH_MSG_PERMISSION_DENIED));
         response.sendRedirect("/restapi/common/error/oauth/" + ErrorConsts.OAUTH_CODE_PERMISSION_DENIED);
         return false;
     }

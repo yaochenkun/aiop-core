@@ -40,8 +40,8 @@ public class NlpController {
 	@Autowired
 	private EnvConsts envConsts;
 
-	@Autowired
-	private ThriftConnectionService thriftNlpConnectionService;
+//	@Autowired
+//	private ThriftConnectionService thriftNlpConnectionService;
 
 	@Reference
 	private NlpAlgDubboService nlpAlgDubboService;
@@ -77,7 +77,7 @@ public class NlpController {
 		}
 
 
-		// 算法处理(deepnlp)
+		// 算法处理(deepnlp thrift)
 //		TProtocol protocol = thriftNlpConnectionService.getConnection();
 //		NlpAlgThriftService.Client nlpAlgSerivce = new NlpAlgThriftService.Client(protocol);
 //		try {

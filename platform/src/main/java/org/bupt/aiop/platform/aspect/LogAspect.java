@@ -57,6 +57,8 @@ public class LogAspect {
 	@Around(value = "pointcut()")
 	public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
 
+		long enterTimestamp = System.currentTimeMillis();
+
 		HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
 		Identity identity = (Identity) session.getAttribute(OauthConsts.KEY_IDENTITY);
 		Integer appId = identity.getId();
@@ -84,7 +86,9 @@ public class LogAspect {
 		abilityInvokeLog.setInvokeTime(new Date());
 		abilityInvokeLogService.save(abilityInvokeLog);
 
-		logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_EXIT, "ability", abilityName));
+		long exitTimestamp = System.currentTimeMillis();
+
+		logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_EXIT, "ability", abilityName, Long.toString(exitTimestamp - enterTimestamp)));
 		return response.getContent();
 	}
 }

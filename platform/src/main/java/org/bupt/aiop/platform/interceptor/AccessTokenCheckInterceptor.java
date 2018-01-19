@@ -48,13 +48,13 @@ public class AccessTokenCheckInterceptor implements HandlerInterceptor {
             request.getSession().setAttribute(OauthConsts.KEY_IDENTITY, identity);
 
             logger.debug("app_id={}, client_id={}, access_token通过认证", appId, identity.getClientId());
-            logger.info(LogUtil.body(LogConsts.DOMAIN_OAUTH, "app_id", appId, LogConsts.VERB_AUTH, "access_token", accessToken, LogConsts.SUCCESS));
+            logger.info(LogUtil.body(LogConsts.DOMAIN_OAUTH, "app_id", appId, LogConsts.VERB_AUTH, "access_token", "", LogConsts.SUCCESS));
             return true;
 
         } catch (Exception e) {
             logger.debug("access_token无效, 原因为: {}", e.getMessage());
             logger.debug("正转向认证失败控制器");
-            logger.info(LogUtil.body(LogConsts.DOMAIN_OAUTH, "app_id", appId, LogConsts.VERB_AUTH, "access_token", accessToken, LogConsts.ERROR, ErrorConsts.OAUTH_MSG_ACCESS_TOKEN_INVALID));
+            logger.info(LogUtil.body(LogConsts.DOMAIN_OAUTH, "app_id", appId, LogConsts.VERB_AUTH, "access_token", "", LogConsts.ERROR, ErrorConsts.OAUTH_MSG_ACCESS_TOKEN_INVALID));
             response.sendRedirect("/restapi/common/error/oauth/" + ErrorConsts.OAUTH_CODE_ACCESS_TOKEN_INVALID);
 
             return false;
