@@ -89,7 +89,7 @@ public class OutputCacheAspect {
 			}
 
 			outputService.saveOutput(key, (String) response.getContent());
-			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "hash_map", RedisConsts.AIOP_ABILITY_INPUT_OUTPUT, LogConsts.VERB_CACHE_SAVE, "key", key, LogConsts.SUCCESS));
+			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "hash_map", RedisConsts.AIOP_ABILITY_INPUT_OUTPUT, LogConsts.VERB_CACHE_SAVE, "key", "", LogConsts.SUCCESS));
 			logger.debug("缓存成功");
 			logger.debug("退出, 能力执行结果缓存环绕方法");
 			return response;

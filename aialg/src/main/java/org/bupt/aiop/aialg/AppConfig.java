@@ -43,7 +43,6 @@ public class AppConfig {
 
     @Bean(name = "motionClassifierModel5")
     public NaiveBayesClassifier getMotionClassifierModel5(){
-        System.out.println(motionClassifierModelPath5);
         return new NaiveBayesClassifier((NaiveBayesModel)IOUtil.readObjectFrom(motionClassifierModelPath5));
     }
 

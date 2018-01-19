@@ -413,7 +413,7 @@ public class NlpAlgDubboServiceImpl implements NlpAlgDubboService {
     }
 
     /**
-     * 文本分类
+     * 情感分析（五分类）
      * @param text
      * @return
      */
