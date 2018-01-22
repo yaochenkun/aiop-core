@@ -143,6 +143,13 @@
             <version>2.4.2</version>
         </dependency>
 
+        <!--Kafka-->
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>0.10.2.1</version>
+        </dependency>
+
     </dependencies>
 
 </project>

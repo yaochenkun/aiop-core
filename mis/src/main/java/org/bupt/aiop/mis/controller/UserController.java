@@ -3,10 +3,13 @@ package org.bupt.aiop.mis.controller;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.fileupload.util.Streams;
 import org.bupt.aiop.mis.annotation.RequiredRoles;
+import org.bupt.aiop.mis.constant.RedisConsts;
 import org.bupt.aiop.mis.constant.RoleConsts;
+import org.bupt.aiop.mis.service.OauthService;
 import org.bupt.common.bean.PageResult;
 import org.bupt.common.bean.ResponseResult;
 import org.bupt.common.constant.OauthConsts;
+import org.bupt.common.util.CaptchaUtil;
 import org.bupt.common.util.FileUtil;
 import org.bupt.common.util.MD5Util;
 import org.bupt.common.util.Validator;
@@ -24,6 +27,7 @@ import javax.servlet.http.HttpSession;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +42,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private OauthService oauthService;
 
     @Autowired
     private EnvConsts envConsts;
@@ -221,12 +228,12 @@ public class UserController {
      * @param params
      * @return
      */
-    @RequestMapping(value = "password/{userId}", method = RequestMethod.PUT)
-    public ResponseResult changePassword(@RequestBody Map<String, Object> params, @PathVariable("userId") Integer
+    @RequestMapping(value = "{userId}/password", method = RequestMethod.PUT)
+    public ResponseResult updatePassword(@RequestBody Map<String, Object> params, @PathVariable("userId") Integer
             userId) {
 
         String oldPassword = (String) params.get("oldPassword");
-        String newPassword = (String) params.get("newPassword");
+        String newPassword = (String) params.get("newPassword"); // 新密码
 
         User user = userService.queryById(userId);
 
@@ -241,7 +248,7 @@ public class UserController {
             }
 
             if (!oldPasswordMD5.equals(user.getPassword())) {
-                return ResponseResult.error("修改失败，原密码输入错误");
+                return ResponseResult.error("修改失败，原始密码错误");
             }
         }
 
@@ -257,6 +264,82 @@ public class UserController {
         userService.update(user);
 
         return ResponseResult.success("密码修改成功");
+    }
+
+    /**
+     * 修改手机（检验验证码+更新）
+     *
+     * @param params
+     * @return
+     */
+    @RequestMapping(value = "{userId}/mobile", method = RequestMethod.PUT)
+    public ResponseResult updateMobile(@RequestBody Map<String, String> params, @PathVariable("userId") Integer
+            userId) {
+
+        // 得到手机号和验证码
+        String mobile = params.get("mobile"); // 新手机号
+        String captcha = params.get("mobileCaptcha");
+
+        logger.debug("{} 用户请求检验修改手机的验证码", mobile);
+
+        // 查询用户是否存在
+        User record = new User();
+        record.setMobile(mobile);
+        User user = userService.queryOne(record);
+        if (user != null) {
+            return ResponseResult.error("已有用户使用该手机号");
+        }
+
+        // 检验验证码时效性
+        String targetCaptcha = oauthService.getCaptcha(mobile, RedisConsts.AIOP_CAPTCHA_MODIFY_MOBILE);
+        if (targetCaptcha == null) {
+            return ResponseResult.error("验证码已过期");
+        }
+
+        // 检验验证码是否匹配
+        if (!targetCaptcha.equals(captcha)) {
+            return ResponseResult.error("验证码错误");
+        }
+
+        // 修改手机
+        user = userService.queryById(userId);
+        if (user == null) {
+            return ResponseResult.error("用户不存在");
+        }
+        user.setMobile(mobile);
+        userService.update(user);
+
+        logger.debug("用户={} 请求修改手机={}成功", userId, mobile);
+        return ResponseResult.success("手机修改成功");
+    }
+
+    /**
+     * 修改邮箱
+     *
+     * @param params
+     * @return
+     */
+    @RequestMapping(value = "{userId}/email", method = RequestMethod.PUT)
+    public ResponseResult updateEmail(@RequestBody Map<String, String> params, @PathVariable("userId") Integer
+            userId) {
+
+        // 得到手机号和验证码
+        String email = params.get("email"); // 新邮箱
+        String captcha = params.get("emailCaptcha");
+
+        logger.debug("{} 用户请求修改邮箱", email);
+
+
+        // 修改邮箱
+        User user = userService.queryById(userId);
+        if (user == null) {
+            return ResponseResult.error("用户不存在");
+        }
+        user.setEmail(email);
+        userService.update(user);
+
+        logger.debug("用户={} 请求修改邮箱={}成功", userId, email);
+        return ResponseResult.success("邮箱修改成功");
     }
 
 
@@ -285,16 +368,16 @@ public class UserController {
                         fileName), true);
             } catch (IOException e) {
                 e.printStackTrace();
-                return ResponseResult.error("头像上传失败");
+                return ResponseResult.error("上传失败");
             }
 
             user.setAvatarFile(fileName);
             userService.update(user);
         } else {
-            return ResponseResult.error("头像上传失败");
+            return ResponseResult.error("上传失败");
         }
 
-        return ResponseResult.success("头像上传成功", "/" + envConsts.FILE_AVATAR_DIC + "/" + fileName);
+        return ResponseResult.success("上传成功", "/" + envConsts.FILE_AVATAR_DIC + "/" + fileName);
     }
 
     /**
@@ -310,4 +393,5 @@ public class UserController {
 
         return ResponseResult.success("查询成功", userService.queryListByWhere(record).size());
     }
+
 }

@@ -1,0 +1,9 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+    <!-- Kafka生产者 -->
+    <bean id="kafkaMessageProducer" class="org.bupt.common.kafka.KafkaMessageProducer">
+        <constructor-arg name="brokerAddressList" value="${kafka.brokerAddressList}"/>
+    </bean>
+</beans>

@@ -12,4 +12,6 @@ public class RedisConsts {
 	public static final String AIOP_CAPTCHA_LOGIN = "aiop:captcha:login"; //手机登录验证码
 	public static final String AIOP_CAPTCHA_REGISTER = "aiop:captcha:register"; //手机登录验证码
 	public static final String AIOP_CAPTCHA_RETRIEVE = "aiop:captcha:retrieve"; //找回密码验证码
+	public static final String AIOP_CAPTCHA_MODIFY_MOBILE = "aiop:captcha:modify_mobile"; //找回密码验证码
+	public static final String AIOP_CAPTCHA_MODIFY_EMAIL = "aiop:captcha:modify_email"; //找回密码验证码
 }

@@ -47,11 +47,11 @@ public class EnvConsts {
 	public String REFRESH_TOKEN_API_KEY_SECRET;
 
 	//SMS
-	@Value("${sms.code.expire}")
-	public Integer SMS_CODE_EXPIRE;
+	@Value("${captcha.expire}")
+	public Integer CAPTCHA_EXPIRE;
 
-	@Value("${sms.code.len}")
-	public Integer SMS_CODE_LEN;
+	@Value("${captcha.len}")
+	public Integer CAPTCHA_LEN;
 
 	//默认图片名字（头像、LOGO、商标、图案）
 	@Value("${default.image}")

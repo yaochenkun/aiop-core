@@ -209,11 +209,11 @@ public class OauthController {
 		}
 
 		// 生成SMS_CODE_LEN位的验证码
-		String captcha = CaptchaUtil.generate(envConsts.SMS_CODE_LEN);
+		String captcha = CaptchaUtil.generate(envConsts.CAPTCHA_LEN);
 
 		// 发送给mobile手机captcha验证码
 		// todo: 后期转为消息队列
-		oauthService.sendCaptcha(mobile, captcha, RedisConsts.AIOP_CAPTCHA_REGISTER);
+		oauthService.sendCaptchaByMobile(mobile, captcha, RedisConsts.AIOP_CAPTCHA_REGISTER);
 
 		logger.debug("已为用户手机 {} 发送验证码 {}", mobile, captcha);
 		return ResponseResult.success("已发送验证码");
@@ -335,11 +335,11 @@ public class OauthController {
 		}
 
 		// 生成SMS_CODE_LEN位的验证码
-		String captcha = CaptchaUtil.generate(envConsts.SMS_CODE_LEN);
+		String captcha = CaptchaUtil.generate(envConsts.CAPTCHA_LEN);
 
 		// 发送给mobile手机captcha验证码
 		// todo: 后期转为消息队列
-		oauthService.sendCaptcha(mobile, captcha, RedisConsts.AIOP_CAPTCHA_LOGIN);
+		oauthService.sendCaptchaByMobile(mobile, captcha, RedisConsts.AIOP_CAPTCHA_LOGIN);
 
 		logger.debug("已为用户手机 {} 发送验证码 {}", mobile, captcha);
 		return ResponseResult.success("已发送验证码");
@@ -365,11 +365,11 @@ public class OauthController {
 		}
 
 		// 生成SMS_CODE_LEN位的验证码
-		String captcha = CaptchaUtil.generate(envConsts.SMS_CODE_LEN);
+		String captcha = CaptchaUtil.generate(envConsts.CAPTCHA_LEN);
 
 		// 发送给mobile手机captcha验证码
 		// todo: 后期转为消息队列
-		oauthService.sendCaptcha(mobile, captcha, RedisConsts.AIOP_CAPTCHA_RETRIEVE);
+		oauthService.sendCaptchaByMobile(mobile, captcha, RedisConsts.AIOP_CAPTCHA_RETRIEVE);
 
 		logger.debug("已为用户手机 {} 发送验证码 {}", mobile, captcha);
 		return ResponseResult.success("已发送验证码");
@@ -447,6 +447,60 @@ public class OauthController {
 		userService.update(user);
 
 		return ResponseResult.success("密码修改成功");
+	}
+
+	/**
+	 * 发送修改手机号的验证码
+	 * @return
+	 */
+	@RequestMapping(value = "captcha/modify_mobile", method = RequestMethod.POST)
+	public ResponseResult sendModifyMobileCaptcha(@RequestBody Map<String, String> params) {
+
+		// 得到手机号
+		String mobile = params.get("mobile");
+
+		logger.debug("{} 用户请求修改手机时发送验证码", mobile);
+
+		// 先检查是否有之前发送的未失效的验证码
+		if (oauthService.getCaptcha(mobile, RedisConsts.AIOP_CAPTCHA_MODIFY_MOBILE) != null) {
+			return ResponseResult.error("请勿重复发送验证码");
+		}
+
+		// 生成SMS_CODE_LEN位的验证码
+		String captcha = CaptchaUtil.generate(envConsts.CAPTCHA_LEN);
+
+		// 发送给mobile手机captcha验证码
+		oauthService.sendCaptchaByMobile(mobile, captcha, RedisConsts.AIOP_CAPTCHA_MODIFY_MOBILE);
+
+		logger.debug("已为用户手机 {} 发送验证码 {}", mobile, captcha);
+		return ResponseResult.success("已发送验证码");
+	}
+
+	/**
+	 * 发送修改邮箱的验证码
+	 * @return
+	 */
+	@RequestMapping(value = "captcha/modify_email", method = RequestMethod.POST)
+	public ResponseResult sendModifyEmailCaptcha(@RequestBody Map<String, String> params) {
+
+		// 得到手机号
+		String email = params.get("email");
+
+		logger.debug("{} 用户请求修改邮箱时发送验证码", email);
+
+		// 先检查是否有之前发送的未失效的验证码
+		if (oauthService.getCaptcha(email, RedisConsts.AIOP_CAPTCHA_MODIFY_EMAIL) != null) {
+			return ResponseResult.error("请勿重复发送验证码");
+		}
+
+		// 生成SMS_CODE_LEN位的验证码
+		String captcha = CaptchaUtil.generate(envConsts.CAPTCHA_LEN);
+
+		// 发送给mobile手机captcha验证码
+		oauthService.sendCaptchaByEmail(email, captcha, RedisConsts.AIOP_CAPTCHA_MODIFY_EMAIL);
+
+		logger.debug("已为用户邮箱 {} 发送验证码 {}", email, captcha);
+		return ResponseResult.success("已发送验证码至邮箱");
 	}
 
 	/**
