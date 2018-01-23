@@ -25,11 +25,11 @@ public class ServicesLauncher {
 						 	 "classpath:spring/dubbo-server.xml"});
 		context.start();
 
-		logger.info("dubbo server has been successfully launched on PID = {}", getProcessID());
-
 		hangup();
+		logger.info("dubbo server has been successfully launched on PID = {}", getProcessID());
 	}
 
+	// 进程挂起
 	public static void hangup() throws InterruptedException {
 		while(true) {
 			synchronized(lock) {
@@ -38,6 +38,7 @@ public class ServicesLauncher {
 		}
 	}
 
+	// 获取进程号
 	public static final int getProcessID() {
 		RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
 		return Integer.valueOf(runtimeMXBean.getName().split("@")[0]).intValue();

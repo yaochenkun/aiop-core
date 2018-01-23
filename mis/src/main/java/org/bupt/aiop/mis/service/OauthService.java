@@ -4,6 +4,7 @@ import org.bupt.aiop.mis.constant.EnvConsts;
 import org.bupt.aiop.mis.constant.KafkaConsts;
 import org.bupt.aiop.mis.constant.RedisConsts;
 import org.bupt.aiop.mis.pojo.po.App;
+import org.bupt.aiop.mis.pojo.po.User;
 import org.bupt.common.kafka.KafkaMessageProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,8 +60,8 @@ public class OauthService extends BaseService<App> {
 		// 1.构造消息体内容
 		Map<String, Object> params = new HashMap<>();
 		params.put("to", mobile);
-		params.put("content", "验证码：" + captcha);
-		params.put("footer", "。来自人工智能能力开放平台");
+		params.put("content", "验证码：" + captcha + "。来自");
+		params.put("footer", KafkaConsts.FOOTER);
 
 		// 2.生产消息
 		kafkaMessageProducer.send(KafkaConsts.TOPIC_SEND_SMS_TO_SINGLE, params);
@@ -87,10 +88,11 @@ public class OauthService extends BaseService<App> {
 
 		// 1.构造消息体内容
 		Map<String, Object> params = new HashMap<>();
+		params.put("fromName", KafkaConsts.FROM_NAME);
 		params.put("to", email);
-		params.put("subject", "邮箱验证-来自人工智能能力开放平台");
-		params.put("content", "验证码：" + captcha + ", 请在修改页面输入该验证码后进行验证更换");
-		params.put("footer", "人工智能能力开放平台");
+		params.put("subject", "邮箱验证");
+		params.put("content", "验证码：<strong>" + captcha + "</strong><br>请在修改页面输入该验证码后进行验证更换");
+		params.put("footer", KafkaConsts.FOOTER);
 
 		// 2.生产消息
 		kafkaMessageProducer.send(KafkaConsts.TOPIC_SEND_EMAIL_TO_SINGLE, params);
@@ -119,6 +121,34 @@ public class OauthService extends BaseService<App> {
 	 */
 	public String getCaptcha(String mobileOrEmail, String type) {
 		return (String) redisMapper.opsForValue().get(type + ":" + mobileOrEmail);
+	}
+
+	/**
+	 * 向邮箱地址发送注册成功邮件
+	 * @param user 用户信息
+	 * @return
+	 */
+	public void sendRegisterSuccessByEmail(User user) {
+
+		/**
+		 * 生产Kafka消息：通过SMTP服务发送注册成功邮件到邮箱
+		 */
+
+		// 1.构造消息体内容
+		Map<String, Object> params = new HashMap<>();
+		params.put("fromName", KafkaConsts.FROM_NAME);
+		params.put("to", user.getEmail());
+		params.put("subject", "注册成功");
+		params.put("content", "恭喜您成功在本平台注册账号，您的账号信息如下：" +
+				"<br>账户名：<strong>" + user.getUsername() + "</strong>" +
+				"<br>手机：<strong>" + user.getMobile() + "</strong>" +
+				"<br>邮箱：<strong>" + user.getEmail() + "</strong>" +
+				"<br>角色：<strong>" + user.getRole() + "</strong>" +
+				"<br><br>请妥善保管您的账号信息，切勿泄露给他人。");
+		params.put("footer", KafkaConsts.FOOTER);
+
+		// 2.生产消息
+		kafkaMessageProducer.send(KafkaConsts.TOPIC_SEND_EMAIL_TO_SINGLE, params);
 	}
 
 }

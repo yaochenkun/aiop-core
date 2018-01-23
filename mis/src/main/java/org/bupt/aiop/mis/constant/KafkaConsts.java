@@ -29,4 +29,12 @@ public class KafkaConsts {
     public static final String TOPIC_SEND_SMS_TO_SINGLE = "topic_send_sms_to_single";
     public static final String GROUPID_SEND_SMS_TO_SINGLE = "groupid_send_sms_to_single";
     public static final Integer THREADNUM_SEND_SMS_TO_SINGLE = 3;
+
+
+    /**
+     * 短信/邮件内容体的抬头与落款
+     */
+    public static final String FROM_NAME = "人工智能能力开放平台";
+    public static final String FOOTER = "人工智能能力开放平台<br>北京邮电大学交换与智能控制中心出品";
+
 }

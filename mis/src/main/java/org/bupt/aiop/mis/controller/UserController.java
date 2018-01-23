@@ -324,14 +324,32 @@ public class UserController {
             userId) {
 
         // 得到手机号和验证码
-        String email = params.get("email"); // 新邮箱
+        String email = params.get("email"); // 新手机号
         String captcha = params.get("emailCaptcha");
 
-        logger.debug("{} 用户请求修改邮箱", email);
+        logger.debug("{} 用户请求检验修改邮箱的验证码", email);
 
+        // 查询用户是否存在
+        User record = new User();
+        record.setEmail(email);
+        User user = userService.queryOne(record);
+        if (user != null) {
+            return ResponseResult.error("已有用户使用该邮箱");
+        }
 
-        // 修改邮箱
-        User user = userService.queryById(userId);
+        // 检验验证码时效性
+        String targetCaptcha = oauthService.getCaptcha(email, RedisConsts.AIOP_CAPTCHA_MODIFY_EMAIL);
+        if (targetCaptcha == null) {
+            return ResponseResult.error("验证码已过期");
+        }
+
+        // 检验验证码是否匹配
+        if (!targetCaptcha.equals(captcha)) {
+            return ResponseResult.error("验证码错误");
+        }
+
+        // 修改手机
+        user = userService.queryById(userId);
         if (user == null) {
             return ResponseResult.error("用户不存在");
         }

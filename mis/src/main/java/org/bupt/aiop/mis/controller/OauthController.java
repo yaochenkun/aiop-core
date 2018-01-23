@@ -187,6 +187,9 @@ public class OauthController {
 			return ResponseResult.error("注册失败");
 		}
 
+		// kafka消息：向email发送注册成功邮件
+		oauthService.sendRegisterSuccessByEmail(user);
+
 		logger.debug("用户={}，注册成功", username);
 		return ResponseResult.success("注册成功");
 	}
@@ -212,7 +215,6 @@ public class OauthController {
 		String captcha = CaptchaUtil.generate(envConsts.CAPTCHA_LEN);
 
 		// 发送给mobile手机captcha验证码
-		// todo: 后期转为消息队列
 		oauthService.sendCaptchaByMobile(mobile, captcha, RedisConsts.AIOP_CAPTCHA_REGISTER);
 
 		logger.debug("已为用户手机 {} 发送验证码 {}", mobile, captcha);
