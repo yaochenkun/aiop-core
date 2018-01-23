@@ -143,12 +143,12 @@ public class PropertyUtil {
 	}
 
 	/**
-	 * 读取所有的整形键值对
+	 * 读取所有的字符串配置项
 	 *
 	 * @param filePath
 	 * @return
 	 */
-	public static Map<String, Integer> readIntegers(String filePath) {
+	public static Map<String, String> readStrings(String filePath) {
 
 		String targetPath = rootPath + filePath;
 
@@ -158,40 +158,9 @@ public class PropertyUtil {
 			Properties props = new Properties();
 			props.load(bufferedReader);
 
-			Map<String, Integer> map = new HashMap<>();
+			Map<String, String> map = new HashMap<>();
 			for (Map.Entry entry : props.entrySet())
-				map.put(String.valueOf(entry.getKey()), Integer.parseInt(entry.getValue().toString()));
-
-			inputStream.close();
-			bufferedReader.close();
-
-			return map;
-		} catch (IOException e) {
-
-			System.err.println("属性文件读取错误");
-			return null;
-		}
-	}
-
-	/**
-	 * 读取所有的整形键值对
-	 *
-	 * @param filePath
-	 * @return
-	 */
-	public static Map<String, Double> readDoubles(String filePath) {
-
-		String targetPath = rootPath + filePath;
-
-		try {
-			InputStream inputStream = new FileInputStream(targetPath);
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "utf-8"));
-			Properties props = new Properties();
-			props.load(bufferedReader);
-
-			Map<String, Double> map = new HashMap<>();
-			for (Map.Entry entry : props.entrySet())
-				map.put(String.valueOf(entry.getKey()), Double.parseDouble(entry.getValue().toString()));
+				map.put(String.valueOf(entry.getKey()), entry.getValue().toString());
 
 			inputStream.close();
 			bufferedReader.close();

@@ -133,7 +133,7 @@ public class AppController {
 		String status = (String) params.get("status");
 		Date updateDate = TimeUtil.parseDate((String) params.get("updateDate"));
 		Integer developerId = identity.getId();
-logger.info("开发者ID={}", developerId);
+
 		List<App> list = appService.listApp(pageNow, pageSize, developerId, name, status, updateDate);
 		PageResult pageResult = new PageResult(new PageInfo<>(list));
 
