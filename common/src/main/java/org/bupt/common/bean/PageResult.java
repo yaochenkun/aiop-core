@@ -1,6 +1,7 @@
 package org.bupt.common.bean;
 
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -48,11 +49,15 @@ public class PageResult {
 		this.pageTotal = pageTotal;
 	}
 
-
 	public PageResult(Integer rowCount, List<?> data, Integer pageTotal, Long rowTotal) {
 		this.rowCount = rowCount;
 		this.data = data;
 		this.pageTotal = pageTotal;
+		this.rowTotal = rowTotal;
+	}
+
+	public PageResult(List<?> data, Long rowTotal) {
+		this.data = data;
 		this.rowTotal = rowTotal;
 	}
 

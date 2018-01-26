@@ -1,0 +1,11 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+    <!-- ElasticSearch单例连接-单节点 -->
+    <bean id="esConnectionService" class="org.bupt.common.es.EsConnectionService">
+        <constructor-arg name="host" value="${es.host}"/>
+        <constructor-arg name="port" value="${es.port}"/>
+    </bean>
+
+</beans>
