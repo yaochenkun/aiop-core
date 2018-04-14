@@ -15,8 +15,8 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.suggest.Suggester;
 import org.bupt.aiop.aialg.bean.*;
 import org.bupt.aiop.aialg.util.CommonFormatter;
+import org.bupt.aiop.aialg.util.ReflectUtil;
 import org.bupt.aiop.rpcapi.dubbo.NlpAlgDubboService;
-import org.bupt.common.util.ReflectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;

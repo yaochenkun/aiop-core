@@ -25,8 +25,8 @@ public class ServicesLauncher {
 						 	 "classpath:spring/dubbo-server.xml"});
 		context.start();
 
-		hangup();
 		logger.info("dubbo server has been successfully launched on PID = {}", getProcessID());
+		hangup();
 	}
 
 	// 进程挂起
