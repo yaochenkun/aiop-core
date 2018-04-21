@@ -20,13 +20,13 @@
 
         <!--access_token认证-->
         <mvc:interceptor>
-            <mvc:mapping path="/restapi/nlp/**"/>
+            <mvc:mapping path="/restapi/**"/>
             <bean class="org.bupt.aiop.platform.interceptor.AccessTokenCheckInterceptor"/>
         </mvc:interceptor>
 
         <!--能力权限验证-->
         <mvc:interceptor>
-            <mvc:mapping path="/restapi/nlp/**"/>
+            <mvc:mapping path="/restapi/**"/>
             <bean class="org.bupt.aiop.platform.interceptor.PermissionCheckInterceptor"/>
         </mvc:interceptor>
 

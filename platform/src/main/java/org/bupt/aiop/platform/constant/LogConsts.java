@@ -5,6 +5,9 @@ public class LogConsts {
 	//业务领域
 	public static final String DOMAIN_OAUTH = "OAUTH";
 	public static final String DOMAIN_NLP_REST = "NLP_REST";
+	public static final String DOMAIN_IMAGE_REST = "IMAGE_REST";
+	public static final String DOMAIN_VIDEO_REST = "VIDEO_REST";
+	public static final String DOMAIN_SPEECH_REST = "SPEECH_REST";
 	public static final String DOMAIN_APP_MANAGE = "APP_MANAGE";
 
 	//谓语动词

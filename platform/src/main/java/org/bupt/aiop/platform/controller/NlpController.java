@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * NlpController
+ * 自然语言处理服务
  */
 @RestController
 @RequestMapping("restapi/nlp")

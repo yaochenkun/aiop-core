@@ -46,7 +46,7 @@ public class LogAspect {
 	/**
 	 * NlpController每个方法均作为切点
 	 */
-	@Pointcut("execution(* org.bupt.aiop.platform.controller.NlpController.*(..))")
+	@Pointcut("execution(* org.bupt.aiop.platform.controller..*.*(..))")
 	private void pointcut(){}
 
 
