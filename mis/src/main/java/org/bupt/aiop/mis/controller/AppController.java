@@ -172,6 +172,28 @@ public class AppController {
 		return ResponseResult.success("查询成功", list);
 	}
 
+	/**
+	 * 查询应用列表（某个开发者）
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = "list/developer/{developerId}", method = RequestMethod.GET)
+	public ResponseResult listDeveloperAllApp(@PathVariable Integer developerId, HttpSession session) {
+
+		App record = new App();
+		record.setDeveloperId(developerId);
+		List<App> list = appService.queryListByWhere(record);
+
+
+		// 加上图片目录前缀
+		for (App app : list) {
+			app.setLogoFile("/" + envConsts.FILE_APP_LOGO_DIC + "/" + app.getLogoFile());
+		}
+
+		logger.debug("查询开发者{}的所有应用列表成功", developerId);
+		return ResponseResult.success("查询成功", list);
+	}
+
 
 	/**
 	 * 删除应用

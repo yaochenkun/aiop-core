@@ -40,9 +40,9 @@ public class OutputCacheAspect {
 	private OutputService outputService;
 
 	/**
-	 * NlpController每个方法均作为切点
+	 * 只针对NlpController每个方法均作为切点（因为图像、语音、视频太大了缓存不下）
 	 */
-	@Pointcut("execution(* org.bupt.aiop.platform.controller..*.*(..))")
+	@Pointcut("execution(* org.bupt.aiop.platform.controller.NlpController.*(..))")
 	private void pointcut(){}
 
 
@@ -72,7 +72,7 @@ public class OutputCacheAspect {
 		if (!outputService.hasAbilityAndInput(key)) {
 
 			logger.debug("缓存未命中, 放行");
-			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_CACHE_HIT, "ability", abilityName, LogConsts.FAILED));
+			logger.info(LogUtil.body(LogConsts.DOMAIN_ABILITY_REST, "app_id", appId, LogConsts.VERB_CACHE_HIT, "ability", abilityName, LogConsts.FAILED));
 			ResponseResult response = (ResponseResult) joinPoint.proceed();
 
 			//发生错误
@@ -89,7 +89,7 @@ public class OutputCacheAspect {
 			}
 
 			outputService.saveOutput(key, (String) response.getContent());
-			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "hash_map", RedisConsts.AIOP_ABILITY_INPUT_OUTPUT, LogConsts.VERB_CACHE_SAVE, "key", "", LogConsts.SUCCESS));
+			logger.info(LogUtil.body(LogConsts.DOMAIN_ABILITY_REST, "hash_map", RedisConsts.AIOP_ABILITY_INPUT_OUTPUT, LogConsts.VERB_CACHE_SAVE, "key", "", LogConsts.SUCCESS));
 			logger.debug("缓存成功");
 			logger.debug("退出, 能力执行结果缓存环绕方法");
 			return response;
@@ -98,8 +98,8 @@ public class OutputCacheAspect {
 		//缓存命中, 获取缓存结果
 		logger.debug("缓存命中");
 		logger.debug("退出, 能力执行结果缓存环绕方法");
-		logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_CACHE_HIT, "ability", abilityName, LogConsts.SUCCESS));
-		logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", abilityName, LogConsts.SUCCESS));
+		logger.info(LogUtil.body(LogConsts.DOMAIN_ABILITY_REST, "app_id", appId, LogConsts.VERB_CACHE_HIT, "ability", abilityName, LogConsts.SUCCESS));
+		logger.info(LogUtil.body(LogConsts.DOMAIN_ABILITY_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", abilityName, LogConsts.SUCCESS));
 		return ResponseResult.success("", outputService.getOutput(key));
 	}
 }

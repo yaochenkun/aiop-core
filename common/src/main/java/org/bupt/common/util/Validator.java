@@ -186,4 +186,15 @@ public class Validator {
         return Pattern.matches(regex, ipAddress);
     }
 
+    /**
+     * 校验Base64
+     *
+     * @param base64Image base64格式的图片
+     * @return 验证成功返回true，验证失败返回false
+     */
+    public static boolean checkBase64(String base64Image) {
+        String regex = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$";
+        return Pattern.matches(regex, base64Image);
+    }
+
 }

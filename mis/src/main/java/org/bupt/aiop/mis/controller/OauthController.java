@@ -234,6 +234,7 @@ public class OauthController {
 		// 得到用户名和密码
 		String username = params.get("username");
 		String password = params.get("password");
+		String role = params.get("role");
 
 		logger.debug("{} 用户请求账户登录", username);
 
@@ -243,6 +244,11 @@ public class OauthController {
 		User user = userService.queryOne(record);
 		if (user == null) {
 			return ResponseResult.error("用户不存在");
+		}
+
+		// 角色是否正确
+		if (!user.getRole().equals(role)) {
+			return ResponseResult.error("权限不够，请尝试其它入口登录");
 		}
 
 		// 密码加密
@@ -284,6 +290,7 @@ public class OauthController {
 		// 得到手机号和验证码
 		String mobile = params.get("mobile");
 		String captcha = params.get("captcha");
+		String role = params.get("role");
 
 		logger.debug("{} 用户请求手机登录", mobile);
 
@@ -293,6 +300,11 @@ public class OauthController {
 		User user = userService.queryOne(record);
 		if (user == null) {
 			return ResponseResult.error("手机不存在");
+		}
+
+		// 角色是否正确
+		if (!user.getRole().equals(role)) {
+			return ResponseResult.error("权限不够，请尝试其它入口登录");
 		}
 
 		// 检验验证码时效性

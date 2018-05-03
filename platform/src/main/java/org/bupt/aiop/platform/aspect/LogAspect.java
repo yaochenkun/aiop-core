@@ -44,7 +44,7 @@ public class LogAspect {
 	private AbilityInvokeLogService abilityInvokeLogService;
 
 	/**
-	 * NlpController每个方法均作为切点
+	 * Controller每个方法均作为切点
 	 */
 	@Pointcut("execution(* org.bupt.aiop.platform.controller..*.*(..))")
 	private void pointcut(){}
@@ -64,7 +64,7 @@ public class LogAspect {
 		Integer appId = identity.getId();
 		String abilityName = joinPoint.getSignature().getName(); // 能力名称
 
-		logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_ENTER, "ability", abilityName));
+		logger.info(LogUtil.body(LogConsts.DOMAIN_ABILITY_REST, "app_id", appId, LogConsts.VERB_ENTER, "ability", abilityName));
 		ResponseResult response = (ResponseResult) joinPoint.proceed();
 
 		// 根据ability名称获取abilityId
@@ -73,7 +73,7 @@ public class LogAspect {
 		ability = abilityService.queryOne(ability);
 		if (ability == null) {
 			logger.debug("能力={}不存在", abilityName);
-			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_EXIT, "ability", abilityName));
+			logger.info(LogUtil.body(LogConsts.DOMAIN_ABILITY_REST, "app_id", appId, LogConsts.VERB_EXIT, "ability", abilityName));
 			return response.getContent();
 		}
 
@@ -88,7 +88,7 @@ public class LogAspect {
 
 		long exitTimestamp = System.currentTimeMillis();
 
-		logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_EXIT, "ability", abilityName, Long.toString(exitTimestamp - enterTimestamp)));
+		logger.info(LogUtil.body(LogConsts.DOMAIN_ABILITY_REST, "app_id", appId, LogConsts.VERB_EXIT, "ability", abilityName, Long.toString(exitTimestamp - enterTimestamp)));
 		return response.getContent();
 	}
 }

@@ -19,6 +19,7 @@ public class ResponseConsts {
 	public static final Integer ERROR_CODE_INTERNAL_ERROR = 202;
 	public static final Integer ERROR_CODE_ALGORITHMN_ERROR = 203;
 	public static final Integer ERROR_CODE_INVALID_PARAM = 204;
+	public static final Integer ERROR_CODE_INVALID_BASE64_PARAM = 205;
 
 	//错误描述
 	public static final String ERROR_MSG_EMPTY_PARAM = "empty param";
@@ -26,4 +27,5 @@ public class ResponseConsts {
 	public static final String ERROR_MSG_INTERNAL_ERROR = "internal error";
 	public static final String ERROR_MSG_ALGORITHMN_ERROR = "algorithmn error";
 	public static final String ERROR_MSG_INVALID_PARAM = "invalid param";
+	public static final String ERROR_MSG_INVALID_BASE64_PARAM = "invalid base64 param";
 }

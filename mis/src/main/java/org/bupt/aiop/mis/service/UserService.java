@@ -2,6 +2,7 @@ package org.bupt.aiop.mis.service;
 
 import com.github.pagehelper.PageHelper;
 import org.bupt.aiop.mis.constant.EnvConsts;
+import org.bupt.aiop.mis.constant.RedisConsts;
 import org.bupt.common.constant.ResponseConsts;
 import org.bupt.common.util.Validator;
 import org.bupt.common.util.token.Identity;
@@ -9,6 +10,7 @@ import org.bupt.aiop.mis.pojo.po.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -24,6 +26,9 @@ public class UserService extends BaseService<User> {
 
     @Autowired
     private EnvConsts envConsts;
+
+    @Autowired
+    private StringRedisTemplate redisMapper;
 
 
 //    /**
@@ -152,6 +157,18 @@ public class UserService extends BaseService<User> {
     public Integer delete(User user) {
 
         this.getMapper().delete(user);
+
+        return ResponseConsts.CRUD_SUCCESS;
+    }
+
+    /**
+     * 添加用户，并级联在Redis中添加权限
+     * @return
+     */
+    public Integer save(User user) {
+
+        this.getMapper().insert(user);
+        redisMapper.opsForHash().put(RedisConsts.AIOP_USER_ROLE, user.getId().toString(), user.getRole());
 
         return ResponseConsts.CRUD_SUCCESS;
     }

@@ -246,16 +246,11 @@ public class AbilityController {
 	/**
 	 * 查询能力调用量的统计信息
 	 *
-	 * @param params
 	 * @return
 	 */
 	@RequestMapping(value = "invoke_log/list", method = RequestMethod.POST)
 	public ResponseResult listAbilityInvokeLogStatistic(@RequestBody Map<String, Object> params, HttpSession session) {
 
-		// 获取开发者ID
-		Identity identity = (Identity) session.getAttribute(OauthConsts.KEY_IDENTITY);
-
-		params.put("developerId", identity.getId()); // 方便查找developerId旗下所有应用使用
 		List<AbilityInvokeLogStatistic> abilityInvokeLogStatisticList = abilityInvokeLogService.listAbilityInvokeLogStatistic(params);
 
 		logger.debug("查询能力调用量的统计信息成功");

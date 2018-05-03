@@ -2,6 +2,7 @@ package org.bupt.aiop.platform.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
+import org.apache.thrift.protocol.TProtocol;
 import org.bupt.aiop.platform.annotation.RequiredPermission;
 import org.bupt.aiop.platform.constant.EnvConsts;
 import org.bupt.aiop.platform.constant.LogConsts;
@@ -9,9 +10,11 @@ import org.bupt.aiop.platform.constant.NlpConsts;
 import org.bupt.aiop.platform.constant.ResponseConsts;
 import org.bupt.aiop.rpcapi.dubbo.ImageAlgDubboService;
 import org.bupt.aiop.rpcapi.dubbo.NlpAlgDubboService;
+import org.bupt.aiop.rpcapi.thrift.ImageAlgThriftService;
 import org.bupt.common.bean.ErrorResult;
 import org.bupt.common.bean.ResponseResult;
 import org.bupt.common.constant.OauthConsts;
+import org.bupt.common.thrift.ThriftConnectionService;
 import org.bupt.common.util.LogUtil;
 import org.bupt.common.util.Validator;
 import org.bupt.common.util.token.Identity;
@@ -41,30 +44,32 @@ public class ImageController {
 	@Autowired
 	private EnvConsts envConsts;
 
-//	@Autowired
-//	private ThriftConnectionService thriftImageConnectionService;
+	@Autowired
+	private ThriftConnectionService thriftImageConnectionService;
 
 	@Reference
 	private ImageAlgDubboService imageAlgDubboService;
 
 	/**
-	 * 人脸识别
+	 * 人脸相似度
 	 *
 	 * @param params
 	 * @return
 	 */
-	@RequestMapping(value = "v1/face_recognition", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
-//	@RequiredPermission(value = "face_recognition")
-	public Object face_recognition(@RequestBody Map<String, Object> params, HttpSession session) {
+	@RequestMapping(value = "v1/face_sim", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
+//	@RequiredPermission(value = "face_sim")
+	public Object face_sim(@RequestBody Map<String, Object> params, HttpSession session) {
 
 		//日志参数
 		String ability = Thread.currentThread().getStackTrace()[1].getMethodName();
 		Integer appId = ((Identity) session.getAttribute(OauthConsts.KEY_IDENTITY)).getId();
 
 		// 获取初始输入
-		String text = null;
+		String face1 = null;
+		String face2 = null;
 		try {
-			text = (String) params.get("text");
+			face1 = (String) params.get("face1");
+			face2 = (String) params.get("face2");
 		} catch (Exception e) {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INVALID_PARAM));
 			return ResponseResult.error(ResponseConsts.ERROR_MSG_INVALID_PARAM, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INVALID_PARAM, ResponseConsts.ERROR_MSG_INVALID_PARAM)));
@@ -72,35 +77,28 @@ public class ImageController {
 
 
 		// 校验初始输入
-		if (Validator.checkEmpty(text)) {
+		if (Validator.checkEmpty(face1) || Validator.checkEmpty(face2)) {
 			logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
 			return ResponseResult.error(ResponseConsts.ERROR_MSG_EMPTY_PARAM, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM)));
 		}
+		if (!Validator.checkBase64(face1) || !Validator.checkBase64(face2)) { // 校验两张图片是否为合法的base64编码格式
+			logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM));
+			return ResponseResult.error(ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INVALID_BASE64_PARAM, ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM)));
+		}
 
 
-		// 算法处理(deepnlp thrift)
-//		TProtocol protocol = thriftNlpConnectionService.getConnection();
-//		NlpAlgThriftService.Client nlpAlgSerivce = new NlpAlgThriftService.Client(protocol);
-//		try {
-//		    ResponseResult responseResult = ResponseResult.success("", nlpAlgSerivce.word_seg(text));
-//			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-//			return responseResult;
-//		} catch (Exception e) {
-//			logger.info(LogUtil.body(LogConsts.DOMAIN_NLP_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
-//			return ResponseResult.error(ResponseConsts.ERROR_MSG_INTERNAL_ERROR, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
-//		} finally {
-//			thriftNlpConnectionService.returnConnection(protocol);
-//		}
-
-		// 算法处理(hanlp)
+		// 算法处理(thrift)
+		TProtocol protocol = thriftImageConnectionService.getConnection();
+		ImageAlgThriftService.Client imageAlgSerivce = new ImageAlgThriftService.Client(protocol);
 		try {
-			ResponseResult responseResult = ResponseResult.success("", imageAlgDubboService.face_recognition(text));
+		    ResponseResult responseResult = ResponseResult.success("", imageAlgSerivce.face_sim(face1, face2));
 			logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
 			return responseResult;
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
 			return ResponseResult.error(ResponseConsts.ERROR_MSG_INTERNAL_ERROR, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
+		} finally {
+			thriftImageConnectionService.returnConnection(protocol);
 		}
 	}
 }
