@@ -45,7 +45,7 @@ public class SearchController {
 		SearchResponse response;
 		try {
 			response = esConnectionService.getConnection()
-					.prepareSearch(ESConsts.INDEX_INSTRUCTION_COMMON, ESConsts.INDEX_INSTRUCTION_NLP)
+					.prepareSearch(ESConsts.INDEX_INSTRUCTION_COMMON, ESConsts.INDEX_INSTRUCTION_NLP, ESConsts.INDEX_INSTRUCTION_IMAGE)
 					.setQuery(Validator.checkEmpty(keyword) ? QueryBuilders.matchAllQuery() : QueryBuilders.multiMatchQuery(keyword, ESConsts.FIELD_INSTRUCTION_TITLE, ESConsts.FIELD_INSTRUCTION_CONTENT))
 					.setFrom((pageNow - 1) * pageSize)
 					.setSize(pageSize)
