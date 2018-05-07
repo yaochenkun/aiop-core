@@ -24,16 +24,59 @@
         <spring.version>4.1.3.RELEASE</spring.version>
         <mybatis.version>3.2.8</mybatis.version>
         <mybatis.spring.version>1.3.0</mybatis.spring.version>
+        <mybatis-mapper.version>3.3.9</mybatis-mapper.version>
+        <mybatis-paginator.version>1.2.15</mybatis-paginator.version>
+        <mybatis-pagehelper.version>3.7.6</mybatis-pagehelper.version>
         <mysql.version>5.1.40</mysql.version>
         <druid.version>1.1.0</druid.version>
         <aspectjweaver.version>1.8.9</aspectjweaver.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
         <commons-io.version>2.4</commons-io.version>
         <commons-net.version>3.3</commons-net.version>
+        <common-pool2.version>2.4.2</common-pool2.version>
         <jsqlparser.version>0.9.1</jsqlparser.version>
         <commons-fileupload.version>1.3.1</commons-fileupload.version>
         <fastjson.version>1.2.3</fastjson.version>
+        <logback.version>1.1.3</logback.version>
+        <slf4j.version>1.7.5</slf4j.version>
+        <logback-spring.version>0.1.2</logback-spring.version>
+        <jedis.version>2.7.2</jedis.version>
+        <spring-redis.version>1.6.2.RELEASE</spring-redis.version>
+        <pinyin4j.version>2.5.0</pinyin4j.version>
+        <poi-ooxml.version>3.14</poi-ooxml.version>
+        <jwt.version>0.7.0</jwt.version>
+        <thrift.version>0.10.0</thrift.version>
+        <kafka.version>0.10.2.1</kafka.version>
+        <elasticsearch.version>6.1.2</elasticsearch.version>
+        <dubbo.version>2.5.5</dubbo.version>
+        <zookeeper.version>3.4.10</zookeeper.version>
+        <zkclient.version>0.1</zkclient.version>
+        <hanlp.version>portable-1.5.3</hanlp.version>
+        <servlet.version>3.1.0</servlet.version>
     </properties>
+    <!--日志-->
+    <dependencies>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.logback-extensions</groupId>
+            <artifactId>logback-ext-spring</artifactId>
+            <version>${logback-spring.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
