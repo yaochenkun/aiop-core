@@ -27,9 +27,12 @@ public class CommonController {
 
 		logger.debug("进入oauth错误返回控制器");
 		switch (code) {
-			case ErrorConsts.OAUTH_CODE_ACCESS_TOKEN_INVALID: return new ErrorResult(code, ErrorConsts.OAUTH_MSG_ACCESS_TOKEN_INVALID);
-			case ErrorConsts.OAUTH_CODE_PERMISSION_DENIED: return new ErrorResult(code, ErrorConsts.OAUTH_MSG_PERMISSION_DENIED);
-			default: return new ErrorResult(ErrorConsts.OAUTH_CODE_UNDEFINED_ERROR, ErrorConsts.OAUTH_MSG_UNDEFINED_ERROR);
+			case ErrorConsts.OAUTH_CODE_ACCESS_TOKEN_INVALID:
+				return new ErrorResult(code, ErrorConsts.OAUTH_MSG_ACCESS_TOKEN_INVALID);
+			case ErrorConsts.OAUTH_CODE_PERMISSION_DENIED:
+				return new ErrorResult(code, ErrorConsts.OAUTH_MSG_PERMISSION_DENIED);
+			default:
+				return new ErrorResult(ErrorConsts.OAUTH_CODE_UNDEFINED_ERROR, ErrorConsts.OAUTH_MSG_UNDEFINED_ERROR);
 		}
 	}
 }

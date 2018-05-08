@@ -5,43 +5,42 @@
     <!--&lt;!&ndash;1.自然语言处理&ndash;&gt;-->
     <!--&lt;!&ndash;thrift连接池工厂类配置 + 连接池属性配置&ndash;&gt;-->
     <!--<bean id="thriftNlpConnectionFactory" class="org.bupt.common.thrift.ThriftConnectionFactory">-->
-        <!--<property name="proxyIP" value="${thrift.nlpProxyIP}"/>-->
-        <!--<property name="proxyPort" value="${thrift.nlpProxyPort}" />-->
+    <!--<property name="proxyIP" value="${thrift.nlpProxyIP}"/>-->
+    <!--<property name="proxyPort" value="${thrift.nlpProxyPort}" />-->
     <!--</bean>-->
     <!--<bean id="genericNlpObjectPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">-->
-        <!--<property name="maxIdle" value="10"/>-->
-        <!--<property name="maxTotal" value="20" />-->
-        <!--<property name="minIdle" value="3" />-->
-        <!--<property name="testOnBorrow" value="true" />-->
-        <!--<property name="maxWaitMillis" value="1000" />-->
-        <!--<property name="minEvictableIdleTimeMillis" value="60000" />-->
-        <!--<property name="timeBetweenEvictionRunsMillis" value="30000" />-->
-        <!--<property name="numTestsPerEvictionRun" value="3" />-->
-        <!--<property name="testWhileIdle" value="true" />-->
+    <!--<property name="maxIdle" value="10"/>-->
+    <!--<property name="maxTotal" value="20" />-->
+    <!--<property name="minIdle" value="3" />-->
+    <!--<property name="testOnBorrow" value="true" />-->
+    <!--<property name="maxWaitMillis" value="1000" />-->
+    <!--<property name="minEvictableIdleTimeMillis" value="60000" />-->
+    <!--<property name="timeBetweenEvictionRunsMillis" value="30000" />-->
+    <!--<property name="numTestsPerEvictionRun" value="3" />-->
+    <!--<property name="testWhileIdle" value="true" />-->
     <!--</bean>-->
     <!--<bean id="thriftNlpConnectionService" class="org.bupt.common.thrift.ThriftConnectionService">-->
-        <!--<constructor-arg name="thriftConnectionFactory" ref="thriftNlpConnectionFactory"/>-->
-        <!--<constructor-arg name="genericObjectPoolConfig" ref="genericNlpObjectPoolConfig"/>-->
+    <!--<constructor-arg name="thriftConnectionFactory" ref="thriftNlpConnectionFactory"/>-->
+    <!--<constructor-arg name="genericObjectPoolConfig" ref="genericNlpObjectPoolConfig"/>-->
     <!--</bean>-->
-
 
 
     <!--2.图像技术-->
     <!--thrift连接池工厂类配置 + 连接池属性配置-->
     <bean id="thriftImageConnectionFactory" class="org.bupt.common.thrift.ThriftConnectionFactory">
         <property name="proxyIP" value="${thrift.imageProxyIP}"/>
-        <property name="proxyPort" value="${thrift.imageProxyPort}" />
+        <property name="proxyPort" value="${thrift.imageProxyPort}"/>
     </bean>
     <bean id="genericImageObjectPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">
         <property name="maxIdle" value="10"/>
-        <property name="maxTotal" value="20" />
-        <property name="minIdle" value="3" />
-        <property name="testOnBorrow" value="true" />
-        <property name="maxWaitMillis" value="1000" />
-        <property name="minEvictableIdleTimeMillis" value="60000" />
-        <property name="timeBetweenEvictionRunsMillis" value="30000" />
-        <property name="numTestsPerEvictionRun" value="3" />
-        <property name="testWhileIdle" value="true" />
+        <property name="maxTotal" value="20"/>
+        <property name="minIdle" value="3"/>
+        <property name="testOnBorrow" value="true"/>
+        <property name="maxWaitMillis" value="1000"/>
+        <property name="minEvictableIdleTimeMillis" value="60000"/>
+        <property name="timeBetweenEvictionRunsMillis" value="30000"/>
+        <property name="numTestsPerEvictionRun" value="3"/>
+        <property name="testWhileIdle" value="true"/>
     </bean>
     <bean id="thriftImageConnectionService" class="org.bupt.common.thrift.ThriftConnectionService">
         <constructor-arg name="thriftConnectionFactory" ref="thriftImageConnectionFactory"/>
@@ -49,51 +48,49 @@
     </bean>
 
 
-
     <!--&lt;!&ndash;3.语音技术&ndash;&gt;-->
     <!--&lt;!&ndash;thrift连接池工厂类配置 + 连接池属性配置&ndash;&gt;-->
     <!--<bean id="thriftSpeechConnectionFactory" class="org.bupt.common.thrift.ThriftConnectionFactory">-->
-        <!--<property name="proxyIP" value="${thrift.speechProxyIP}"/>-->
-        <!--<property name="proxyPort" value="${thrift.speechProxyPort}" />-->
+    <!--<property name="proxyIP" value="${thrift.speechProxyIP}"/>-->
+    <!--<property name="proxyPort" value="${thrift.speechProxyPort}" />-->
     <!--</bean>-->
     <!--<bean id="genericSpeechObjectPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">-->
-        <!--<property name="maxIdle" value="10"/>-->
-        <!--<property name="maxTotal" value="20" />-->
-        <!--<property name="minIdle" value="3" />-->
-        <!--<property name="testOnBorrow" value="true" />-->
-        <!--<property name="maxWaitMillis" value="1000" />-->
-        <!--<property name="minEvictableIdleTimeMillis" value="60000" />-->
-        <!--<property name="timeBetweenEvictionRunsMillis" value="30000" />-->
-        <!--<property name="numTestsPerEvictionRun" value="3" />-->
-        <!--<property name="testWhileIdle" value="true" />-->
+    <!--<property name="maxIdle" value="10"/>-->
+    <!--<property name="maxTotal" value="20" />-->
+    <!--<property name="minIdle" value="3" />-->
+    <!--<property name="testOnBorrow" value="true" />-->
+    <!--<property name="maxWaitMillis" value="1000" />-->
+    <!--<property name="minEvictableIdleTimeMillis" value="60000" />-->
+    <!--<property name="timeBetweenEvictionRunsMillis" value="30000" />-->
+    <!--<property name="numTestsPerEvictionRun" value="3" />-->
+    <!--<property name="testWhileIdle" value="true" />-->
     <!--</bean>-->
     <!--<bean id="thriftSpeechConnectionService" class="org.bupt.common.thrift.ThriftConnectionService">-->
-        <!--<constructor-arg name="thriftConnectionFactory" ref="thriftSpeechConnectionFactory"/>-->
-        <!--<constructor-arg name="genericObjectPoolConfig" ref="genericSpeechObjectPoolConfig"/>-->
+    <!--<constructor-arg name="thriftConnectionFactory" ref="thriftSpeechConnectionFactory"/>-->
+    <!--<constructor-arg name="genericObjectPoolConfig" ref="genericSpeechObjectPoolConfig"/>-->
     <!--</bean>-->
-
 
 
     <!--&lt;!&ndash;4.视频技术&ndash;&gt;-->
     <!--&lt;!&ndash;thrift连接池工厂类配置 + 连接池属性配置&ndash;&gt;-->
     <!--<bean id="thriftVideoConnectionFactory" class="org.bupt.common.thrift.ThriftConnectionFactory">-->
-        <!--<property name="proxyIP" value="${thrift.videoProxyIP}"/>-->
-        <!--<property name="proxyPort" value="${thrift.videoProxyPort}" />-->
+    <!--<property name="proxyIP" value="${thrift.videoProxyIP}"/>-->
+    <!--<property name="proxyPort" value="${thrift.videoProxyPort}" />-->
     <!--</bean>-->
     <!--<bean id="genericVideoObjectPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">-->
-        <!--<property name="maxIdle" value="10"/>-->
-        <!--<property name="maxTotal" value="20" />-->
-        <!--<property name="minIdle" value="3" />-->
-        <!--<property name="testOnBorrow" value="true" />-->
-        <!--<property name="maxWaitMillis" value="1000" />-->
-        <!--<property name="minEvictableIdleTimeMillis" value="60000" />-->
-        <!--<property name="timeBetweenEvictionRunsMillis" value="30000" />-->
-        <!--<property name="numTestsPerEvictionRun" value="3" />-->
-        <!--<property name="testWhileIdle" value="true" />-->
+    <!--<property name="maxIdle" value="10"/>-->
+    <!--<property name="maxTotal" value="20" />-->
+    <!--<property name="minIdle" value="3" />-->
+    <!--<property name="testOnBorrow" value="true" />-->
+    <!--<property name="maxWaitMillis" value="1000" />-->
+    <!--<property name="minEvictableIdleTimeMillis" value="60000" />-->
+    <!--<property name="timeBetweenEvictionRunsMillis" value="30000" />-->
+    <!--<property name="numTestsPerEvictionRun" value="3" />-->
+    <!--<property name="testWhileIdle" value="true" />-->
     <!--</bean>-->
     <!--<bean id="thriftVideoConnectionService" class="org.bupt.common.thrift.ThriftConnectionService">-->
-        <!--<constructor-arg name="thriftConnectionFactory" ref="thriftVideoConnectionFactory"/>-->
-        <!--<constructor-arg name="genericObjectPoolConfig" ref="genericVideoObjectPoolConfig"/>-->
+    <!--<constructor-arg name="thriftConnectionFactory" ref="thriftVideoConnectionFactory"/>-->
+    <!--<constructor-arg name="genericObjectPoolConfig" ref="genericVideoObjectPoolConfig"/>-->
     <!--</bean>-->
 
 </beans>

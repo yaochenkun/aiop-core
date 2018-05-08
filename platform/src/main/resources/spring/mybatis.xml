@@ -34,8 +34,6 @@
     </bean>
 
 
-
-
     <bean class="org.mybatis.spring.SqlSessionFactoryBean">
         <!-- 指定数据源 -->
         <property name="dataSource" ref="dataSource"/>

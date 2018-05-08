@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Properties;
@@ -13,17 +15,16 @@ import java.util.Properties;
  */
 public class KafkaMessageProducer extends Thread {
 
+    private Logger logger = LoggerFactory.getLogger(KafkaMessageProducer.class);
     private Producer<Integer, String> producer;
-
-    private Properties props;
 
     private int msgNumber;
 
-    private final int MAX_MSG_NUMBER = 1000; // 取模用，防msgNumber溢出
+    private static final int MAX_MSG_NUMBER = 1000; // 取模用，防msgNumber溢出
 
     public KafkaMessageProducer(String brokerAddressList) {
 
-        props = new Properties();
+        Properties props = new Properties();
 
         // bootstrap.servers是新版的api
         props.put("bootstrap.servers", brokerAddressList);
@@ -67,6 +68,6 @@ public class KafkaMessageProducer extends Thread {
         // 发送
         producer.send(new ProducerRecord<>(topic, msgNumber, msgContent));
 
-        System.out.println("producer thread = " + Thread.currentThread().getId() + " sent msg: msgNumber = " + msgNumber + " msgContent = " + msgContent);
+        logger.debug("producer thread: {} sent msg: {} msgContent: {}", Thread.currentThread().getId(), msgNumber, msgContent);
     }
 }

@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  * 能力使用权限认证拦截器（判断access_token有效性）
  * Created by ken on 2017/6/8.
  */
-public class AccessTokenCheckInterceptor implements HandlerInterceptor {
+public class AccessTokenCheckInterceptor extends HandlerInterceptorAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(AccessTokenCheckInterceptor.class);
 
@@ -31,7 +32,7 @@ public class AccessTokenCheckInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
-			Exception {
+            Exception {
 
         logger.debug("进入AccessTokenCheckInterceptor");
 
@@ -61,15 +62,4 @@ public class AccessTokenCheckInterceptor implements HandlerInterceptor {
         }
     }
 
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView
-            modelAndView) throws Exception {
-
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception
-            ex) throws Exception {
-
-    }
 }

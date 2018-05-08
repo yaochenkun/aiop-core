@@ -17,26 +17,26 @@ import java.net.UnknownHostException;
  */
 public class EsConnectionService {
 
-	private Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
-	private TransportClient client;
+    private TransportClient client;
 
-	// 单节点
-	public EsConnectionService(String host, Integer port) throws UnknownHostException {
-		client = new PreBuiltTransportClient(Settings.EMPTY);
-		client.addTransportAddress(new TransportAddress(InetAddress.getByName(host), port));
-	}
+    // 单节点
+    public EsConnectionService(String host, Integer port) throws UnknownHostException {
+        client = new PreBuiltTransportClient(Settings.EMPTY);
+        client.addTransportAddress(new TransportAddress(InetAddress.getByName(host), port));
+    }
 
-	// 多节点（集群）
-	public EsConnectionService(String[] hosts, Integer[] ports) throws UnknownHostException {
-		client = new PreBuiltTransportClient(Settings.EMPTY);
-		for (int i = 0; i < hosts.length; i++) {
-			client.addTransportAddress(new TransportAddress(InetAddress.getByName(hosts[i]), ports[i]));
-		}
-	}
+    // 多节点（集群）
+    public EsConnectionService(String[] hosts, Integer[] ports) throws UnknownHostException {
+        client = new PreBuiltTransportClient(Settings.EMPTY);
+        for (int i = 0, len = hosts.length; i < len; i++) {
+            client.addTransportAddress(new TransportAddress(InetAddress.getByName(hosts[i]), ports[i]));
+        }
+    }
 
-	// 获取可以操作ES的连接
-	public TransportClient getConnection() {
-		return client;
-	}
+    // 获取可以操作ES的连接
+    public TransportClient getConnection() {
+        return client;
+    }
 }

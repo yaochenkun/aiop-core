@@ -18,7 +18,7 @@ public class ThriftConnectionService {
 
 	public ThriftConnectionService(ThriftConnectionFactory thriftConnectionFactory, GenericObjectPoolConfig genericObjectPoolConfig) {
 
-		connectionPool = new GenericObjectPool<TProtocol>(thriftConnectionFactory, genericObjectPoolConfig);
+		connectionPool = new GenericObjectPool<>(thriftConnectionFactory, genericObjectPoolConfig);
 	}
 
 	public TProtocol getConnection() {

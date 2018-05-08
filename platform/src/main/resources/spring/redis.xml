@@ -3,22 +3,22 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <bean id="jedisConfig" class="redis.clients.jedis.JedisPoolConfig">
-        <property name="maxTotal" value="${redis.maxActive}"></property>
-        <property name="maxIdle" value="${redis.maxIdle}"></property>
-        <property name="maxWaitMillis" value="${redis.maxWait}"></property>
-        <property name="testOnBorrow" value="${redis.testOnBorrow}"></property>
+        <property name="maxTotal" value="${redis.maxActive}"/>
+        <property name="maxIdle" value="${redis.maxIdle}"/>
+        <property name="maxWaitMillis" value="${redis.maxWait}"/>
+        <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
     </bean>
     <!-- redis连接工厂 -->
     <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
-        <property name="hostName" value="${redis.host}"></property>
-        <property name="port" value="${redis.port}"></property>
-        <property name="password" value="${redis.password}"></property>
-        <property name="poolConfig" ref="jedisConfig"></property>
+        <property name="hostName" value="${redis.host}"/>
+        <property name="port" value="${redis.port}"/>
+        <property name="password" value="${redis.password}"/>
+        <property name="poolConfig" ref="jedisConfig"/>
     </bean>
 
     <!-- redis操作集合类-->
     <bean id="redisMapper" class="org.springframework.data.redis.core.StringRedisTemplate">
-        <property name="connectionFactory"   ref="connectionFactory" />
+        <property name="connectionFactory" ref="connectionFactory"/>
         <property name="enableTransactionSupport" value="true"/>
     </bean>
 

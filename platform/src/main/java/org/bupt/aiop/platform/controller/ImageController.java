@@ -38,67 +38,66 @@ import java.util.Map;
 @RequestMapping("restapi/image")
 public class ImageController {
 
-	private static final Logger logger = LoggerFactory.getLogger(ImageController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImageController.class);
 
 
-	@Autowired
-	private EnvConsts envConsts;
+    @Autowired
+    private EnvConsts envConsts;
 
-	@Autowired
-	private ThriftConnectionService thriftImageConnectionService;
+    @Autowired
+    private ThriftConnectionService thriftImageConnectionService;
 
-	@Reference
-	private ImageAlgDubboService imageAlgDubboService;
+//	@Reference
+//	private ImageAlgDubboService imageAlgDubboService;
 
-	/**
-	 * 人脸相似度
-	 *
-	 * @param params
-	 * @return
-	 */
-	@RequestMapping(value = "v1/face_sim", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
+    /**
+     * 人脸相似度
+     *
+     * @param params
+     * @return
+     */
+    @RequestMapping(value = "v1/face_sim", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
 //	@RequiredPermission(value = "face_sim")
-	public Object face_sim(@RequestBody Map<String, Object> params, HttpSession session) {
+    public Object face_sim(@RequestBody Map<String, Object> params, HttpSession session) {
 
-		//日志参数
-		String ability = Thread.currentThread().getStackTrace()[1].getMethodName();
-		Integer appId = ((Identity) session.getAttribute(OauthConsts.KEY_IDENTITY)).getId();
+        //日志参数
+        String ability = Thread.currentThread().getStackTrace()[1].getMethodName();
+        Integer appId = ((Identity) session.getAttribute(OauthConsts.KEY_IDENTITY)).getId();
 
-		// 获取初始输入
-		String face1 = null;
-		String face2 = null;
-		try {
-			face1 = (String) params.get("face1");
-			face2 = (String) params.get("face2");
-		} catch (Exception e) {
-			logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INVALID_PARAM));
-			return ResponseResult.error(ResponseConsts.ERROR_MSG_INVALID_PARAM, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INVALID_PARAM, ResponseConsts.ERROR_MSG_INVALID_PARAM)));
-		}
-
-
-		// 校验初始输入
-		if (Validator.checkEmpty(face1) || Validator.checkEmpty(face2)) {
-			logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
-			return ResponseResult.error(ResponseConsts.ERROR_MSG_EMPTY_PARAM, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM)));
-		}
-		if (!Validator.checkBase64(face1) || !Validator.checkBase64(face2)) { // 校验两张图片是否为合法的base64编码格式
-			logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM));
-			return ResponseResult.error(ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INVALID_BASE64_PARAM, ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM)));
-		}
+        // 获取初始输入
+        String face1 = null;
+        String face2 = null;
+        try {
+            face1 = (String) params.get("face1");
+            face2 = (String) params.get("face2");
+        } catch (Exception e) {
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INVALID_PARAM));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_INVALID_PARAM, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INVALID_PARAM, ResponseConsts.ERROR_MSG_INVALID_PARAM)));
+        }
 
 
-		// 算法处理(thrift)
-		TProtocol protocol = thriftImageConnectionService.getConnection();
-		ImageAlgThriftService.Client imageAlgSerivce = new ImageAlgThriftService.Client(protocol);
-		try {
-		    ResponseResult responseResult = ResponseResult.success("", imageAlgSerivce.face_sim(face1, face2));
-			logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
-			return responseResult;
-		} catch (Exception e) {
-			logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
-			return ResponseResult.error(ResponseConsts.ERROR_MSG_INTERNAL_ERROR, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
-		} finally {
-			thriftImageConnectionService.returnConnection(protocol);
-		}
-	}
+        // 校验初始输入
+        if (Validator.checkEmpty(face1) || Validator.checkEmpty(face2)) {
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_EMPTY_PARAM, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM)));
+        }
+        if (!Validator.checkBase64(face1) || !Validator.checkBase64(face2)) { // 校验两张图片是否为合法的base64编码格式
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INVALID_BASE64_PARAM, ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM)));
+        }
+
+        // 算法处理(thrift)
+        TProtocol protocol = thriftImageConnectionService.getConnection();
+        ImageAlgThriftService.Client imageAlgSerivce = new ImageAlgThriftService.Client(protocol);
+        try {
+            ResponseResult responseResult = ResponseResult.success("", imageAlgSerivce.face_sim(face1, face2));
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
+            return responseResult;
+        } catch (Exception e) {
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_INTERNAL_ERROR, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
+        } finally {
+            thriftImageConnectionService.returnConnection(protocol);
+        }
+    }
 }

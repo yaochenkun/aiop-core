@@ -9,8 +9,7 @@ import org.bupt.aiop.mis.service.OauthService;
 import org.bupt.common.bean.PageResult;
 import org.bupt.common.bean.ResponseResult;
 import org.bupt.common.constant.OauthConsts;
-import org.bupt.common.util.CaptchaUtil;
-import org.bupt.common.util.FileUtil;
+import org.bupt.common.util.FilenameUtil;
 import org.bupt.common.util.MD5Util;
 import org.bupt.common.util.Validator;
 import org.bupt.common.util.token.Identity;
@@ -27,7 +26,6 @@ import javax.servlet.http.HttpSession;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -379,7 +377,7 @@ public class UserController {
         String fileName;
         if (!file.isEmpty()) {
 
-            fileName = id + "." + FileUtil.getExtensionName(file.getOriginalFilename());
+            fileName = id + "." + FilenameUtil.getExtensionName(file.getOriginalFilename());
 
             try {
                 Streams.copy(file.getInputStream(), new FileOutputStream(envConsts.FILE_PATH + envConsts.FILE_AVATAR_DIC + "/" +

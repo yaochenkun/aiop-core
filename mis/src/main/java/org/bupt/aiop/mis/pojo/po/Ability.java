@@ -1,11 +1,9 @@
 package org.bupt.aiop.mis.pojo.po;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
+@Table(name = "ability")
 public class Ability {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

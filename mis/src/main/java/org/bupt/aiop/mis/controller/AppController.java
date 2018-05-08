@@ -6,7 +6,6 @@ import org.bupt.aiop.mis.constant.EnvConsts;
 import org.bupt.aiop.mis.pojo.po.Ability;
 import org.bupt.aiop.mis.pojo.po.App;
 import org.bupt.aiop.mis.pojo.po.AppAbility;
-import org.bupt.aiop.mis.pojo.po.Model;
 import org.bupt.aiop.mis.pojo.vo.AbilityUnderApp;
 import org.bupt.aiop.mis.service.AbilityService;
 import org.bupt.aiop.mis.service.AppService;
@@ -14,7 +13,7 @@ import org.bupt.common.bean.PageResult;
 import org.bupt.common.bean.ResponseResult;
 import org.bupt.common.constant.OauthConsts;
 import org.bupt.common.constant.ResponseConsts;
-import org.bupt.common.util.FileUtil;
+import org.bupt.common.util.FilenameUtil;
 import org.bupt.common.util.TimeUtil;
 import org.bupt.common.util.UUIDUtil;
 import org.bupt.common.util.Validator;
@@ -271,7 +270,7 @@ public class AppController {
 		String fileName;
 		if (!file.isEmpty()) {
 
-			fileName = id + "." + FileUtil.getExtensionName(file.getOriginalFilename());
+			fileName = id + "." + FilenameUtil.getExtensionName(file.getOriginalFilename());
 			try {
 				Streams.copy(file.getInputStream(), new FileOutputStream(envConsts.FILE_PATH + "app_logo/" +
 						fileName), true);
