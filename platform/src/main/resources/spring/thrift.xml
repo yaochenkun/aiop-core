@@ -1,6 +1,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!--&lt;!&ndash;1.自然语言处理&ndash;&gt;-->
     <!--&lt;!&ndash;thrift连接池工厂类配置 + 连接池属性配置&ndash;&gt;-->

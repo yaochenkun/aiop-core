@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.bupt.aiop.mis.mapper.AbilityMapper" >
-  <resultMap id="BaseResultMap" type="org.bupt.aiop.platform.pojo.po.Ability" >
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="zh_name" property="zhName" jdbcType="VARCHAR" />
-    <result column="en_name" property="enName" jdbcType="VARCHAR" />
-    <result column="type" property="type" jdbcType="VARCHAR" />
-    <result column="model_id" property="modelId" jdbcType="INTEGER" />
-    <result column="invoke_limit" property="invokeLimit" jdbcType="INTEGER" />
-    <result column="qps_limit" property="qpsLimit" jdbcType="INTEGER" />
-    <result column="restapi_url" property="restapiUrl" jdbcType="VARCHAR" />
-    <result column="doc_url" property="docUrl" jdbcType="VARCHAR" />
-    <result column="description" property="description" jdbcType="VARCHAR" />
-    <result column="version" property="version" jdbcType="VARCHAR" />
-    <result column="create_date" property="createDate" jdbcType="DATE" />
-    <result column="update_date" property="updateDate" jdbcType="DATE" />
-  </resultMap>
+<mapper namespace="org.bupt.aiop.mis.mapper.AbilityMapper">
+    <resultMap id="BaseResultMap" type="org.bupt.aiop.platform.pojo.po.Ability">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="zh_name" property="zhName" jdbcType="VARCHAR"/>
+        <result column="en_name" property="enName" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="model_id" property="modelId" jdbcType="INTEGER"/>
+        <result column="invoke_limit" property="invokeLimit" jdbcType="INTEGER"/>
+        <result column="qps_limit" property="qpsLimit" jdbcType="INTEGER"/>
+        <result column="restapi_url" property="restapiUrl" jdbcType="VARCHAR"/>
+        <result column="doc_url" property="docUrl" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate" jdbcType="DATE"/>
+        <result column="update_date" property="updateDate" jdbcType="DATE"/>
+    </resultMap>
 
 </mapper>

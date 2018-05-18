@@ -1,9 +1,7 @@
 package org.bupt.aiop.platform.interceptor;
 
-import com.alibaba.fastjson.JSON;
 import org.bupt.aiop.platform.constant.EnvConsts;
 import org.bupt.aiop.platform.constant.LogConsts;
-import org.bupt.common.bean.ResponseResult;
 import org.bupt.common.constant.ErrorConsts;
 import org.bupt.common.constant.OauthConsts;
 import org.bupt.common.util.LogUtil;
@@ -12,8 +10,6 @@ import org.bupt.common.util.token.TokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;

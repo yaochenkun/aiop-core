@@ -1,7 +1,7 @@
 package org.bupt.aiop.platform.constant;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 /**
  *
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
  * Created by ken on 2017/10/21.
  */
 
-@Service
+@Component
 public class EnvConsts {
 
 	@Value("${accesstoken.apiKeySecret}")

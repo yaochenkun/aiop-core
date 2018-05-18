@@ -16,13 +16,13 @@
     </listener>
 
     <!-- 加载logback相关日志配置文件 -->
-    <context-param>
-        <param-name>logbackConfigLocation</param-name>
-        <param-value>classpath:logback.xml</param-value>
-    </context-param>
-    <listener>
-        <listener-class>ch.qos.logback.ext.spring.web.LogbackConfigListener</listener-class>
-    </listener>
+    <!--<context-param>-->
+        <!--<param-name>logbackConfigLocation</param-name>-->
+        <!--<param-value>classpath:logback.xml</param-value>-->
+    <!--</context-param>-->
+    <!--<listener>-->
+        <!--<listener-class>ch.qos.logback.ext.spring.web.LogbackConfigListener</listener-class>-->
+    <!--</listener>-->
 
     <!-- 编码过滤器，以UTF8编码 -->
     <filter>
