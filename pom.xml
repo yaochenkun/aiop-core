@@ -45,7 +45,7 @@
         <pinyin4j.version>2.5.0</pinyin4j.version>
         <poi-ooxml.version>3.14</poi-ooxml.version>
         <jwt.version>0.7.0</jwt.version>
-        <thrift.version>0.10.0</thrift.version>
+        <thrift.version>0.11.0</thrift.version>
         <kafka.version>0.10.2.1</kafka.version>
         <elasticsearch.version>6.1.2</elasticsearch.version>
         <dubbo.version>2.5.5</dubbo.version>

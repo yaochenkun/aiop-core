@@ -1,16 +1,14 @@
 package org.bupt.aiop.platform.controller;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
 import org.apache.thrift.protocol.TProtocol;
-import org.bupt.aiop.platform.annotation.RequiredPermission;
 import org.bupt.aiop.platform.constant.EnvConsts;
 import org.bupt.aiop.platform.constant.LogConsts;
-import org.bupt.aiop.platform.constant.NlpConsts;
 import org.bupt.aiop.platform.constant.ResponseConsts;
-import org.bupt.aiop.rpcapi.dubbo.ImageAlgDubboService;
-import org.bupt.aiop.rpcapi.dubbo.NlpAlgDubboService;
-import org.bupt.aiop.rpcapi.thrift.ImageAlgThriftService;
+import org.bupt.aiop.rpcapi.thrift.FaceDetectionThriftService;
+import org.bupt.aiop.rpcapi.thrift.FaceSimThriftService;
+import org.bupt.aiop.rpcapi.thrift.ReductionThriftService;
+import org.bupt.aiop.rpcapi.thrift.TargetDetectionThriftService;
 import org.bupt.common.bean.ErrorResult;
 import org.bupt.common.bean.ResponseResult;
 import org.bupt.common.constant.OauthConsts;
@@ -27,8 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,7 +41,16 @@ public class ImageController {
     private EnvConsts envConsts;
 
     @Autowired
-    private ThriftConnectionService thriftImageConnectionService;
+    private ThriftConnectionService thriftFaceSimConnectionService;
+
+    @Autowired
+    private ThriftConnectionService thriftTargetDetectConnectionService;
+
+    @Autowired
+    private ThriftConnectionService thriftFaceDetectConnectionService;
+
+    @Autowired
+    private ThriftConnectionService thriftReductionConnectionService;
 
 //	@Reference
 //	private ImageAlgDubboService imageAlgDubboService;
@@ -58,7 +63,7 @@ public class ImageController {
      */
     @RequestMapping(value = "v1/face_sim", method = RequestMethod.POST, produces = "text/json;charset=UTF-8")
 //	@RequiredPermission(value = "face_sim")
-    public Object face_sim(@RequestBody Map<String, Object> params, HttpSession session) {
+    public Object faceSim(@RequestBody Map<String, Object> params, HttpSession session) {
 
         //日志参数
         String ability = Thread.currentThread().getStackTrace()[1].getMethodName();
@@ -87,8 +92,8 @@ public class ImageController {
         }
 
         // 算法处理(thrift)
-        TProtocol protocol = thriftImageConnectionService.getConnection();
-        ImageAlgThriftService.Client imageAlgSerivce = new ImageAlgThriftService.Client(protocol);
+        TProtocol protocol = thriftFaceSimConnectionService.getConnection();
+        FaceSimThriftService.Client imageAlgSerivce = new FaceSimThriftService.Client(protocol);
         try {
             ResponseResult responseResult = ResponseResult.success("", imageAlgSerivce.face_sim(face1, face2));
             logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.SUCCESS));
@@ -97,7 +102,202 @@ public class ImageController {
             logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR));
             return ResponseResult.error(ResponseConsts.ERROR_MSG_INTERNAL_ERROR, JSON.toJSONString(new ErrorResult(ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
         } finally {
-            thriftImageConnectionService.returnConnection(protocol);
+            thriftFaceSimConnectionService.returnConnection(protocol);
         }
     }
+
+    @RequestMapping(value = "v1/target_detection", method = RequestMethod.POST)
+    public Object TargetDetection(@RequestBody Map<String, Object> params, HttpSession session) {
+        String ability = Thread.currentThread().getStackTrace()[1].getMethodName();
+        Integer appId = ((Identity) session.getAttribute(OauthConsts.KEY_IDENTITY)).getId();
+        String img;
+        if (params.containsKey("img")) {
+            img = (String) params.get("img");
+        } else {
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability",
+                    ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INVALID_PARAM));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_INVALID_PARAM, JSON.toJSONString(new ErrorResult(
+                    ResponseConsts.ERROR_CODE_INVALID_PARAM, ResponseConsts.ERROR_MSG_INVALID_PARAM
+            )));
+        }
+
+        if (Validator.checkEmpty(img)) {
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE,
+                    "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_EMPTY_PARAM, JSON.toJSONString(new ErrorResult(
+                    ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM
+            )));
+        }
+
+        if (!Validator.checkBase64(img)) {
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "appid", appId, LogConsts.VERB_INVOKE,
+                    "aliblity", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM, JSON.toJSONString(new ErrorResult(
+                    ResponseConsts.ERROR_CODE_INVALID_BASE64_PARAM, ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM
+            )));
+        }
+        TProtocol protocol = thriftTargetDetectConnectionService.getConnection();
+        TargetDetectionThriftService.Client client = new TargetDetectionThriftService.Client(protocol);
+        try {
+            ResponseResult responseResult = ResponseResult.success("", client.target_detection(img));
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE,
+                    "ability", ability, LogConsts.SUCCESS));
+            return responseResult;
+        } catch (Exception e) {
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE,
+                    "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR
+            ));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_INTERNAL_ERROR, JSON.toJSONString(new ErrorResult(
+                    ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
+        } finally {
+            thriftTargetDetectConnectionService.returnConnection(protocol);
+        }
+    }
+
+    @RequestMapping(value = "v1/face_detection", method = RequestMethod.POST)
+    public Object faceDetection(@RequestBody Map<String, Object> params, HttpSession session) {
+        String ability = Thread.currentThread().getStackTrace()[1].getMethodName();
+        Integer appId = ((Identity) session.getAttribute(OauthConsts.KEY_IDENTITY)).getId();
+        String img;
+        if (params.containsKey("img")) {
+            img = (String) params.get("img");
+        } else {
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability",
+                    ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INVALID_PARAM));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_INVALID_PARAM, JSON.toJSONString(new ErrorResult(
+                    ResponseConsts.ERROR_CODE_INVALID_PARAM, ResponseConsts.ERROR_MSG_INVALID_PARAM
+            )));
+        }
+
+        if (Validator.checkEmpty(img)) {
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE,
+                    "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_EMPTY_PARAM, JSON.toJSONString(new ErrorResult(
+                    ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM
+            )));
+        }
+
+        if (!Validator.checkBase64(img)) {
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "appid", appId, LogConsts.VERB_INVOKE,
+                    "aliblity", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM, JSON.toJSONString(new ErrorResult(
+                    ResponseConsts.ERROR_CODE_INVALID_BASE64_PARAM, ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM
+            )));
+        }
+        TProtocol protocol = thriftFaceDetectConnectionService.getConnection();
+        FaceDetectionThriftService.Client client = new FaceDetectionThriftService.Client(protocol);
+        try {
+            ResponseResult responseResult = ResponseResult.success("", client.face_detection(img));
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE,
+                    "ability", ability, LogConsts.SUCCESS));
+            return responseResult;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE,
+                    "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR
+            ));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_INTERNAL_ERROR, JSON.toJSONString(new ErrorResult(
+                    ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
+        } finally {
+            thriftFaceDetectConnectionService.returnConnection(protocol);
+        }
+    }
+
+
+    @RequestMapping(value = "v1/fuzzy_reduction", method = RequestMethod.POST)
+    public Object fuzzyReduction(@RequestBody Map<String, Object> params, HttpSession session) {
+        String ability = Thread.currentThread().getStackTrace()[1].getMethodName();
+        Integer appId = ((Identity) session.getAttribute(OauthConsts.KEY_IDENTITY)).getId();
+        String img;
+        if (params.containsKey("img")) {
+            img = (String) params.get("img");
+        } else {
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability",
+                    ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INVALID_PARAM));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_INVALID_PARAM, JSON.toJSONString(new ErrorResult(
+                    ResponseConsts.ERROR_CODE_INVALID_PARAM, ResponseConsts.ERROR_MSG_INVALID_PARAM
+            )));
+        }
+
+        if (Validator.checkEmpty(img)) {
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE,
+                    "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_EMPTY_PARAM, JSON.toJSONString(new ErrorResult(
+                    ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM
+            )));
+        }
+
+        if (!Validator.checkBase64(img)) {
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "appid", appId, LogConsts.VERB_INVOKE,
+                    "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM, JSON.toJSONString(new ErrorResult(
+                    ResponseConsts.ERROR_CODE_INVALID_BASE64_PARAM, ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM
+            )));
+        }
+        TProtocol protocol = thriftReductionConnectionService.getConnection();
+        ReductionThriftService.Client client = new ReductionThriftService.Client(protocol);
+        try {
+            ResponseResult responseResult = ResponseResult.success("", client.fuzzy_reduction(img));
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE,
+                    "ability", ability, LogConsts.SUCCESS));
+            return responseResult;
+        } catch (Exception e) {
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE,
+                    "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR
+            ));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_INTERNAL_ERROR, JSON.toJSONString(new ErrorResult(
+                    ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
+        } finally {
+            thriftReductionConnectionService.returnConnection(protocol);
+        }
+    }
+
+    @RequestMapping(value = "v1/occlusion_reduction", method = RequestMethod.POST)
+    public Object occlusionReduction(@RequestBody Map<String, Object> params, HttpSession session) {
+        String ability = Thread.currentThread().getStackTrace()[1].getMethodName();
+        Integer appId = ((Identity) session.getAttribute(OauthConsts.KEY_IDENTITY)).getId();
+        String img;
+        if (params.containsKey("img")) {
+            img = (String) params.get("img");
+        } else {
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE, "ability",
+                    ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INVALID_PARAM));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_INVALID_PARAM, JSON.toJSONString(new ErrorResult(
+                    ResponseConsts.ERROR_CODE_INVALID_PARAM, ResponseConsts.ERROR_MSG_INVALID_PARAM
+            )));
+        }
+
+        if (Validator.checkEmpty(img)) {
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE,
+                    "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_EMPTY_PARAM));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_EMPTY_PARAM, JSON.toJSONString(new ErrorResult(
+                    ResponseConsts.ERROR_CODE_EMPTY_PARAM, ResponseConsts.ERROR_MSG_EMPTY_PARAM
+            )));
+        }
+
+        if (!Validator.checkBase64(img)) {
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "appid", appId, LogConsts.VERB_INVOKE,
+                    "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM, JSON.toJSONString(new ErrorResult(
+                    ResponseConsts.ERROR_CODE_INVALID_BASE64_PARAM, ResponseConsts.ERROR_MSG_INVALID_BASE64_PARAM
+            )));
+        }
+        TProtocol protocol = thriftReductionConnectionService.getConnection();
+        ReductionThriftService.Client client = new ReductionThriftService.Client(protocol);
+        try {
+            ResponseResult responseResult = ResponseResult.success("", client.occlusion_reduction(img));
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE,
+                    "ability", ability, LogConsts.SUCCESS));
+            return responseResult;
+        } catch (Exception e) {
+            logger.info(LogUtil.body(LogConsts.DOMAIN_IMAGE_REST, "app_id", appId, LogConsts.VERB_INVOKE,
+                    "ability", ability, LogConsts.ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR
+            ));
+            return ResponseResult.error(ResponseConsts.ERROR_MSG_INTERNAL_ERROR, JSON.toJSONString(new ErrorResult(
+                    ResponseConsts.ERROR_CODE_INTERNAL_ERROR, ResponseConsts.ERROR_MSG_INTERNAL_ERROR)));
+        } finally {
+            thriftReductionConnectionService.returnConnection(protocol);
+        }
+    }
+
 }

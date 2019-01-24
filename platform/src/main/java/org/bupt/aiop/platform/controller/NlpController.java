@@ -1,26 +1,26 @@
 package org.bupt.aiop.platform.controller;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
-import org.apache.thrift.protocol.TProtocol;
 import org.bupt.aiop.platform.annotation.RequiredPermission;
+import org.bupt.aiop.platform.constant.EnvConsts;
 import org.bupt.aiop.platform.constant.LogConsts;
 import org.bupt.aiop.platform.constant.NlpConsts;
 import org.bupt.aiop.platform.constant.ResponseConsts;
 import org.bupt.aiop.rpcapi.dubbo.NlpAlgDubboService;
-import org.bupt.aiop.rpcapi.thrift.NlpAlgThriftService;
 import org.bupt.common.bean.ErrorResult;
 import org.bupt.common.bean.ResponseResult;
 import org.bupt.common.constant.OauthConsts;
 import org.bupt.common.thrift.ThriftConnectionService;
 import org.bupt.common.util.LogUtil;
 import org.bupt.common.util.Validator;
-import org.bupt.aiop.platform.constant.EnvConsts;
 import org.bupt.common.util.token.Identity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -40,10 +40,10 @@ public class NlpController {
 	@Autowired
 	private EnvConsts envConsts;
 
-//	@Autowired
+//	@Autowired(required = false)
 //	private ThriftConnectionService thriftNlpConnectionService;
 
-	@Reference
+	@Autowired(required = false)
 	private NlpAlgDubboService nlpAlgDubboService;
 
 	/**

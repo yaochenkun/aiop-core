@@ -1,11 +1,18 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 	   http://www.springframework.org/schema/context
-	   http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	   http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	   http://code.alibabatech.com/schema/dubbo
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
     <context:property-placeholder location="classpath:*.properties"/>
+    <dubbo:application name="restapi"/>
+    <dubbo:registry address="${zookeeper.host}" timeout="5000"/>
+    <!--<dubbo:annotation package="org.bupt.aiop.platform.controller" />-->
+    <!--<dubbo:reference interface="org.bupt.aiop.rpcapi.dubbo.NlpAlgDubboService" id="nlpAlgDubboService"/>-->
     <context:component-scan base-package="org.bupt.aiop.platform"/>
 </beans>
